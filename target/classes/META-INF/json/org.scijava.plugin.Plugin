@@ -1,1 +1,1 @@
-{"class":"wbif.sjx.TrackAnalysis.TrackMateLoaderFactory","values":{"type":"fiji.plugin.trackmate.action.TrackMateActionFactory"}}{"class":"wbif.sjx.TrackAnalysis.TrackMateIntegration","values":{"type":"fiji.plugin.trackmate.action.TrackMateActionFactory"}}
+{"class":"wbif.sjx.TrackAnalysis.IO.TrackMateLoaderFactory","values":{"type":"fiji.plugin.trackmate.action.TrackMateActionFactory"}}

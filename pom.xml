@@ -78,7 +78,7 @@
 
     <properties>
         <package-name>wbif.sjx.TrackAnalysis</package-name>
-        <main-class>wbif.sjx.TrackAnalysis.TrackAnalysisPlugin</main-class>
+        <main-class>wbif.sjx.TrackAnalysis.IO.TrackAnalysisPlugin</main-class>
         <license.licenseName>gpl3</license.licenseName>
         <license.copyrightOwners>Stephen Cross</license.copyrightOwners>
     </properties>
@@ -119,6 +119,33 @@
                 <configuration>
                     <finalName>Track_Analysis-${project.version}</finalName>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>wbif.sjx</groupId>
+                                    <artifactId>common</artifactId>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

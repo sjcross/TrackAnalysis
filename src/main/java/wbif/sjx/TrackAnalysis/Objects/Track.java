@@ -1,76 +1,42 @@
-package wbif.sjx.TrackAnalysis;
+package wbif.sjx.TrackAnalysis.Objects;
 
-import ij.measure.ResultsTable;
 import org.apache.commons.math3.stat.descriptive.summary.Sum;
 import wbif.sjx.common.Analysis.*;
-import wbif.sjx.common.MathFunc.CumStat;
+import wbif.sjx.common.MathFunc.MultiCumStat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by sc13967 on 03/02/2017.
  */
-public class Track {
-    double[] x;
-    double[] y;
-    double[] z;
-    int[] f;
-
-
-    // CONSTRUCTORS
-
-    public Track(double[] x, double[] y, double[] z, int[] f) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.f = f;
-
-    }
-
-    public Track(double[] x, double[] y, int[] f) {
-        this.x = x;
-        this.y = y;
-        this.z = new double[x.length];
-        Arrays.fill(z, 1);
-        this.f = f;
-
-    }
-
-    public Track(ArrayList<Integer> xArray, ArrayList<Integer> yArray, ArrayList<Integer> zArray, ArrayList<Integer> fArray) {
-        for (int i=0;i<x.length;i++) {
-            x[i] = xArray.get(i);
-            y[i] = yArray.get(i);
-            z[i] = zArray.get(i);
-            f[i] = fArray.get(i);
-
-        }
-    }
-
-
+public class Track extends ArrayList<Point> {
     // PUBLIC METHODS
 
-    public CumStat getDirectionalPersistence() {
-        return DirectionalPersistenceCalculator.calculate(f,x,y,z);
+    public MultiCumStat getDirectionalPersistence() {
+        return DirectionalPersistenceCalculator.calculate(getF(),getX(),getY(),getZ());
 
     }
 
-    public CumStat getMSD() {
-        return MSDCalculator.calculate(f,x,y,z);
+    public MultiCumStat getMSD() {
+        return MSDCalculator.calculate(getF(),getX(),getY(),getZ());
 
     }
 
     public double[] getInstantaneousVelocity() {
-        return InstantaneousVelocityCalculator.calculate(f,x,y,z);
+        return InstantaneousVelocityCalculator.calculate(getF(),getX(),getY(),getZ());
 
     }
 
     public double[] getStepSizes() {
-        return StepSizeCalculator.calculate(x,y,z);
+        return StepSizeCalculator.calculate(getX(),getY(),getZ());
 
     }
 
-    public double getEuclideanDistance() {
+    public double getEuclspotIDeanDistance() {
+        double[] x = getX();
+        double[] y = getX();
+        double[] z = getX();
+
         double dx = x[x.length-1]-x[0];
         double dy = y[x.length-1]-y[0];
         double dz = z[x.length-1]-z[0];
@@ -87,15 +53,15 @@ public class Track {
     }
 
     public double getDirectionalityRatio() {
-        return getEuclideanDistance()/getTotalPathLength();
+        return getEuclspotIDeanDistance()/getTotalPathLength();
 
     }
 
     /**
-     * Returns a double[] containing the Euclidean distance at all time steps
+     * Returns a double[] containing the EuclspotIDean distance at all time steps
      */
-    public double[] getRollingEuclideanDistance() {
-        return EuclideanDistanceCalculator.calculate(x,y,z);
+    public double[] getRollingEuclspotIDeanDistance() {
+        return EuclideanDistanceCalculator.calculate(getX(),getY(),getZ());
 
     }
 
@@ -103,7 +69,7 @@ public class Track {
      * Returns a double[] containing the total path length up to each time step
      */
     public double[] getRollingTotalPathLength() {
-        return TotalPathLengthCalculator.calculate(x,y,z);
+        return TotalPathLengthCalculator.calculate(getX(),getY(),getZ());
 
     }
 
@@ -111,16 +77,23 @@ public class Track {
      * Returns a double[] containing the directionality ratio at all time steps
      */
     public double[] getRollingDirectionalityRatio() {
-        return DirectionalityRatioCalculator.calculate(x,y,z);
+        return DirectionalityRatioCalculator.calculate(getX(),getY(),getZ());
 
     }
 
     public int getDuration() {
+        int[] f = getF();
+
         return f[f.length-1]-f[0];
 
     }
 
     public double[][] getLimits(){
+        double[] x = getX();
+        double[] y = getX();
+        double[] z = getX();
+        int[] f = getF();
+
         double[][] limits = new double[4][2];
         for (double[] row:limits) {
             row[0] = Double.MAX_VALUE;
@@ -147,36 +120,24 @@ public class Track {
 
     // GETTERS AND SETTERS
 
-
     public double[] getX() {
-        return x;
-    }
+       return stream().map(Point::getX).mapToDouble(Double::doubleValue).toArray();
 
-    public void setX(double[] x) {
-        this.x = x;
     }
 
     public double[] getY() {
-        return y;
-    }
+        return stream().map(Point::getY).mapToDouble(Double::doubleValue).toArray();
 
-    public void setY(double[] y) {
-        this.y = y;
     }
 
     public double[] getZ() {
-        return z;
-    }
+        return stream().map(Point::getZ).mapToDouble(Double::doubleValue).toArray();
 
-    public void setZ(double[] z) {
-        this.z = z;
     }
 
     public int[] getF() {
-        return f;
+        return stream().map(Point::getF).mapToInt(Integer::intValue).toArray();
+
     }
 
-    public void setF(int[] f) {
-        this.f = f;
-    }
 }

@@ -1,32 +1,53 @@
 package wbif.sjx.TrackAnalysis;
 
-import ij.gui.Plot;
-
-import java.util.ArrayList;
+import ij.Prefs;
+import ij.gui.GenericDialog;
+import wbif.sjx.TrackAnalysis.Objects.TrackCollection;
+import wbif.sjx.TrackAnalysis.Visualisation.MotionHeatmap;
 
 /**
  * Created by sc13967 on 12/06/2017.
  */
 public class TrackAnalysis {
-    private ArrayList<Track> tracks = new ArrayList<Track>();
+    private TrackCollection tracks;
 
-    public TrackAnalysis(ArrayList<Track> tracks) {
+    public TrackAnalysis(TrackCollection tracks) {
         this.tracks = tracks;
 
-        Track track = tracks.get(0);
-        int[] f = track.getF();
-        double[] y = track.getRollingTotalPathLength();
+        displayMotionHeatmap();
 
-        float[] ff = new float[f.length];
-        float[] yy = new float[y.length];
-        for (int i=0;i<ff.length;i++) {
-            ff[i] = (float) f[i];
-            yy[i] = (float) y[i];
+    }
 
-        }
+    private void displayMotionHeatmap() {
+        String[] modes = MotionHeatmap.modes;
+        String[] statOpts = MotionHeatmap.stats;
 
-        Plot plot = new Plot("Plot","x","y",ff,yy);
-        plot.show();
+        int modeIdx = (int) Prefs.get("TrackAnalysis.heatmapModeIdx",0);
+        int statIdx = (int) Prefs.get("TrackAnalysis.heatmapStatIdx",0);
+        int binning = (int) Prefs.get("TrackAnalysis.heatmapBinning",1);
+        boolean smoothBinning = Prefs.get("TrackAnalysis.heatmapSmoothBinning",true);
+
+        GenericDialog gd = new GenericDialog("Settings");
+        gd.addChoice("Metric to display",modes,modes[modeIdx]);
+        gd.addChoice("Statistic",statOpts,statOpts[statIdx]);
+        gd.addNumericField("Binning",binning,0);
+        gd.addCheckbox("Smooth binning",smoothBinning);
+        gd.showDialog();
+
+        modeIdx = gd.getNextChoiceIndex();
+        statIdx = gd.getNextChoiceIndex();
+        binning = (int) gd.getNextNumber();
+        smoothBinning = gd.getNextBoolean();
+
+        Prefs.set("TrackAnalysis.heatmapModeIdx",modeIdx);
+        Prefs.set("TrackAnalysis.heatmapStatIdx",statIdx);
+        Prefs.set("TrackAnalysis.heatmapBinning",binning);
+        Prefs.set("TrackAnalysis.heatmapSmoothBinning",smoothBinning);
+
+        MotionHeatmap motionHeatmap = new MotionHeatmap(tracks);
+        motionHeatmap.setBinning(binning);
+        motionHeatmap.setSmoothBinning(smoothBinning);
+        motionHeatmap.calculate(modes[modeIdx],statOpts[statIdx]);
 
     }
 }
