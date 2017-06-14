@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+		http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.scijava</groupId>
+        <artifactId>pom-scijava</artifactId>
+        <version>14.0.0</version>
+        <relativePath />
+    </parent>
+
+    <groupId>wbif.sjx</groupId>
+    <artifactId>TrackAnalysis</artifactId>
+    <version>1.0.0</version>
+
+    <name>Track Analysis</name>
+    <description>A Maven project implementing an ImageJ 1.x plugin.</description>
+    <url>https://github.com/SJCross/TrackAnalysis/</url>
+    <inceptionYear>2017</inceptionYear>
+    <organization>
+        <name>University of Bristol</name>
+    </organization>
+    <licenses>
+        <license>
+            <name>GNU General Public License v3.0</name>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>sjcross</id>
+            <name>Stephen Cross</name>
+            <roles>
+                <role>lead</role>
+                <role>developer</role>
+                <role>debugger</role>
+                <role>reviewer</role>
+                <role>support</role>
+                <role>maintainer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <contributors>
+        <contributor>
+            <name>Stephen Cross</name>
+            <roles><role>founder</role></roles>
+            <properties><id>sjcross</id></properties>
+        </contributor>
+    </contributors>
+
+    <mailingLists>
+        <mailingList>
+            <name>ImageJ Forum</name>
+            <archive>http://forum.imagej.net/</archive>
+        </mailingList>
+    </mailingLists>
+
+    <scm>
+        <connection>scm:git:git://github.com/SJCross/TrackAnalysis</connection>
+        <developerConnection>scm:git:git@github.com:SJCross/TrackAnalysis</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://github.com/SJCross/TrackAnalysis</url>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/SJCross/TrackAnalysis/issues</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>None</system>
+    </ciManagement>
+
+    <properties>
+        <package-name>wbif.sjx.TrackAnalysis</package-name>
+        <main-class>wbif.sjx.TrackAnalysis.IO.TrackAnalysisPlugin</main-class>
+        <license.licenseName>gpl3</license.licenseName>
+        <license.copyrightOwners>Stephen Cross</license.copyrightOwners>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>imagej.public</id>
+            <url>http://maven.imagej.net/content/groups/public</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.imagej</groupId>
+            <artifactId>ij</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>sc.fiji</groupId>
+            <artifactId>TrackMate_</artifactId>
+            <version>3.5.1</version>
+        </dependency>
+
+        <!--Local repository-->
+        <dependency>
+            <groupId>wbif.sjx</groupId>
+            <artifactId>common</artifactId>
+            <version>1.2.4</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <finalName>Track_Analysis-${project.version}</finalName>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <overWriteReleases>true</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>wbif.sjx</groupId>
+                                    <artifactId>common</artifactId>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
