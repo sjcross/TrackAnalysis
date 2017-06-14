@@ -1,8 +1,6 @@
 package wbif.sjx.TrackAnalysis.IO;
 
-import ij.IJ;
-import ij.ImageJ;
-import ij.Prefs;
+import ij.*;
 import ij.gui.GenericDialog;
 import ij.measure.ResultsTable;
 import ij.plugin.PlugIn;
@@ -10,6 +8,8 @@ import wbif.sjx.TrackAnalysis.Objects.Point;
 import wbif.sjx.TrackAnalysis.Objects.Track;
 import wbif.sjx.TrackAnalysis.Objects.TrackCollection;
 import wbif.sjx.TrackAnalysis.TrackAnalysis;
+
+import java.util.Arrays;
 
 /**
  * Loads tracks from results table.
@@ -32,12 +32,53 @@ public class TrackAnalysisPlugin implements PlugIn {
      * @param s
      */
     public void run(String s) {
+        // Getting the current windows
+        String[] windows = getWindows();
+        if (windows == null) return;
+
+        IJ.renameResults(windows[0], "Results");
+
+        ImagePlus ipl;
+        if (!windows[1].equals("None")) {
+            ipl = WindowManager.getImage(windows[1]);
+        } else {
+            ipl = null;
+        }
+
         // Getting results from ResultsTable
         ResultsTable rt = ResultsTable.getResultsTable();
-        TrackCollection tracks = doImport(rt);
+        TrackCollection tracks = doImport(rt,ipl);
 
         // Running TrackAnalysis
-        new TrackAnalysis(tracks);
+        new TrackAnalysis(tracks,ipl);
+
+    }
+
+    /**
+     * Gets a String[] containing the names of the results table and image windows to be processed.  If no image is to
+     * be loaded, the second argument is "null".
+     * @return
+     */
+    private static String[] getWindows() {
+        String[] tableList = WindowManager.getNonImageTitles();
+        String[] imageListTemp = WindowManager.getImageTitles();
+
+        String[] imageList = new String[imageListTemp.length+1];
+        imageList[0] = "None";
+        System.arraycopy(imageListTemp, 0, imageList, 1, imageList.length - 1);
+
+        GenericDialog gd = new GenericDialog("Select windows");
+        gd.addChoice("Tracks",tableList,tableList[0]);
+        gd.addChoice("Image",imageList,imageList[0]);
+        gd.showDialog();
+
+        if (gd.wasCanceled()) return null;
+
+        String[] windows = new String[2];
+        windows[0] = gd.getNextChoice();
+        windows[1] = gd.getNextChoice();
+
+        return windows;
 
     }
 
@@ -45,7 +86,7 @@ public class TrackAnalysisPlugin implements PlugIn {
      * Convert tracks stored in the results table to an ArrayList of Track objects.
      * @return
      */
-    public TrackCollection doImport(ResultsTable rt) {
+    public TrackCollection doImport(ResultsTable rt, ImagePlus ipl) {
         // Get available ResultsTable columns
         String[] headings = rt.getHeadings();
 
@@ -64,11 +105,20 @@ public class TrackAnalysisPlugin implements PlugIn {
         frameIdx = frameIdx < headings.length ? frameIdx : 0;
 
         // Getting default calibration value
-        double distXY = Prefs.get("TrackAnalysis.distXY",1);
-        double distZ = Prefs.get("TrackAnalysis.distZ",1);
+        double distXY;
+        double distZ;
+        if (ipl == null) {
+            distXY = 1;
+            distZ = 1;
+
+        } else {
+            distXY = ipl.getCalibration().getX(1);
+            distZ = ipl.getCalibration().getZ(1);
+
+        }
 
         GenericDialog gd = new GenericDialog("Import tracks from results table");
-        gd.addChoice("ID column",headings,headings[trackIDIdx]);
+        gd.addChoice("Track ID column",headings,headings[trackIDIdx]);
         gd.addChoice("X-position column",headings,headings[xPosIdx]);
         gd.addChoice("Y-position column",headings,headings[yPosIdx]);
         gd.addChoice("Z-position column",headings,headings[zPosIdx]);
@@ -94,8 +144,6 @@ public class TrackAnalysisPlugin implements PlugIn {
         Prefs.set("TrackAnalysis.yPosIdx",yPosIdx);
         Prefs.set("TrackAnalysis.zPosIdx",zPosIdx);
         Prefs.set("TrackAnalysis.frameIdx",frameIdx);
-        Prefs.set("TrackAnalysis.distXY",distXY);
-        Prefs.set("TrackAnalysis.distZ",distZ);
 
         // Updating column headings
         String idCol = headings[trackIDIdx];

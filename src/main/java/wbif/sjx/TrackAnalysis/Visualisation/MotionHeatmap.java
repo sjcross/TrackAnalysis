@@ -153,7 +153,7 @@ public class MotionHeatmap {
             // Scaling the image back to it's original size
             if (smoothBinning) {
                 ipl.getProcessor().setInterpolationMethod(ImageProcessor.BICUBIC);
-                ipl.setProcessor(ipl.getProcessor().resize(ipl.getWidth() * binning, ipl.getHeight() * binning));
+                ipl.setProcessor(ipl.getProcessor().resize(width, height));
 
             }
         }
@@ -171,11 +171,10 @@ public class MotionHeatmap {
     private void getAbsoluteVelocity(HashMap<Integer,CumStat> stats, Indexer indexer) {
         double distXY = tracks.getDistXY();
         double distZ = tracks.getDistZ();
-        System.out.println("here!_"+tracks.size());
 
         for (Track track:tracks.values()) {
             for (int i=0;i<track.getX().length-1;i++) {
-                System.out.println(track.getX()[0]+"_"+track.getY()[0]+"_"+track.getZ()[0]+"_"+track.getF()[0]);
+
                 // Getting step start locations
                 double x1 = track.getX()[i];
                 double y1 = track.getY()[i];

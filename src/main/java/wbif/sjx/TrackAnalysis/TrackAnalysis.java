@@ -1,5 +1,6 @@
 package wbif.sjx.TrackAnalysis;
 
+import ij.ImagePlus;
 import ij.Prefs;
 import ij.gui.GenericDialog;
 import wbif.sjx.TrackAnalysis.Objects.TrackCollection;
@@ -10,9 +11,11 @@ import wbif.sjx.TrackAnalysis.Visualisation.MotionHeatmap;
  */
 public class TrackAnalysis {
     private TrackCollection tracks;
+    private ImagePlus ipl;
 
-    public TrackAnalysis(TrackCollection tracks) {
+    public TrackAnalysis(TrackCollection tracks, ImagePlus ipl) {
         this.tracks = tracks;
+        this.ipl = ipl;
 
         displayMotionHeatmap();
 
@@ -34,6 +37,8 @@ public class TrackAnalysis {
         gd.addCheckbox("Smooth binning",smoothBinning);
         gd.showDialog();
 
+        if (gd.wasCanceled()) return;
+
         modeIdx = gd.getNextChoiceIndex();
         statIdx = gd.getNextChoiceIndex();
         binning = (int) gd.getNextNumber();
@@ -47,7 +52,13 @@ public class TrackAnalysis {
         MotionHeatmap motionHeatmap = new MotionHeatmap(tracks);
         motionHeatmap.setBinning(binning);
         motionHeatmap.setSmoothBinning(smoothBinning);
-        motionHeatmap.calculate(modes[modeIdx],statOpts[statIdx]);
 
+        if (ipl == null) {
+            motionHeatmap.calculate(modes[modeIdx],statOpts[statIdx]);
+
+        } else {
+            motionHeatmap.calculate(modes[modeIdx],statOpts[statIdx],ipl.getWidth(),ipl.getHeight());
+
+        }
     }
 }

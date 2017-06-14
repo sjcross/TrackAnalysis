@@ -33,7 +33,7 @@ public class TrackMateLoader extends AbstractTMAction {
 
     @Override
     public void execute(TrackMate trackMate) {
-        ImagePlus ipl = IJ.getImage();
+        ImagePlus ipl = trackMate.getSettings().imp;
         Calibration calibration = ipl.getCalibration();
 
         // Creating the ArrayList to hold all Tracks
@@ -49,18 +49,17 @@ public class TrackMateLoader extends AbstractTMAction {
             // Getting x,y,f and 2-channel spot intensities from TrackMate results
             for (Spot spot : spots) {
                 // NEED TO GET TRACK ID
-                int ID = TRACK ID
                 double x = spot.getFeature(Spot.POSITION_X)/tracks.getDistXY();
                 double y = spot.getFeature(Spot.POSITION_Y)/tracks.getDistXY();
                 double z = spot.getFeature(Spot.POSITION_Z)/tracks.getDistZ();
                 int f = (int) Math.round(spot.getFeature(Spot.FRAME));
 
-                tracks.putIfAbsent(ID, new Track());
-                tracks.get(ID).add(new Point(x,y,z,f));
+                tracks.putIfAbsent(trackID, new Track());
+                tracks.get(trackID).add(new Point(x,y,z,f));
 
             }
         }
-        System.out.println(tracks.size()+"_rand: "+tracks.get(124).getF()[2]);
+
         // Sorting spots in each track to ensure they are in chronological order
         for (Track track:tracks.values()) {
             track.sort((o1, o2) -> {
@@ -70,10 +69,8 @@ public class TrackMateLoader extends AbstractTMAction {
             });
         }
 
-        System.out.println(tracks.size()+"_rand: "+tracks.get(124).getF()[2]);
-
         // Running TrackAnalysis
-        new TrackAnalysis(tracks);
+        new TrackAnalysis(tracks, ipl);
 
     }
 
