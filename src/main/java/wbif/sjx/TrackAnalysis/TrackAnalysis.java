@@ -3,8 +3,8 @@ package wbif.sjx.TrackAnalysis;
 import ij.ImagePlus;
 import ij.Prefs;
 import ij.gui.GenericDialog;
-import wbif.sjx.TrackAnalysis.Objects.TrackCollection;
 import wbif.sjx.TrackAnalysis.Visualisation.MotionHeatmap;
+import wbif.sjx.common.Object.TrackCollection;
 
 /**
  * Created by sc13967 on 12/06/2017.

@@ -4,12 +4,10 @@ import ij.*;
 import ij.gui.GenericDialog;
 import ij.measure.ResultsTable;
 import ij.plugin.PlugIn;
-import wbif.sjx.TrackAnalysis.Objects.Point;
-import wbif.sjx.TrackAnalysis.Objects.Track;
-import wbif.sjx.TrackAnalysis.Objects.TrackCollection;
 import wbif.sjx.TrackAnalysis.TrackAnalysis;
-
-import java.util.Arrays;
+import wbif.sjx.common.Object.Point;
+import wbif.sjx.common.Object.Track;
+import wbif.sjx.common.Object.TrackCollection;
 
 /**
  * Loads tracks from results table.

@@ -2,20 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="65780597-d0a5-40f9-9c79-737a1c7125a8" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__fr_inra_ijpb_MorphoLibJ__1_3_2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_math4_4_0_SNAPSHOT.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_numbers_angle_1_0_SNAPSHOT.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_numbers_arrays_1_0_SNAPSHOT.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_numbers_combinatorics_1_0_SNAPSHOT.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_numbers_core_1_0_SNAPSHOT.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_numbers_fraction_1_0_SNAPSHOT.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_numbers_gamma_1_0_SNAPSHOT.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_rng_client_api_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_rng_core_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_rng_sampling_1_1_SNAPSHOT.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_rng_simple_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__wbif_sjx_common_1_2_4.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__wbif_sjx_common_1_2_4_SNAPSHOT.xml" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__wbif_sjx_common_1_2_5_SNAPSHOT.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__fr_inra_ijpb_MorphoLibJ__1_3_2.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_math4_4_0_SNAPSHOT.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_numbers_angle_1_0_SNAPSHOT.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_numbers_arrays_1_0_SNAPSHOT.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_numbers_combinatorics_1_0_SNAPSHOT.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_numbers_core_1_0_SNAPSHOT.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_numbers_fraction_1_0_SNAPSHOT.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_numbers_gamma_1_0_SNAPSHOT.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_rng_client_api_1_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_rng_core_1_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_rng_sampling_1_1_SNAPSHOT.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_rng_simple_1_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__wbif_sjx_common_1_2_4.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Objects/Point.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Objects/Track.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Objects/TrackCollection.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TrackAnalysis.iml" afterPath="$PROJECT_DIR$/TrackAnalysis.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
@@ -23,7 +26,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoader.java" afterPath="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoader.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/TrackAnalysis.java" afterPath="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/TrackAnalysis.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Visualisation/MotionHeatmap.java" afterPath="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Visualisation/MotionHeatmap.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -40,8 +42,8 @@
       <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="18" lean-forward="false" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
+            <state relative-caret-position="-884">
+              <caret line="23" column="42" lean-forward="true" selection-start-line="23" selection-start-column="42" selection-end-line="23" selection-end-column="42" />
               <folding />
             </state>
           </provider>
@@ -50,15 +52,27 @@
       <file leaf-file-name="TrackAnalysisPlugin.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackAnalysisPlugin.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-408">
-              <caret line="116" column="0" lean-forward="false" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
+            <state relative-caret-position="879">
+              <caret line="126" column="0" lean-forward="false" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
               <folding>
                 <element signature="docComment;class#TrackAnalysisPlugin#0" expanded="false" />
                 <element signature="docComment;method#main#0;class#TrackAnalysisPlugin#0" expanded="false" />
                 <element signature="docComment;method#run#0;class#TrackAnalysisPlugin#0" expanded="false" />
                 <element signature="docComment;method#getWindows#0;class#TrackAnalysisPlugin#0" expanded="false" />
                 <element signature="docComment;method#doImport#0;class#TrackAnalysisPlugin#0" expanded="false" />
-                <element signature="e#6011#6172#0" expanded="false" />
+                <element signature="e#5961#6122#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TrackMateLoaderFactory.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoaderFactory.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="238">
+              <caret line="21" column="5" lean-forward="false" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+              <folding>
+                <element signature="docComment;class#TrackMateLoaderFactory#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -67,10 +81,9 @@
       <file leaf-file-name="TrackAnalysis.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/TrackAnalysis.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+            <state relative-caret-position="765">
+              <caret line="51" column="59" lean-forward="false" selection-start-line="51" selection-start-column="59" selection-end-line="51" selection-end-column="59" />
               <folding>
-                <element signature="imports" expanded="true" />
                 <element signature="docComment;class#TrackAnalysis#0" expanded="false" />
               </folding>
             </state>
@@ -80,19 +93,19 @@
       <file leaf-file-name="MotionHeatmap.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Visualisation/MotionHeatmap.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-204">
-              <caret line="162" column="39" lean-forward="false" selection-start-line="162" selection-start-column="39" selection-end-line="162" selection-end-column="39" />
+            <state relative-caret-position="2312">
+              <caret line="172" column="0" lean-forward="false" selection-start-line="172" selection-start-column="0" selection-end-line="172" selection-end-column="0" />
               <folding>
                 <element signature="docComment;class#MotionHeatmap#0" expanded="false" />
                 <element signature="method#MotionHeatmap#0;class#MotionHeatmap#0" expanded="false" />
                 <element signature="method#calculate#0;class#MotionHeatmap#0" expanded="false" />
-                <element signature="e#6203#6298#0" expanded="false" />
+                <element signature="e#6079#6174#0" expanded="false" />
                 <element signature="method#getXVelocity#0;class#MotionHeatmap#0" expanded="false" />
-                <element signature="e#7369#7464#0" expanded="false" />
+                <element signature="e#7245#7340#0" expanded="false" />
                 <element signature="method#getYVelocity#0;class#MotionHeatmap#0" expanded="false" />
-                <element signature="e#8456#8551#0" expanded="false" />
+                <element signature="e#8332#8427#0" expanded="false" />
                 <element signature="method#getZVelocity#0;class#MotionHeatmap#0" expanded="false" />
-                <element signature="e#9586#9681#0" expanded="false" />
+                <element signature="e#9462#9557#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -101,8 +114,8 @@
       <file leaf-file-name="TrackMateLoader.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoader.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="113">
-              <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+            <state relative-caret-position="867">
+              <caret line="53" column="70" lean-forward="false" selection-start-line="53" selection-start-column="70" selection-end-line="53" selection-end-column="70" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="docComment;class#TrackMateLoader#0" expanded="false" />
@@ -156,18 +169,21 @@
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/MotionHeatmap.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Objects/Point.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/ResultsTableImporter.java" />
-        <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Objects/Track.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Objects/TrackCollection.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/TrackMateLoaderFactory.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/TrackAnalysisPlugin.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/TrackMateLoader.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoader2.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoaderFactory.java" />
-        <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Visualisation/MotionHeatmap.java" />
+        <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Objects/Track.java" />
+        <option value="$PROJECT_DIR$/../Common/src/main/java/wbif/sjx/common/Object/Point.java" />
+        <option value="$PROJECT_DIR$/../Common/src/main/java/wbif/sjx/common/Object/Track.java" />
+        <option value="$PROJECT_DIR$/../Common/src/main/java/wbif/sjx/common/Object/TrackCollection.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/TrackAnalysis.java" />
-        <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoader.java" />
+        <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Visualisation/MotionHeatmap.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackAnalysisPlugin.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoader.java" />
       </list>
     </option>
   </component>
@@ -202,8 +218,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -347,6 +361,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -613,28 +629,28 @@
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32987553" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32987553" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32987553" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26599148" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run with VisualVM" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2553305" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32987553" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39937758" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39937758" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Debug with VisualVM" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32987553" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32987553" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="UnknownFeatures">
@@ -656,230 +672,55 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="136">
+          <caret line="8" column="38" lean-forward="false" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="38" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Ratio_Plus.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="82" lean-forward="false" selection-start-line="9" selection-start-column="82" selection-end-line="9" selection-end-column="82" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Objects/Point.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/ResultsTableImporter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="15" column="4" lean-forward="false" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_51/src.zip!/java/util/function/Function.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="48" column="6" lean-forward="false" selection-start-line="48" selection-start-column="6" selection-end-line="48" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Objects/TrackCollection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="29" column="5" lean-forward="true" selection-start-line="29" selection-start-column="5" selection-end-line="29" selection-end-column="5" />
-          <folding>
-            <element signature="docComment;class#TrackCollection#0" expanded="false" />
-            <element signature="method#TrackCollection#0;class#TrackCollection#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/plugins.config">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="97" lean-forward="false" selection-start-line="0" selection-start-column="97" selection-end-line="0" selection-end-column="97" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/target/classes/wbif/sjx/TrackAnalysis/IO/TrackAnalysisPlugin.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-911">
-          <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#4422#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/target/classes/wbif/sjx/TrackAnalysis/IO/TrackMateLoader.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="32" column="27" lean-forward="true" selection-start-line="32" selection-start-column="27" selection-end-line="32" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#2923#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/target/classes/wbif/sjx/TrackAnalysis/TrackMateLoaderFactory.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="22" column="5" lean-forward="true" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
-          <folding>
-            <element signature="e#0#1276#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/target/classes/wbif/sjx/TrackAnalysis/TrackMateLoader.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-180">
-          <caret line="38" column="98" lean-forward="true" selection-start-line="38" selection-start-column="98" selection-end-line="38" selection-end-column="98" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/target/classes/wbif/sjx/TrackAnalysis/TrackAnalysisPlugin.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-843">
-          <caret line="26" column="44" lean-forward="true" selection-start-line="26" selection-start-column="44" selection-end-line="26" selection-end-column="44" />
-          <folding>
-            <element signature="e#0#4374#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/target/classes/wbif/sjx/TrackAnalysis/TrackAnalysis.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-10">
-          <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#1942#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/target/classes/wbif/sjx/TrackAnalysis/IO/TrackMateLoaderFactory.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="21" column="37" lean-forward="true" selection-start-line="21" selection-start-column="37" selection-end-line="21" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#1284#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/target/classes/wbif/sjx/TrackAnalysis/IO/TrackMateLoader2.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#2925#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoaderFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="21" column="5" lean-forward="true" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+        <state relative-caret-position="238">
+          <caret line="21" column="5" lean-forward="false" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
           <folding>
-            <element signature="imports" expanded="true" />
             <element signature="docComment;class#TrackMateLoaderFactory#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Objects/Track.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="30" column="66" lean-forward="true" selection-start-line="30" selection-start-column="66" selection-end-line="30" selection-end-column="66" />
-          <folding>
-            <element signature="docComment;class#Track#0" expanded="false" />
-            <element signature="docComment;method#getRollingTotalPathLength#0;class#Track#0" expanded="false" />
-            <element signature="docComment;method#getRollingDirectionalityRatio#0;class#Track#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/wbif/sjx/Common/1.2.4-SNAPSHOT/Common-1.2.4-SNAPSHOT.jar!/wbif/sjx/common/MathFunc/CumStat.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="20" column="22" lean-forward="true" selection-start-line="20" selection-start-column="22" selection-end-line="20" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/wbif/sjx/Common/1.2.4-SNAPSHOT/Common-1.2.4-SNAPSHOT.jar!/wbif/sjx/common/MathFunc/MultiCumStat.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="18" column="23" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="242" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/wbif/sjx/Common/1.2.4-SNAPSHOT/Common-1.2.4-SNAPSHOT.jar!/wbif/sjx/common/Process/NanBinner.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="21" column="5" lean-forward="true" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Visualisation/MotionHeatmap.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-204">
-          <caret line="162" column="39" lean-forward="false" selection-start-line="162" selection-start-column="39" selection-end-line="162" selection-end-column="39" />
-          <folding>
-            <element signature="docComment;class#MotionHeatmap#0" expanded="false" />
-            <element signature="method#MotionHeatmap#0;class#MotionHeatmap#0" expanded="false" />
-            <element signature="method#calculate#0;class#MotionHeatmap#0" expanded="false" />
-            <element signature="e#6203#6298#0" expanded="false" />
-            <element signature="method#getXVelocity#0;class#MotionHeatmap#0" expanded="false" />
-            <element signature="e#7369#7464#0" expanded="false" />
-            <element signature="method#getYVelocity#0;class#MotionHeatmap#0" expanded="false" />
-            <element signature="e#8456#8551#0" expanded="false" />
-            <element signature="method#getZVelocity#0;class#MotionHeatmap#0" expanded="false" />
-            <element signature="e#9586#9681#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/TrackAnalysis.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+        <state relative-caret-position="765">
+          <caret line="51" column="59" lean-forward="false" selection-start-line="51" selection-start-column="59" selection-end-line="51" selection-end-column="59" />
           <folding>
-            <element signature="imports" expanded="true" />
             <element signature="docComment;class#TrackAnalysis#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Visualisation/MotionHeatmap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2312">
+          <caret line="172" column="0" lean-forward="false" selection-start-line="172" selection-start-column="0" selection-end-line="172" selection-end-column="0" />
+          <folding>
+            <element signature="docComment;class#MotionHeatmap#0" expanded="false" />
+            <element signature="method#MotionHeatmap#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="method#calculate#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#6079#6174#0" expanded="false" />
+            <element signature="method#getXVelocity#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#7245#7340#0" expanded="false" />
+            <element signature="method#getYVelocity#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#8332#8427#0" expanded="false" />
+            <element signature="method#getZVelocity#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#9462#9557#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="113">
-          <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+        <state relative-caret-position="867">
+          <caret line="53" column="70" lean-forward="false" selection-start-line="53" selection-start-column="70" selection-end-line="53" selection-end-column="70" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="docComment;class#TrackMateLoader#0" expanded="false" />
@@ -889,7 +730,176 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackAnalysisPlugin.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-408">
+        <state relative-caret-position="1768">
+          <caret line="126" column="0" lean-forward="true" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
+          <folding>
+            <element signature="docComment;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="docComment;method#main#0;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="docComment;method#run#0;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="docComment;method#getWindows#0;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="docComment;method#doImport#0;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="e#5961#6122#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="38" lean-forward="false" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackAnalysisPlugin.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2431">
+          <caret line="165" column="9" lean-forward="false" selection-start-line="165" selection-start-column="9" selection-end-line="165" selection-end-column="9" />
+          <folding>
+            <element signature="docComment;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="docComment;method#main#0;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="docComment;method#run#0;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="docComment;method#getWindows#0;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="docComment;method#doImport#0;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="e#5961#6122#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoaderFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="21" column="5" lean-forward="false" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+          <folding>
+            <element signature="docComment;class#TrackMateLoaderFactory#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/TrackAnalysis.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="765">
+          <caret line="51" column="59" lean-forward="false" selection-start-line="51" selection-start-column="59" selection-end-line="51" selection-end-column="59" />
+          <folding>
+            <element signature="docComment;class#TrackAnalysis#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Visualisation/MotionHeatmap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2312">
+          <caret line="172" column="0" lean-forward="false" selection-start-line="172" selection-start-column="0" selection-end-line="172" selection-end-column="0" />
+          <folding>
+            <element signature="docComment;class#MotionHeatmap#0" expanded="false" />
+            <element signature="method#MotionHeatmap#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="method#calculate#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#6079#6174#0" expanded="false" />
+            <element signature="method#getXVelocity#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#7245#7340#0" expanded="false" />
+            <element signature="method#getYVelocity#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#8332#8427#0" expanded="false" />
+            <element signature="method#getZVelocity#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#9462#9557#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="731">
+          <caret line="53" column="70" lean-forward="true" selection-start-line="53" selection-start-column="70" selection-end-line="53" selection-end-column="70" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="docComment;class#TrackMateLoader#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackAnalysisPlugin.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2550">
+          <caret line="165" column="9" lean-forward="false" selection-start-line="165" selection-start-column="9" selection-end-line="165" selection-end-column="9" />
+          <folding>
+            <element signature="docComment;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="docComment;method#main#0;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="docComment;method#run#0;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="docComment;method#getWindows#0;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="docComment;method#doImport#0;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="e#5961#6122#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoaderFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="21" column="5" lean-forward="false" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+          <folding>
+            <element signature="docComment;class#TrackMateLoaderFactory#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/TrackAnalysis.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="833">
+          <caret line="51" column="59" lean-forward="false" selection-start-line="51" selection-start-column="59" selection-end-line="51" selection-end-column="59" />
+          <folding>
+            <element signature="docComment;class#TrackAnalysis#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Visualisation/MotionHeatmap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2499">
+          <caret line="172" column="0" lean-forward="false" selection-start-line="172" selection-start-column="0" selection-end-line="172" selection-end-column="0" />
+          <folding>
+            <element signature="docComment;class#MotionHeatmap#0" expanded="false" />
+            <element signature="method#MotionHeatmap#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="method#calculate#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#6079#6174#0" expanded="false" />
+            <element signature="method#getXVelocity#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#7245#7340#0" expanded="false" />
+            <element signature="method#getYVelocity#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#8332#8427#0" expanded="false" />
+            <element signature="method#getZVelocity#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#9462#9557#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="918">
+          <caret line="56" column="47" lean-forward="false" selection-start-line="56" selection-start-column="47" selection-end-line="56" selection-end-column="47" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="docComment;class#TrackMateLoader#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackAnalysisPlugin.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1564">
           <caret line="116" column="0" lean-forward="false" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
           <folding>
             <element signature="docComment;class#TrackAnalysisPlugin#0" expanded="false" />
@@ -897,15 +907,218 @@
             <element signature="docComment;method#run#0;class#TrackAnalysisPlugin#0" expanded="false" />
             <element signature="docComment;method#getWindows#0;class#TrackAnalysisPlugin#0" expanded="false" />
             <element signature="docComment;method#doImport#0;class#TrackAnalysisPlugin#0" expanded="false" />
-            <element signature="e#6011#6172#0" expanded="false" />
+            <element signature="e#5961#6122#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/TrackAnalysis.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+          <folding>
+            <element signature="docComment;class#TrackAnalysis#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Visualisation/MotionHeatmap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2074">
+          <caret line="162" column="39" lean-forward="false" selection-start-line="162" selection-start-column="39" selection-end-line="162" selection-end-column="39" />
+          <folding>
+            <element signature="docComment;class#MotionHeatmap#0" expanded="false" />
+            <element signature="method#MotionHeatmap#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="method#calculate#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#6079#6174#0" expanded="false" />
+            <element signature="method#getXVelocity#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#7245#7340#0" expanded="false" />
+            <element signature="method#getYVelocity#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#8332#8427#0" expanded="false" />
+            <element signature="method#getZVelocity#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#9462#9557#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="docComment;class#TrackMateLoader#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="18" lean-forward="false" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Ratio_Plus.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/ResultsTableImporter.java" />
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_51/src.zip!/java/util/function/Function.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="48" column="6" lean-forward="false" selection-start-line="48" selection-start-column="6" selection-end-line="48" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/plugins.config">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="97" lean-forward="false" selection-start-line="0" selection-start-column="97" selection-end-line="0" selection-end-column="97" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/target/classes/wbif/sjx/TrackAnalysis/IO/TrackAnalysisPlugin.class" />
+    <entry file="file://$PROJECT_DIR$/target/classes/wbif/sjx/TrackAnalysis/IO/TrackMateLoader.class" />
+    <entry file="file://$PROJECT_DIR$/target/classes/wbif/sjx/TrackAnalysis/TrackMateLoaderFactory.class" />
+    <entry file="file://$PROJECT_DIR$/target/classes/wbif/sjx/TrackAnalysis/TrackMateLoader.class" />
+    <entry file="file://$PROJECT_DIR$/target/classes/wbif/sjx/TrackAnalysis/TrackAnalysisPlugin.class" />
+    <entry file="file://$PROJECT_DIR$/target/classes/wbif/sjx/TrackAnalysis/TrackAnalysis.class" />
+    <entry file="file://$PROJECT_DIR$/target/classes/wbif/sjx/TrackAnalysis/IO/TrackMateLoaderFactory.class" />
+    <entry file="file://$PROJECT_DIR$/target/classes/wbif/sjx/TrackAnalysis/IO/TrackMateLoader2.class" />
+    <entry file="jar://$MAVEN_REPOSITORY$/wbif/sjx/Common/1.2.4-SNAPSHOT/Common-1.2.4-SNAPSHOT.jar!/wbif/sjx/common/MathFunc/CumStat.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="20" column="22" lean-forward="true" selection-start-line="20" selection-start-column="22" selection-end-line="20" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/wbif/sjx/Common/1.2.4-SNAPSHOT/Common-1.2.4-SNAPSHOT.jar!/wbif/sjx/common/MathFunc/MultiCumStat.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="18" column="23" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="242" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/wbif/sjx/Common/1.2.4-SNAPSHOT/Common-1.2.4-SNAPSHOT.jar!/wbif/sjx/common/Process/NanBinner.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="21" column="5" lean-forward="true" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Common/src/main/java/wbif/sjx/common/Object/Track.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="10" column="3" lean-forward="false" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="docComment;class#Track#0" expanded="false" />
+            <element signature="docComment;method#getRollingTotalPathLength#0;class#Track#0" expanded="false" />
+            <element signature="docComment;method#getRollingDirectionalityRatio#0;class#Track#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Common/src/main/java/wbif/sjx/common/Object/TrackCollection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding>
+            <element signature="docComment;class#TrackCollection#0" expanded="false" />
+            <element signature="method#TrackCollection#0;class#TrackCollection#0" expanded="false" />
+            <element signature="e#507#508#0" expanded="true" />
+            <element signature="e#543#544#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../Common/src/main/java/wbif/sjx/common/Object/Point.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="30" column="5" lean-forward="false" selection-start-line="30" selection-start-column="5" selection-end-line="30" selection-end-column="5" />
+          <folding>
+            <element signature="e#668#669#0" expanded="true" />
+            <element signature="e#694#695#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoaderFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="21" column="5" lean-forward="false" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+          <folding>
+            <element signature="docComment;class#TrackMateLoaderFactory#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/TrackAnalysis.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="765">
+          <caret line="51" column="59" lean-forward="false" selection-start-line="51" selection-start-column="59" selection-end-line="51" selection-end-column="59" />
+          <folding>
+            <element signature="docComment;class#TrackAnalysis#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Visualisation/MotionHeatmap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2312">
+          <caret line="172" column="0" lean-forward="false" selection-start-line="172" selection-start-column="0" selection-end-line="172" selection-end-column="0" />
+          <folding>
+            <element signature="docComment;class#MotionHeatmap#0" expanded="false" />
+            <element signature="method#MotionHeatmap#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="method#calculate#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#6079#6174#0" expanded="false" />
+            <element signature="method#getXVelocity#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#7245#7340#0" expanded="false" />
+            <element signature="method#getYVelocity#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#8332#8427#0" expanded="false" />
+            <element signature="method#getZVelocity#0;class#MotionHeatmap#0" expanded="false" />
+            <element signature="e#9462#9557#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="867">
+          <caret line="53" column="70" lean-forward="false" selection-start-line="53" selection-start-column="70" selection-end-line="53" selection-end-column="70" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="docComment;class#TrackMateLoader#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackAnalysisPlugin.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="879">
+          <caret line="126" column="0" lean-forward="false" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
+          <folding>
+            <element signature="docComment;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="docComment;method#main#0;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="docComment;method#run#0;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="docComment;method#getWindows#0;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="docComment;method#doImport#0;class#TrackAnalysisPlugin#0" expanded="false" />
+            <element signature="e#5961#6122#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-884">
+          <caret line="23" column="42" lean-forward="true" selection-start-line="23" selection-start-column="42" selection-end-line="23" selection-end-column="42" />
           <folding />
         </state>
       </provider>

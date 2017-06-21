@@ -1,17 +1,13 @@
 package wbif.sjx.TrackAnalysis.Visualisation;
 
-import ij.IJ;
 import ij.ImagePlus;
-import ij.measure.Calibration;
-import ij.plugin.Resizer;
-import ij.plugin.SubHyperstackMaker;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
-import wbif.sjx.TrackAnalysis.Objects.Track;
-import wbif.sjx.TrackAnalysis.Objects.TrackCollection;
 import wbif.sjx.common.MathFunc.CumStat;
 import wbif.sjx.common.MathFunc.Indexer;
 import wbif.sjx.common.Object.LUTs;
+import wbif.sjx.common.Object.Track;
+import wbif.sjx.common.Object.TrackCollection;
 import wbif.sjx.common.Process.IntensityMinMax;
 import wbif.sjx.common.Process.NanBinner;
 

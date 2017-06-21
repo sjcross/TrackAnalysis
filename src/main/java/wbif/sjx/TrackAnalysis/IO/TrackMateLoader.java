@@ -4,13 +4,12 @@ package wbif.sjx.TrackAnalysis.IO;
 
 import fiji.plugin.trackmate.*;
 import fiji.plugin.trackmate.action.AbstractTMAction;
-import ij.IJ;
 import ij.ImagePlus;
 import ij.measure.Calibration;
-import wbif.sjx.TrackAnalysis.Objects.Point;
-import wbif.sjx.TrackAnalysis.Objects.Track;
-import wbif.sjx.TrackAnalysis.Objects.TrackCollection;
 import wbif.sjx.TrackAnalysis.TrackAnalysis;
+import wbif.sjx.common.Object.Point;
+import wbif.sjx.common.Object.Track;
+import wbif.sjx.common.Object.TrackCollection;
 
 import java.util.ArrayList;
 import java.util.Set;
