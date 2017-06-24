@@ -6,8 +6,10 @@
     <JAVADOC>
       <root url="jar://$MAVEN_REPOSITORY$/wbif/sjx/Common/1.2.5-SNAPSHOT/Common-1.2.5-SNAPSHOT-javadoc.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/wbif/sjx/Common/1.2.5-SNAPSHOT/Common-1.2.5-SNAPSHOT-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/wbif/sjx/Common/1.2.5-SNAPSHOT/Common-1.2.5-SNAPSHOT-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/wbif/sjx/Common/1.2.5-SNAPSHOT/Common-1.2.5-SNAPSHOT-sources.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/wbif/sjx/Common/1.2.5-SNAPSHOT/Common-1.2.5-SNAPSHOT-sources.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/wbif/sjx/Common/1.2.5-SNAPSHOT/Common-1.2.5-SNAPSHOT-sources.jar!/" />
     </SOURCES>

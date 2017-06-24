@@ -3,6 +3,7 @@ package wbif.sjx.TrackAnalysis;
 import ij.ImagePlus;
 import ij.Prefs;
 import ij.gui.GenericDialog;
+import wbif.sjx.TrackAnalysis.GUI.MainGUI;
 import wbif.sjx.TrackAnalysis.Visualisation.MotionHeatmap;
 import wbif.sjx.common.Object.TrackCollection;
 
@@ -17,7 +18,8 @@ public class TrackAnalysis {
         this.tracks = tracks;
         this.ipl = ipl;
 
-        displayMotionHeatmap();
+        MainGUI gui = new MainGUI(tracks);
+        gui.create();
 
     }
 
