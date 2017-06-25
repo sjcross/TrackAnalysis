@@ -13,10 +13,11 @@ import java.awt.event.ActionEvent;
  * Created by sc13967 on 24/06/2017.
  */
 public class MotilityPlotControl extends ModuleControl {
+    private JTextField lineWidthTextField;
     private JCheckBox blackPlotCheckbox;
     private JCheckBox showLabelsCheckbox;
 
-    public MotilityPlotControl(TrackCollection tracks, int panelWidth, int elementHeight) {
+    MotilityPlotControl(TrackCollection tracks, int panelWidth, int elementHeight) {
         super(tracks, panelWidth, elementHeight);
     }
 
@@ -34,10 +35,31 @@ public class MotilityPlotControl extends ModuleControl {
         c.gridy = 0;
         c.insets = new Insets(0,5,0,5);
 
+        // Label and text field to specify line width
+        JTextField label = new JTextField("Line width");
+        label.setPreferredSize(new Dimension(3*panelWidth/4,elementHeight));
+        label.setEditable(false);
+        label.setBorder(null);
+        label.setFont(new Font(Font.SANS_SERIF,Font.BOLD,12));
+        c.gridwidth = 1;
+        c.insets = new Insets(5,5,0,5);
+        panel.add(label,c);
+
+        double lineWidth = Prefs.get("TrackAnalysis.MotilityPlot.lineWith",1.0);
+        lineWidthTextField = new JTextField();
+        lineWidthTextField.setPreferredSize(new Dimension(panelWidth/4-5,elementHeight));
+        lineWidthTextField.setText(String.valueOf(lineWidth));
+        c.gridx++;
+        c.insets = new Insets(5,0,0,5);
+        panel.add(lineWidthTextField,c);
+
         boolean blackPlot = Prefs.get("TrackAnalysis.MotilityPlot.blackPlot",false);
         blackPlotCheckbox = new JCheckBox("Black lines");
         blackPlotCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
         blackPlotCheckbox.setSelected(blackPlot);
+        c.gridx = 0;
+        c.gridy++;
+        c.gridwidth = 2;
         panel.add(blackPlotCheckbox,c);
 
         boolean showLabels = Prefs.get("TrackAnalysis.MotilityPlot.showLabels",false);
@@ -45,6 +67,7 @@ public class MotilityPlotControl extends ModuleControl {
         showLabelsCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
         showLabelsCheckbox.setSelected(showLabels);
         c.gridy++;
+        c.insets = new Insets(5,0,20,5);
         panel.add(showLabelsCheckbox,c);
 
         return panel;
@@ -56,6 +79,8 @@ public class MotilityPlotControl extends ModuleControl {
         boolean pixelDistances = calibrationCheckbox.isSelected();
         Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
 
+        double lineWidth = Double.parseDouble(lineWidthTextField.getText());
+
         boolean blackPlot = blackPlotCheckbox.isSelected();
         Prefs.set("TrackAnalysis.MotilityPlot.blackPlot",blackPlot);
 
@@ -66,6 +91,7 @@ public class MotilityPlotControl extends ModuleControl {
         if (ID == -1) {
             String units = tracks.values().iterator().next().getUnits(pixelDistances);
             plot = new Plot("Object motility (All tracks)","X-position ("+units+")","Y-position ("+units+")");
+            plot.setLineWidth((float) lineWidth);
 
             for (int key:tracks.keySet()) {
                 Track track = tracks.get(key);
@@ -94,6 +120,7 @@ public class MotilityPlotControl extends ModuleControl {
         } else {
             String units = tracks.values().iterator().next().getUnits(pixelDistances);
             plot = new Plot("Object motility (All tracks)", "X-position (" + units + ")", "Y-position (" + units + ")");
+            plot.setLineWidth((float) lineWidth);
 
             Track track = tracks.get(ID);
 
@@ -134,6 +161,7 @@ public class MotilityPlotControl extends ModuleControl {
             plot.setFrameSize((int) (base_w * range_x / range_y), base_w);
         }
 
+        plot.setLineWidth(1);
         plot.show();
 
     }

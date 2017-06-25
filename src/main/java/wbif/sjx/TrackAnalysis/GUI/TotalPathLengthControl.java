@@ -13,13 +13,13 @@ import java.awt.event.ActionEvent;
  * Created by sc13967 on 24/06/2017.
  */
 public class TotalPathLengthControl extends ModuleControl {
-    public TotalPathLengthControl(TrackCollection tracks, int panelWidth, int elementHeight) {
+    TotalPathLengthControl(TrackCollection tracks, int panelWidth, int elementHeight) {
         super(tracks, panelWidth, elementHeight);
     }
 
     @Override
     public String getTitle() {
-        return "Total path length";
+        return "Total path length plot";
     }
 
     @Override
@@ -35,23 +35,21 @@ public class TotalPathLengthControl extends ModuleControl {
 
         if (ID == -1) {
             double[][] totalPathLength = tracks.getAverageTotalPathLength(pixelDistances);
-            double[] f = new double[totalPathLength[0].length];
             double[] errMin = new double[totalPathLength[0].length];
             double[] errMax = new double[totalPathLength[0].length];
 
-            for (int i=0;i<f.length;i++) {
-                f[i] = i;
-                errMin[i] = totalPathLength[0][i] - totalPathLength[1][i];
-                errMax[i] = totalPathLength[0][i] + totalPathLength[1][i];
+            for (int i=0;i<errMin.length;i++) {
+                errMin[i] = totalPathLength[1][i] - totalPathLength[2][i];
+                errMax[i] = totalPathLength[1][i] + totalPathLength[2][i];
             }
 
             String units = tracks.values().iterator().next().getUnits(pixelDistances);
             Plot plot = new Plot("Total path length (all tracks)","Time relative to start of track (frames)","Total path length ("+units+")");
             plot.setColor(Color.BLACK);
-            plot.addPoints(f,totalPathLength[0],Plot.LINE);
+            plot.addPoints(totalPathLength[0],totalPathLength[1],Plot.LINE);
             plot.setColor(Color.RED);
-            plot.addPoints(f,errMin,Plot.LINE);
-            plot.addPoints(f,errMax,Plot.LINE);
+            plot.addPoints(totalPathLength[0],errMin,Plot.LINE);
+            plot.addPoints(totalPathLength[0],errMax,Plot.LINE);
             plot.setLimitsToFit(true);
             plot.show();
 

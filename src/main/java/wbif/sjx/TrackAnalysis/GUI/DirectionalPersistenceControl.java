@@ -10,22 +10,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
- * Created by sc13967 on 24/06/2017.
+ * Created by sc13967 on 25/06/2017.
  */
-public class EuclideanDistanceControl extends ModuleControl {
-    EuclideanDistanceControl(TrackCollection tracks, int panelWidth, int elementHeight) {
+public class DirectionalPersistenceControl extends ModuleControl {
+    DirectionalPersistenceControl(TrackCollection tracks, int panelWidth, int elementHeight) {
         super(tracks, panelWidth, elementHeight);
     }
 
     @Override
     public String getTitle() {
-        return "Euclidean distance plot";
+        return "Directional persistence plot";
     }
 
     @Override
     public JPanel getExtraControls() {
         return null;
-
     }
 
     @Override
@@ -34,22 +33,21 @@ public class EuclideanDistanceControl extends ModuleControl {
         Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
 
         if (ID == -1) {
-            double[][] euclideanDistance = tracks.getAverageRollingEuclideanDistance(pixelDistances);
-            double[] errMin = new double[euclideanDistance[0].length];
-            double[] errMax = new double[euclideanDistance[0].length];
+            double[][] directionalPersistence = tracks.getAverageDirectionalPersistence(pixelDistances);
+            double[] errMin = new double[directionalPersistence[0].length];
+            double[] errMax = new double[directionalPersistence[0].length];
 
             for (int i=0;i<errMin.length;i++) {
-                errMin[i] = euclideanDistance[1][i] - euclideanDistance[2][i];
-                errMax[i] = euclideanDistance[1][i] + euclideanDistance[2][i];
+                errMin[i] = directionalPersistence[1][i] - directionalPersistence[2][i];
+                errMax[i] = directionalPersistence[1][i] + directionalPersistence[2][i];
             }
 
-            String units = tracks.values().iterator().next().getUnits(pixelDistances);
-            Plot plot = new Plot("Euclidean distance (all tracks)","Time relative to start of track (frames)","Euclidean distance ("+units+")");
+            Plot plot = new Plot("Directional persistence (all tracks)","Interval (frames)","Directional persistence");
             plot.setColor(Color.BLACK);
-            plot.addPoints(euclideanDistance[0],euclideanDistance[1],Plot.LINE);
+            plot.addPoints(directionalPersistence[0],directionalPersistence[1],Plot.LINE);
             plot.setColor(Color.RED);
-            plot.addPoints(euclideanDistance[0],errMin,Plot.LINE);
-            plot.addPoints(euclideanDistance[0],errMax,Plot.LINE);
+            plot.addPoints(directionalPersistence[0],errMin,Plot.LINE);
+            plot.addPoints(directionalPersistence[0],errMax,Plot.LINE);
             plot.setLimitsToFit(true);
             plot.show();
 
@@ -67,7 +65,6 @@ public class EuclideanDistanceControl extends ModuleControl {
 
     @Override
     public void extraActions(ActionEvent e) {
-
 
     }
 }

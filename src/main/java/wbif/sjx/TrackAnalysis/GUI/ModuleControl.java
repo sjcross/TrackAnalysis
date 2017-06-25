@@ -36,7 +36,7 @@ public abstract class ModuleControl implements ActionListener {
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 2;
-        c.insets = new Insets(0,5,0,5);
+        c.insets = new Insets(20,5,0,5);
 
         // Button to run ensemble plotting
         JButton plotAllButton = new JButton(PLOT_ALL);
@@ -67,7 +67,7 @@ public abstract class ModuleControl implements ActionListener {
         c.gridx = 0;
         c.gridy++;
         c.gridwidth = 2;
-        c.insets = new Insets(5,5,0,5);
+        c.insets = new Insets(5,5,20,5);
         panel.add(calibrationCheckbox,c);
 
         return panel;

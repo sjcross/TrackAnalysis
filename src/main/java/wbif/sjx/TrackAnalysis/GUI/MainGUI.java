@@ -1,6 +1,5 @@
 package wbif.sjx.TrackAnalysis.GUI;
 
-import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
 
 import javax.swing.*;
@@ -21,7 +20,10 @@ public class MainGUI implements ActionListener {
     private TrackCollection tracks;
 
     private static final String TRACK_SUMMARY = new TrackSummary(null,0,0).getTitle();
+    private static final String DIRECTIONAL_PERSISTENCE = new DirectionalPersistenceControl(null,0,0).getTitle();
+    private static final String DIRECTIONALITY_RATIO = new DirectionalityRatioControl(null,0,0).getTitle();
     private static final String EUCLIDEAN_DISTANCE = new EuclideanDistanceControl(null,0,0).getTitle();
+    private static final String MEAN_SQUARED_DISPLACEMENT = new MSDControl(null,0,0).getTitle();
     private static final String MOTILITY_PLOT = new MotilityPlotControl(null,0,0).getTitle();
     private static final String TOTAL_PATH_LENGTH = new TotalPathLengthControl(null,0,0).getTitle();
 
@@ -29,7 +31,10 @@ public class MainGUI implements ActionListener {
 
     String[] moduleList = new String[]{
             TRACK_SUMMARY,
+            DIRECTIONAL_PERSISTENCE,
+            DIRECTIONALITY_RATIO,
             EUCLIDEAN_DISTANCE,
+            MEAN_SQUARED_DISPLACEMENT,
             MOTILITY_PLOT,
             TOTAL_PATH_LENGTH
     };
@@ -73,8 +78,17 @@ public class MainGUI implements ActionListener {
         if (module.equals(TRACK_SUMMARY)) {
             control = new TrackSummary(tracks, frameWidth, elementHeight);
 
+        } else if (module.equals(DIRECTIONAL_PERSISTENCE)) {
+            control = new DirectionalPersistenceControl(tracks, frameWidth, elementHeight);
+
+        } else if (module.equals(DIRECTIONALITY_RATIO)) {
+            control = new DirectionalityRatioControl(tracks, frameWidth, elementHeight);
+
         } else if (module.equals(EUCLIDEAN_DISTANCE)) {
             control = new EuclideanDistanceControl(tracks, frameWidth, elementHeight);
+
+        } else if (module.equals(MEAN_SQUARED_DISPLACEMENT)) {
+            control = new MSDControl(tracks, frameWidth, elementHeight);
 
         } else if (module.equals(MOTILITY_PLOT)) {
             control = new MotilityPlotControl(tracks, frameWidth, elementHeight);
