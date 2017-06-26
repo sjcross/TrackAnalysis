@@ -13,6 +13,11 @@ import java.awt.event.ActionEvent;
  * Created by sc13967 on 25/06/2017.
  */
 public class DirectionalityRatioControl extends ModuleControl {
+    private static final String RELATIVE_TO_FIRST_FRAME = "Relative to first frame";
+    private static final String RELATIVE_TO_TRACK_START = "Relative to track start";
+
+    private JComboBox<String> comboBox;
+
     DirectionalityRatioControl(TrackCollection tracks, int panelWidth, int elementHeight) {
         super(tracks, panelWidth, elementHeight);
     }
@@ -24,7 +29,22 @@ public class DirectionalityRatioControl extends ModuleControl {
 
     @Override
     public JPanel getExtraControls() {
-        return null;
+        JPanel panel = new JPanel(new GridBagLayout());
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.insets = new Insets(0,5,0,5);
+
+        String relativePosition = Prefs.get("TrackAnalysis.relativePosition",RELATIVE_TO_TRACK_START);
+        comboBox = new JComboBox<>(new String[]{RELATIVE_TO_TRACK_START,RELATIVE_TO_FIRST_FRAME});
+        comboBox.setPreferredSize(new Dimension(panelWidth,elementHeight));
+        comboBox.setSelectedItem(relativePosition);
+        c.insets = new Insets(0,5,20,5);
+        panel.add(comboBox,c);
+
+        return panel;
+
     }
 
     @Override
@@ -32,8 +52,13 @@ public class DirectionalityRatioControl extends ModuleControl {
         boolean pixelDistances = calibrationCheckbox.isSelected();
         Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
 
+        String relativePosition = (String) comboBox.getSelectedItem();
+        Prefs.set("TrackAnalysis.relativePosition",relativePosition);
+        boolean relativeToTrackStart = relativePosition.equals(RELATIVE_TO_TRACK_START);
+        String xLabel = relativeToTrackStart ? "Time relative to start of track (frames)" : "Time relative to first frame (frames)";
+
         if (ID == -1) {
-            double[][] directionalityRatio = tracks.getAverageDirectionalityRatio(pixelDistances);
+            double[][] directionalityRatio = tracks.getAverageDirectionalityRatio(pixelDistances,relativeToTrackStart);
             double[] errMin = new double[directionalityRatio[0].length];
             double[] errMax = new double[directionalityRatio[0].length];
 
@@ -42,7 +67,7 @@ public class DirectionalityRatioControl extends ModuleControl {
                 errMax[i] = directionalityRatio[1][i] + directionalityRatio[2][i];
             }
 
-            Plot plot = new Plot("Directionality ratio (all tracks)","Time relative to start of track (frames)","Directionality ratio");
+            Plot plot = new Plot("Directionality ratio (all tracks)",xLabel,"Directionality ratio");
             plot.setColor(Color.BLACK);
             plot.addPoints(directionalityRatio[0],directionalityRatio[1],Plot.LINE);
             plot.setColor(Color.RED);
@@ -56,7 +81,7 @@ public class DirectionalityRatioControl extends ModuleControl {
             double[] f = track.getFAsDouble();
             double[] directionalityRatio = track.getRollingDirectionalityRatio(pixelDistances);
 
-            Plot plot = new Plot("Directionality ratio (track "+ID+")","Time relative to start of track (frames)","Directionality ratio",f,directionalityRatio);
+            Plot plot = new Plot("Directionality ratio (track "+ID+")",xLabel,"Directionality ratio",f,directionalityRatio);
             plot.show();
 
         }

@@ -3,6 +3,8 @@ package wbif.sjx.TrackAnalysis.GUI;
 import ij.IJ;
 import ij.Prefs;
 import ij.measure.ResultsTable;
+import org.apache.commons.math3.stat.descriptive.moment.Mean;
+import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import wbif.sjx.common.Analysis.MSDCalculator;
 import wbif.sjx.common.MathFunc.CumStat;
 import wbif.sjx.common.Object.Track;
@@ -28,9 +30,50 @@ public class TrackSummary extends ModuleControl {
         super(tracks, panelWidth, elementHeight);
     }
 
+    private void showTrackSummary(ResultsTable rt) {
+        boolean pixelDistances = calibrationCheckbox.isSelected();
+        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
+
+        DecimalFormat df = new DecimalFormat("#.###");
+        String units = tracks.values().iterator().next().getUnits(pixelDistances);
+
+        int i=0;
+        for (Track track:tracks.values()) {
+            double[][] meanPos = track.getMeanPosition(pixelDistances);
+
+            rt.setValue("Mean x-pos ("+units+")", i, df.format(meanPos[0][0])); //Distances reported in image units
+            rt.setValue("Mean y-pos ("+units+")", i, df.format(meanPos[0][1])); //Distances reported in image units
+            rt.setValue("Mean z-pos ("+units+")", i, df.format(meanPos[0][2])); //Distances reported in image units
+            rt.setValue("Stdev x-pos ("+units+")", i, df.format(meanPos[1][0])); //Distances reported in image units
+            rt.setValue("Stdev y-pos ("+units+")", i, df.format(meanPos[1][1])); //Distances reported in image units
+            rt.setValue("Stdev z-pos ("+units+")", i++, df.format(meanPos[1][2])); //Distances reported in image units
+
+        }
+    }
+
+    private void showTrackSummary(int ID, ResultsTable rt) {
+        boolean pixelDistances = calibrationCheckbox.isSelected();
+        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
+
+        Track track = tracks.get(ID);
+
+        DecimalFormat df = new DecimalFormat("#.###");
+        String units = track.getUnits(pixelDistances);
+
+        double[][] meanPos = track.getMeanPosition(pixelDistances);
+
+        rt.setValue("Mean x-pos ("+units+")", 0, df.format(meanPos[0][0])); //Distances reported in image units
+        rt.setValue("Mean y-pos ("+units+")", 0, df.format(meanPos[0][1])); //Distances reported in image units
+        rt.setValue("Mean z-pos ("+units+")", 0, df.format(meanPos[0][2])); //Distances reported in image units
+        rt.setValue("Stdev x-pos ("+units+")", 0, df.format(meanPos[1][0])); //Distances reported in image units
+        rt.setValue("Stdev y-pos ("+units+")", 0, df.format(meanPos[1][1])); //Distances reported in image units
+        rt.setValue("Stdev z-pos ("+units+")", 0, df.format(meanPos[1][2])); //Distances reported in image units
+
+    }
+
     private void showNumberOfObjects() {
-        int[][] frameAndNumber = tracks.getNumberOfObjects();
-        DecimalFormat df = new DecimalFormat("#.##");
+        int[][] frameAndNumber = tracks.getNumberOfObjects(false);
+        DecimalFormat df = new DecimalFormat("#.###");
 
         IJ.log("Number of objects (total): "+String.valueOf(tracks.size()));
 
@@ -48,10 +91,14 @@ public class TrackSummary extends ModuleControl {
 
     private void showAllTracksDuration(ResultsTable rt) {
         DecimalFormat df = new DecimalFormat("#.##");
+        DecimalFormat dfS = new DecimalFormat("#");
         CumStat cs = new CumStat();
 
         int i = 0;
         for (Track track:tracks.values()) {
+            int[] f = track.getF();
+            rt.setValue("Start (frame)", i, dfS.format(f[0]));
+            rt.setValue("End (frame)", i, dfS.format(f[f.length-1]));
             rt.setValue("Duration (frames)",i++,track.getDuration());
 
             cs.addMeasure(track.getDuration());
@@ -65,7 +112,7 @@ public class TrackSummary extends ModuleControl {
     }
 
     private void showTrackDuration(int ID, ResultsTable rt) {
-        DecimalFormat df = new DecimalFormat("#.##");
+        DecimalFormat df = new DecimalFormat("#.###");
         Track track = tracks.get(ID);
 
         rt.setValue("Duration (frames)",0,track.getDuration());
@@ -78,7 +125,7 @@ public class TrackSummary extends ModuleControl {
     private void showAllTracksSpatialStatistics(ResultsTable rt) {
         boolean pixelDistances = calibrationCheckbox.isSelected();
         Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
-        DecimalFormat df = new DecimalFormat("#.##");
+        DecimalFormat df = new DecimalFormat("#.###");
         String units = tracks.values().iterator().next().getUnits(pixelDistances);
 
         // Using CumStats to keep memory requirements smaller
@@ -158,7 +205,7 @@ public class TrackSummary extends ModuleControl {
         Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
 
         Track track = tracks.get(ID);
-        DecimalFormat df = new DecimalFormat("#.##");
+        DecimalFormat df = new DecimalFormat("#.###");
         String units = track.getUnits(pixelDistances);
 
         // Using CumStats to keep memory requirements smaller
@@ -212,7 +259,7 @@ public class TrackSummary extends ModuleControl {
         boolean pixelDistances = calibrationCheckbox.isSelected();
         Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
 
-        DecimalFormat df = new DecimalFormat("#.##");
+        DecimalFormat df = new DecimalFormat("0.000E0");
         DecimalFormat dfS = new DecimalFormat("#");
         String units = tracks.values().iterator().next().getUnits(pixelDistances);
 
@@ -230,7 +277,7 @@ public class TrackSummary extends ModuleControl {
         int i = 0;
         for (Track track:tracks.values()) {
             double[] fit = track.getMSDLinearFit(pixelDistances,nPoints);
-            rt.setValue("Diffusion coefficient ("+units+"^2/frame)",i++,fit[0]/4);
+            rt.setValue("Diffusion coefficient ("+units+"^2/frame)",i++,df.format(fit[0]/4));
         }
     }
 
@@ -239,7 +286,7 @@ public class TrackSummary extends ModuleControl {
         Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
 
         Track track = tracks.get(ID);
-        DecimalFormat df = new DecimalFormat("#.##");
+        DecimalFormat df = new DecimalFormat("0.000E0");
         DecimalFormat dfS = new DecimalFormat("#");
         String units = track.getUnits(pixelDistances);
 
@@ -247,7 +294,7 @@ public class TrackSummary extends ModuleControl {
 
         double[] linearFit = track.getMSDLinearFit(pixelDistances,nPoints);
 
-        rt.setValue("Diffusion coefficient ("+units+"^2/frame)",0,linearFit[0]/4);
+        rt.setValue("Diffusion coefficient ("+units+"^2/frame)",0,df.format(linearFit[0]/4));
 
         IJ.log("Diffusion coefficient: "+String.valueOf(df.format(linearFit[0]/4))+" "+units+"^2/frame");
         IJ.log("Least squares gradient: "+String.valueOf(df.format(linearFit[0]))+" "+units+"^2/frame");
@@ -314,7 +361,7 @@ public class TrackSummary extends ModuleControl {
         c.insets = new Insets(5,5,20,5);
         panel.add(label,c);
 
-        int nPoints = (int) Prefs.get("TrackAnalysis.TrackSummary.nPoints",10);
+        int nPoints = (int) Prefs.get("TrackAnalysis.TrackSummary.nPoints",25);
         nPointsTextField = new JTextField();
         nPointsTextField.setPreferredSize(new Dimension(panelWidth/4-5,elementHeight));
         nPointsTextField.setText(String.valueOf(nPoints));
@@ -351,6 +398,7 @@ public class TrackSummary extends ModuleControl {
                 rt.setValue("ID",i++,key);
             }
 
+            showTrackSummary(rt);
             if (numberOfObjects) showNumberOfObjects();
             if (trackDuration) showAllTracksDuration(rt);
             if (spatialStatistics) showAllTracksSpatialStatistics(rt);
@@ -362,6 +410,7 @@ public class TrackSummary extends ModuleControl {
 
             rt.setValue("ID",0,ID);
 
+            showTrackSummary(ID,rt);
             if (trackDuration) showTrackDuration(ID,rt);
             if (spatialStatistics) showTrackSpatialStatistics(ID,rt);
             if (diffusionCoefficient) showDiffusionCoefficient(ID,rt);

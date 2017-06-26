@@ -120,7 +120,26 @@ public class MSDControl extends ModuleControl {
             double[] msd = Arrays.stream(cs).mapToDouble(CumStat::getMean).toArray();
 
             String units = track.getUnits(pixelDistances);
-            Plot plot = new Plot("Mean squared displacement (track "+ID+")","Interval (frames)","Mean squared displacement ("+units+")",f,msd);
+            Plot plot = new Plot("Mean squared displacement (track "+ID+")","Interval (frames)","Mean squared displacement ("+units+")");
+            plot.setColor(Color.BLACK);
+            plot.addPoints(f,msd,Plot.LINE);
+
+            if (fitLine) {
+                double[] fit = MSDCalculator.getLinearFit(f, msd, nPoints);
+                double[] x = new double[(int) fit[2]];
+                double[] y = new double[(int) fit[2]];
+
+                for (int i = 0; i < x.length; i++) {
+                    x[i] = f[i];
+                    y[i] = fit[0] * f[i] + fit[1];
+                }
+
+                plot.setColor(Color.CYAN);
+                plot.addPoints(x, y, Plot.LINE);
+
+            }
+
+            plot.setLimitsToFit(true);
             plot.show();
 
         }

@@ -31,12 +31,13 @@ public class MainGUI implements ActionListener {
 
     String[] moduleList = new String[]{
             TRACK_SUMMARY,
-            DIRECTIONAL_PERSISTENCE,
+//            DIRECTIONAL_PERSISTENCE,
             DIRECTIONALITY_RATIO,
             EUCLIDEAN_DISTANCE,
             MEAN_SQUARED_DISPLACEMENT,
             MOTILITY_PLOT,
             TOTAL_PATH_LENGTH
+
     };
 
     public MainGUI(TrackCollection tracks) {

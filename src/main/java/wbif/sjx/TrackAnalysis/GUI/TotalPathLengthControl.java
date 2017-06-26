@@ -13,6 +13,11 @@ import java.awt.event.ActionEvent;
  * Created by sc13967 on 24/06/2017.
  */
 public class TotalPathLengthControl extends ModuleControl {
+    private static final String RELATIVE_TO_FIRST_FRAME = "Relative to first frame";
+    private static final String RELATIVE_TO_TRACK_START = "Relative to track start";
+
+    private JComboBox<String> comboBox;
+
     TotalPathLengthControl(TrackCollection tracks, int panelWidth, int elementHeight) {
         super(tracks, panelWidth, elementHeight);
     }
@@ -24,7 +29,21 @@ public class TotalPathLengthControl extends ModuleControl {
 
     @Override
     public JPanel getExtraControls() {
-        return null;
+        JPanel panel = new JPanel(new GridBagLayout());
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.insets = new Insets(0,5,0,5);
+
+        String relativePosition = Prefs.get("TrackAnalysis.relativePosition",RELATIVE_TO_TRACK_START);
+        comboBox = new JComboBox<>(new String[]{RELATIVE_TO_TRACK_START,RELATIVE_TO_FIRST_FRAME});
+        comboBox.setPreferredSize(new Dimension(panelWidth,elementHeight));
+        comboBox.setSelectedItem(relativePosition);
+        c.insets = new Insets(0,5,20,5);
+        panel.add(comboBox,c);
+
+        return panel;
 
     }
 
@@ -33,8 +52,13 @@ public class TotalPathLengthControl extends ModuleControl {
         boolean pixelDistances = calibrationCheckbox.isSelected();
         Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
 
+        String relativePosition = (String) comboBox.getSelectedItem();
+        Prefs.set("TrackAnalysis.relativePosition",relativePosition);
+        boolean relativeToTrackStart = relativePosition.equals(RELATIVE_TO_TRACK_START);
+        String xLabel = relativeToTrackStart ? "Time relative to start of track (frames)" : "Time relative to first frame (frames)";
+
         if (ID == -1) {
-            double[][] totalPathLength = tracks.getAverageTotalPathLength(pixelDistances);
+            double[][] totalPathLength = tracks.getAverageTotalPathLength(pixelDistances,relativeToTrackStart);
             double[] errMin = new double[totalPathLength[0].length];
             double[] errMax = new double[totalPathLength[0].length];
 
@@ -44,7 +68,7 @@ public class TotalPathLengthControl extends ModuleControl {
             }
 
             String units = tracks.values().iterator().next().getUnits(pixelDistances);
-            Plot plot = new Plot("Total path length (all tracks)","Time relative to start of track (frames)","Total path length ("+units+")");
+            Plot plot = new Plot("Total path length (all tracks)",xLabel,"Total path length ("+units+")");
             plot.setColor(Color.BLACK);
             plot.addPoints(totalPathLength[0],totalPathLength[1],Plot.LINE);
             plot.setColor(Color.RED);
@@ -59,7 +83,7 @@ public class TotalPathLengthControl extends ModuleControl {
             double[] totalPathLength = track.getRollingTotalPathLength(pixelDistances);
 
             String units = track.getUnits(pixelDistances);
-            Plot plot = new Plot("Total path length (track "+ID+")","Time relative to start of track (frames)","Total path length ("+units+")",f,totalPathLength);
+            Plot plot = new Plot("Total path length (track "+ID+")",xLabel,"Total path length ("+units+")",f,totalPathLength);
             plot.show();
 
         }
