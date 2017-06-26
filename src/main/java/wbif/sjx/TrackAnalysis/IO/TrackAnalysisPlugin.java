@@ -10,7 +10,7 @@ import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
 
 /**
- * Loads tracks from results table.
+ * Loads tracks from results table.  Tracks are stored in terms of calibrated distances.
  */
 public class TrackAnalysisPlugin implements PlugIn {
     /**
@@ -19,6 +19,7 @@ public class TrackAnalysisPlugin implements PlugIn {
      */
     public static void main(String[] args) {
         new ImageJ();
+//        IJ.runMacroFile("C:\\Users\\sc13967\\Local Documents\\ImageJMacros\\Import_Results_Table.ijm");
         IJ.runMacroFile("C:\\Users\\sc13967\\Documents\\ImageJ Macros\\Import_Results_Table.ijm");
 
         new TrackAnalysisPlugin().run("");
@@ -103,15 +104,13 @@ public class TrackAnalysisPlugin implements PlugIn {
         frameIdx = frameIdx < headings.length ? frameIdx : 0;
 
         // Getting default calibration value
-        double distXY;
-        double distZ;
-        if (ipl == null) {
-            distXY = 1;
-            distZ = 1;
-
-        } else {
+        double distXY = 1;
+        double distZ = 1;
+        String units = "px";
+        if (ipl != null) {
             distXY = ipl.getCalibration().getX(1);
             distZ = ipl.getCalibration().getZ(1);
+            units = ipl.getCalibration().getXUnit();
 
         }
 
@@ -123,6 +122,7 @@ public class TrackAnalysisPlugin implements PlugIn {
         gd.addChoice("Frame number column",headings,headings[frameIdx]);
         gd.addNumericField("Applied XY calibration (dist/px)",distXY,3);
         gd.addNumericField("Applied Z calibration (dist/slice)",distZ,3);
+        gd.addStringField("Units",units);
         gd.showDialog();
 
         // Getting column indices
@@ -135,6 +135,7 @@ public class TrackAnalysisPlugin implements PlugIn {
         // Getting calibration
         distXY = gd.getNextNumber();
         distZ = gd.getNextNumber();
+        units = gd.getNextString();
 
         // Storing indices as preferences
         Prefs.set("TrackAnalysis.trackIDIdx",trackIDIdx);
@@ -151,16 +152,16 @@ public class TrackAnalysisPlugin implements PlugIn {
         String fCol = headings[frameIdx];
 
         // Converting to Track objects
-        TrackCollection tracks = new TrackCollection(distXY,distZ);
+        TrackCollection tracks = new TrackCollection();
 
         for (int row=0;row<rt.getCounter();row++) {
             int ID = Integer.parseInt(rt.getStringValue(idCol,row));
-            double x = Double.parseDouble(rt.getStringValue(xCol,row))/distXY;
-            double y = Double.parseDouble(rt.getStringValue(yCol,row))/distXY;
-            double z = Double.parseDouble(rt.getStringValue(zCol,row))/distZ;
+            double x = Double.parseDouble(rt.getStringValue(xCol,row));
+            double y = Double.parseDouble(rt.getStringValue(yCol,row));
+            double z = Double.parseDouble(rt.getStringValue(zCol,row));
             int f = Integer.parseInt(rt.getStringValue(fCol,row));
 
-            tracks.putIfAbsent(ID, new Track());
+            tracks.putIfAbsent(ID, new Track(distXY,distZ,units));
             tracks.get(ID).add(new Point(x,y,z,f));
 
         }

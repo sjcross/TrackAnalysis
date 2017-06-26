@@ -35,8 +35,12 @@ public class TrackMateLoader extends AbstractTMAction {
         ImagePlus ipl = trackMate.getSettings().imp;
         Calibration calibration = ipl.getCalibration();
 
+        double distXY = calibration.getX(1);
+        double distZ = calibration.getZ(1);
+        String units = calibration.getXUnit();
+
         // Creating the ArrayList to hold all Tracks
-        TrackCollection tracks = new TrackCollection(calibration.getX(1),calibration.getZ(1));
+        TrackCollection tracks = new TrackCollection();
 
         // Converting tracks in TrackMate model to internal Track Objects
         TrackModel trackModel = model.getTrackModel();
@@ -47,13 +51,12 @@ public class TrackMateLoader extends AbstractTMAction {
 
             // Getting x,y,f and 2-channel spot intensities from TrackMate results
             for (Spot spot : spots) {
-                // NEED TO GET TRACK ID
-                double x = spot.getFeature(Spot.POSITION_X)/tracks.getDistXY();
-                double y = spot.getFeature(Spot.POSITION_Y)/tracks.getDistXY();
-                double z = spot.getFeature(Spot.POSITION_Z)/tracks.getDistZ();
+                double x = spot.getFeature(Spot.POSITION_X);
+                double y = spot.getFeature(Spot.POSITION_Y);
+                double z = spot.getFeature(Spot.POSITION_Z);
                 int f = (int) Math.round(spot.getFeature(Spot.FRAME));
 
-                tracks.putIfAbsent(trackID, new Track());
+                tracks.putIfAbsent(trackID, new Track(distXY,distZ,units));
                 tracks.get(trackID).add(new Point(x,y,z,f));
 
             }
