@@ -1,5 +1,6 @@
 package wbif.sjx.TrackAnalysis.GUI;
 
+import ij.ImagePlus;
 import ij.Prefs;
 import ij.gui.Plot;
 import wbif.sjx.common.Object.Track;
@@ -18,8 +19,8 @@ public class EuclideanDistanceControl extends ModuleControl {
 
     private JComboBox<String> comboBox;
 
-    EuclideanDistanceControl(TrackCollection tracks, int panelWidth, int elementHeight) {
-        super(tracks, panelWidth, elementHeight);
+    public EuclideanDistanceControl(TrackCollection tracks, ImagePlus ipl, int panelWidth, int elementHeight) {
+        super(tracks, ipl, panelWidth, elementHeight);
     }
 
     @Override

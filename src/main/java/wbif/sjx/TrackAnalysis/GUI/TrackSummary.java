@@ -1,6 +1,7 @@
 package wbif.sjx.TrackAnalysis.GUI;
 
 import ij.IJ;
+import ij.ImagePlus;
 import ij.Prefs;
 import ij.measure.ResultsTable;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
@@ -26,8 +27,8 @@ public class TrackSummary extends ModuleControl {
     private JCheckBox diffusionCoefficientCheckbox;
     private JTextField nPointsTextField;
 
-    TrackSummary(TrackCollection tracks, int panelWidth, int elementHeight) {
-        super(tracks, panelWidth, elementHeight);
+    public TrackSummary(TrackCollection tracks, ImagePlus ipl, int panelWidth, int elementHeight) {
+        super(tracks, ipl, panelWidth, elementHeight);
     }
 
     private void showTrackSummary(ResultsTable rt) {

@@ -17,7 +17,7 @@ public class TrackAnalysis {
         this.tracks = tracks;
         this.ipl = ipl;
 
-        MainGUI gui = new MainGUI(tracks);
+        MainGUI gui = new MainGUI(tracks,ipl);
         gui.create();
 
     }

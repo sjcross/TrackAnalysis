@@ -1,5 +1,6 @@
 package wbif.sjx.TrackAnalysis.GUI;
 
+import ij.ImagePlus;
 import ij.Prefs;
 import ij.gui.Plot;
 import wbif.sjx.common.Object.Track;
@@ -17,8 +18,8 @@ public class MotilityPlotControl extends ModuleControl {
     private JCheckBox blackPlotCheckbox;
     private JCheckBox showLabelsCheckbox;
 
-    MotilityPlotControl(TrackCollection tracks, int panelWidth, int elementHeight) {
-        super(tracks, panelWidth, elementHeight);
+    public MotilityPlotControl(TrackCollection tracks, ImagePlus ipl, int panelWidth, int elementHeight) {
+        super(tracks, ipl, panelWidth, elementHeight);
     }
 
     @Override

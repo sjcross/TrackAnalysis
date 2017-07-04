@@ -1,5 +1,6 @@
 package wbif.sjx.TrackAnalysis.GUI;
 
+import ij.ImagePlus;
 import ij.Prefs;
 import ij.gui.Plot;
 import wbif.sjx.common.Analysis.MSDCalculator;
@@ -19,8 +20,8 @@ public class MSDControl extends ModuleControl {
     JCheckBox fitLineCheckbox;
     private JTextField nPointsTextField;
 
-    MSDControl(TrackCollection tracks, int panelWidth, int elementHeight) {
-        super(tracks, panelWidth, elementHeight);
+    public MSDControl(TrackCollection tracks, ImagePlus ipl, int panelWidth, int elementHeight) {
+        super(tracks, ipl, panelWidth, elementHeight);
     }
 
     @Override
@@ -77,6 +78,7 @@ public class MSDControl extends ModuleControl {
         Prefs.set("TrackAnalysis.MSD.fitLine",fitLine);
 
         int nPoints = (int) Math.round(Double.parseDouble(nPointsTextField.getText()));
+        Prefs.set("TrackAnalysis.MSD.nPoints",nPoints);
 
         if (ID == -1) {
             double[][] msd = tracks.getAverageMSD(pixelDistances);

@@ -1,5 +1,6 @@
 package wbif.sjx.TrackAnalysis.GUI;
 
+import ij.ImagePlus;
 import wbif.sjx.common.Object.TrackCollection;
 
 import javax.swing.*;
@@ -18,18 +19,32 @@ public class MainGUI implements ActionListener {
     private JScrollPane moduleScrollPane = new JScrollPane();
 
     private TrackCollection tracks;
+    private ImagePlus ipl;
 
-    private static final String TRACK_SUMMARY = new TrackSummary(null,0,0).getTitle();
-    private static final String DIRECTIONAL_PERSISTENCE = new DirectionalPersistenceControl(null,0,0).getTitle();
-    private static final String DIRECTIONALITY_RATIO = new DirectionalityRatioControl(null,0,0).getTitle();
-    private static final String EUCLIDEAN_DISTANCE = new EuclideanDistanceControl(null,0,0).getTitle();
-    private static final String MEAN_SQUARED_DISPLACEMENT = new MSDControl(null,0,0).getTitle();
-    private static final String MOTILITY_PLOT = new MotilityPlotControl(null,0,0).getTitle();
-    private static final String TOTAL_PATH_LENGTH = new TotalPathLengthControl(null,0,0).getTitle();
+    private static final String TRACK_SUMMARY = new TrackSummary(null,null,0,0).getTitle();
+    private static final String DIRECTIONAL_PERSISTENCE = new DirectionalPersistenceControl(null,null,0,0).getTitle();
+    private static final String DIRECTIONALITY_RATIO = new DirectionalityRatioControl(null,null,0,0).getTitle();
+    private static final String EUCLIDEAN_DISTANCE = new EuclideanDistanceControl(null,null,0,0).getTitle();
+    private static final String MEAN_SQUARED_DISPLACEMENT = new MSDControl(null,null,0,0).getTitle();
+    private static final String MOTILITY_PLOT = new MotilityPlotControl(null,null,0,0).getTitle();
+    private static final String SHOW_TRACK_ID = new ShowTrackIDControl(null,null,0,0).getTitle();
+    private static final String TOTAL_PATH_LENGTH = new TotalPathLengthControl(null,null,0,0).getTitle();
 
     private static final String MODULE_CHANGED = "Module changed";
 
-    String[] moduleList = new String[]{
+    String[] moduleListWithIpl = new String[]{
+            TRACK_SUMMARY,
+//            DIRECTIONAL_PERSISTENCE,
+            DIRECTIONALITY_RATIO,
+            EUCLIDEAN_DISTANCE,
+            MEAN_SQUARED_DISPLACEMENT,
+            MOTILITY_PLOT,
+            SHOW_TRACK_ID,
+            TOTAL_PATH_LENGTH
+
+    };
+
+    String[] moduleListWithoutIpl = new String[]{
             TRACK_SUMMARY,
 //            DIRECTIONAL_PERSISTENCE,
             DIRECTIONALITY_RATIO,
@@ -40,8 +55,9 @@ public class MainGUI implements ActionListener {
 
     };
 
-    public MainGUI(TrackCollection tracks) {
+    public MainGUI(TrackCollection tracks, ImagePlus ipl) {
         this.tracks = tracks;
+        this.ipl = ipl;
 
     }
 
@@ -57,13 +73,15 @@ public class MainGUI implements ActionListener {
         c.gridy = 0;
         c.insets = new Insets(5,5,0,5);
 
+        // The module list used depends on whether an image was provided
+        String[] moduleList = ipl == null ? moduleListWithoutIpl : moduleListWithIpl;
         JComboBox<String> comboBox = new JComboBox<>(moduleList);
         comboBox.setPreferredSize(new Dimension(frameWidth,elementHeight));
         comboBox.addActionListener(this);
         comboBox.setActionCommand(MODULE_CHANGED);
         frame.add(comboBox,c);
 
-        changeModule(moduleList[0]);
+        changeModule(moduleListWithIpl[0]);
         moduleScrollPane.setBorder(null);
         c.gridy++;
         frame.add(moduleScrollPane,c);
@@ -77,25 +95,28 @@ public class MainGUI implements ActionListener {
     private void changeModule(String module) {
         ModuleControl control;
         if (module.equals(TRACK_SUMMARY)) {
-            control = new TrackSummary(tracks, frameWidth, elementHeight);
+            control = new TrackSummary(tracks, ipl, frameWidth, elementHeight);
 
         } else if (module.equals(DIRECTIONAL_PERSISTENCE)) {
-            control = new DirectionalPersistenceControl(tracks, frameWidth, elementHeight);
+            control = new DirectionalPersistenceControl(tracks, ipl, frameWidth, elementHeight);
 
         } else if (module.equals(DIRECTIONALITY_RATIO)) {
-            control = new DirectionalityRatioControl(tracks, frameWidth, elementHeight);
+            control = new DirectionalityRatioControl(tracks, ipl, frameWidth, elementHeight);
 
         } else if (module.equals(EUCLIDEAN_DISTANCE)) {
-            control = new EuclideanDistanceControl(tracks, frameWidth, elementHeight);
+            control = new EuclideanDistanceControl(tracks, ipl, frameWidth, elementHeight);
 
         } else if (module.equals(MEAN_SQUARED_DISPLACEMENT)) {
-            control = new MSDControl(tracks, frameWidth, elementHeight);
+            control = new MSDControl(tracks, ipl, frameWidth, elementHeight);
 
         } else if (module.equals(MOTILITY_PLOT)) {
-            control = new MotilityPlotControl(tracks, frameWidth, elementHeight);
+            control = new MotilityPlotControl(tracks, ipl, frameWidth, elementHeight);
+
+        } else if (module.equals(SHOW_TRACK_ID)) {
+            control = new ShowTrackIDControl(tracks, ipl, frameWidth, elementHeight);
 
         } else if (module.equals(TOTAL_PATH_LENGTH)) {
-            control = new TotalPathLengthControl(tracks, frameWidth, elementHeight);
+            control = new TotalPathLengthControl(tracks, ipl, frameWidth, elementHeight);
 
         } else {
             return;

@@ -1,5 +1,6 @@
 package wbif.sjx.TrackAnalysis.GUI;
 
+import ij.ImagePlus;
 import ij.Prefs;
 import ij.gui.Plot;
 import wbif.sjx.common.Object.Track;
@@ -13,8 +14,9 @@ import java.awt.event.ActionEvent;
  * Created by sc13967 on 25/06/2017.
  */
 public class DirectionalPersistenceControl extends ModuleControl {
-    DirectionalPersistenceControl(TrackCollection tracks, int panelWidth, int elementHeight) {
-        super(tracks, panelWidth, elementHeight);
+
+    public DirectionalPersistenceControl(TrackCollection tracks, ImagePlus ipl, int panelWidth, int elementHeight) {
+        super(tracks, ipl, panelWidth, elementHeight);
     }
 
     @Override

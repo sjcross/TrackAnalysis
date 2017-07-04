@@ -1,5 +1,6 @@
 package wbif.sjx.TrackAnalysis.GUI;
 
+import ij.ImagePlus;
 import ij.Prefs;
 import wbif.sjx.common.Object.TrackCollection;
 
@@ -16,14 +17,16 @@ public abstract class ModuleControl implements ActionListener {
     private static final String PLOT_SINGLE = "Single track";
 
     TrackCollection tracks;
+    ImagePlus ipl;
     int panelWidth;
     int elementHeight;
 
     private JTextField plotSingleTextField;
     JCheckBox calibrationCheckbox;
 
-    public ModuleControl(TrackCollection tracks, int panelWidth, int elementHeight) {
+    public ModuleControl(TrackCollection tracks, ImagePlus ipl, int panelWidth, int elementHeight) {
         this.tracks = tracks;
+        this.ipl = ipl;
         this.panelWidth = panelWidth;
         this.elementHeight = elementHeight;
 
