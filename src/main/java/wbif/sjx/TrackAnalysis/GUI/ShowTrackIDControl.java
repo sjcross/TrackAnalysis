@@ -43,7 +43,6 @@ public class ShowTrackIDControl extends ModuleControl {
         label.setPreferredSize(new Dimension(3*panelWidth/4,elementHeight));
         label.setEditable(false);
         label.setBorder(null);
-        label.setFont(new Font(Font.SANS_SERIF,Font.BOLD,12));
         c.gridwidth = 1;
         c.gridy++;
         c.insets = new Insets(5,5,20,5);

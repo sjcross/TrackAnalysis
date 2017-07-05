@@ -44,7 +44,7 @@ public class TrackMateLoader extends AbstractTMAction {
 
         // Converting tracks in TrackMate model to internal Track Objects
         TrackModel trackModel = model.getTrackModel();
-        Set<Integer> trackIDs = trackModel.trackIDs(false);
+        Set<Integer> trackIDs = trackModel.trackIDs(true);
 
         for (Integer trackID:trackIDs) {
             ArrayList<Spot> spots = new ArrayList<>(model.getTrackModel().trackSpots(trackID));
