@@ -66,6 +66,9 @@ public class ShowTrackIDControl extends ModuleControl {
         int fontSize = (int) Math.round(Double.parseDouble(fontSizeTextField.getText()));
         Prefs.set("TrackAnalysis.ShowTrackID.fontSize",fontSize);
 
+        // Creating a duplicate of the image, so the original isn't altered
+        ipl = new Duplicator().run(ipl);
+
         // Creating an overlay for the image
         Overlay ovl = new Overlay();
         ipl.setOverlay(ovl);
@@ -121,7 +124,7 @@ public class ShowTrackIDControl extends ModuleControl {
             }
         }
 
-        new Duplicator().run(ipl).show();
+        ipl.show();
 
     }
 
