@@ -3,11 +3,15 @@ package wbif.sjx.TrackAnalysis.IO;
 import ij.*;
 import ij.gui.GenericDialog;
 import ij.measure.ResultsTable;
+import ij.plugin.HyperStackConverter;
 import ij.plugin.PlugIn;
 import wbif.sjx.TrackAnalysis.TrackAnalysis;
 import wbif.sjx.common.Object.Point;
 import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
+import wbif.sjx.common.Process.SwitchTAndZ;
+
+import javax.swing.JOptionPane;
 
 /**
  * Loads tracks from results table.  Tracks are stored in terms of calibrated distances.
@@ -20,7 +24,8 @@ public class TrackAnalysisPlugin implements PlugIn {
     public static void main(String[] args) {
         new ImageJ();
 //        IJ.runMacroFile("C:\\Users\\sc13967\\Local Documents\\ImageJMacros\\Import_Results_Table.ijm");
-        IJ.runMacroFile("C:\\Users\\sc13967\\Documents\\ImageJ Macros\\Import_Results_Table.ijm");
+//        IJ.runMacroFile("C:\\Users\\sc13967\\Documents\\ImageJ Macros\\Import_Results_Table.ijm");
+        IJ.runMacroFile("E:\\Stephen\\ImageJ Macros\\ImageJMacros\\Import_Results_Table.ijm");
 
         IJ.runMacro("waitForUser");
 
@@ -42,6 +47,13 @@ public class TrackAnalysisPlugin implements PlugIn {
         ImagePlus ipl;
         if (!windows[1].equals("None")) {
             ipl = WindowManager.getImage(windows[1]);
+            if (ipl.getNFrames()==1 & ipl.getNSlices() > 1) {
+                int yn_bt = JOptionPane.showConfirmDialog(null, "Swap frames (t) and slices (z)?","Swap dimensions",JOptionPane.YES_NO_OPTION);
+                if (yn_bt == JOptionPane.YES_OPTION) {
+                    SwitchTAndZ.run(ipl);
+                }
+
+            }
         } else {
             ipl = null;
         }
