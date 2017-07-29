@@ -81,17 +81,18 @@ public class ShowTrackIDControl extends ModuleControl {
 
                 double[] x = track.getX(true);
                 double[] y = track.getY(true);
+                double[] z = track.getZ(true);
                 int[] f = track.getF();
 
                 for (int i=0;i<f.length;i++) {
                     PointRoi roi = new PointRoi(x[i]+0.5,y[i]+0.5);
                     roi.setPointType(3);
-                    roi.setPosition(f[i]+1);
+                    roi.setPosition(1,(int) z[i]+1,f[i]+1);
                     roi.setStrokeColor(col);
                     ovl.addElement(roi);
 
                     TextRoi text = new TextRoi(x[i],y[i],String.valueOf(key));
-                    text.setPosition(f[i]+1);
+                    text.setPosition(1,(int) z[i]+1,f[i]+1);
                     text.setCurrentFont(new Font(Font.SANS_SERIF,Font.PLAIN,fontSize));
                     text.setStrokeColor(col);
                     ovl.addElement(text);

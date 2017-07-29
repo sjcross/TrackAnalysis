@@ -3,7 +3,6 @@ package wbif.sjx.TrackAnalysis.IO;
 import ij.*;
 import ij.gui.GenericDialog;
 import ij.measure.ResultsTable;
-import ij.plugin.HyperStackConverter;
 import ij.plugin.PlugIn;
 import wbif.sjx.TrackAnalysis.TrackAnalysis;
 import wbif.sjx.common.Object.Point;
@@ -11,7 +10,7 @@ import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
 import wbif.sjx.common.Process.SwitchTAndZ;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 /**
  * Loads tracks from results table.  Tracks are stored in terms of calibrated distances.
@@ -38,6 +37,13 @@ public class TrackAnalysisPlugin implements PlugIn {
      * @param s
      */
     public void run(String s) {
+        try {
+            UIManager.setLookAndFeel(
+                    UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+
         // Getting the current windows
         String[] windows = getWindows();
         if (windows == null) return;

@@ -11,6 +11,7 @@ import wbif.sjx.common.Object.Point;
 import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -32,6 +33,13 @@ public class TrackMateLoader extends AbstractTMAction {
 
     @Override
     public void execute(TrackMate trackMate) {
+        try {
+            UIManager.setLookAndFeel(
+                    UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+
         ImagePlus ipl = trackMate.getSettings().imp;
         Calibration calibration = ipl.getCalibration();
 
