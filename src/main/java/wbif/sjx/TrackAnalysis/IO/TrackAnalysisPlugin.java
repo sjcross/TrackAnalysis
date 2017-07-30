@@ -22,9 +22,9 @@ public class TrackAnalysisPlugin implements PlugIn {
      */
     public static void main(String[] args) {
         new ImageJ();
-//        IJ.runMacroFile("C:\\Users\\sc13967\\Local Documents\\ImageJMacros\\Import_Results_Table.ijm");
+        IJ.runMacroFile("C:\\Users\\sc13967\\Local Documents\\ImageJMacros\\Import_Results_Table.ijm");
 //        IJ.runMacroFile("C:\\Users\\sc13967\\Documents\\ImageJ Macros\\Import_Results_Table.ijm");
-        IJ.runMacroFile("E:\\Stephen\\ImageJ Macros\\ImageJMacros\\Import_Results_Table.ijm");
+//        IJ.runMacroFile("E:\\Stephen\\ImageJ Macros\\ImageJMacros\\Import_Results_Table.ijm");
 
         IJ.runMacro("waitForUser");
 

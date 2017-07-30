@@ -106,7 +106,7 @@
         <dependency>
             <groupId>wbif.sjx</groupId>
             <artifactId>common</artifactId>
-            <version>1.2.6-SNAPSHOT</version>
+            <version>1.2.7</version>
         </dependency>
 
         <dependency>

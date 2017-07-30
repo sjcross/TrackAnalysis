@@ -12,6 +12,7 @@ import wbif.sjx.common.Object.TrackCollection;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
 
 /**
  * Created by sc13967 on 04/07/2017.
@@ -87,12 +88,14 @@ public class ShowTrackIDControl extends ModuleControl {
                 for (int i=0;i<f.length;i++) {
                     PointRoi roi = new PointRoi(x[i]+0.5,y[i]+0.5);
                     roi.setPointType(3);
-                    roi.setPosition(1,(int) z[i]+1,f[i]+1);
+                    if (ipl.isHyperStack()) roi.setPosition(1,(int) (z[i]+1),f[i]+1);
+                    else roi.setPosition(f[i]+1);
                     roi.setStrokeColor(col);
                     ovl.addElement(roi);
 
                     TextRoi text = new TextRoi(x[i],y[i],String.valueOf(key));
-                    text.setPosition(1,(int) z[i]+1,f[i]+1);
+                    if (ipl.isHyperStack()) text.setPosition(1,(int) (z[i]+1),f[i]+1);
+                    else text.setPosition(f[i]+1);
                     text.setCurrentFont(new Font(Font.SANS_SERIF,Font.PLAIN,fontSize));
                     text.setStrokeColor(col);
                     ovl.addElement(text);
