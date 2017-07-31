@@ -30,6 +30,7 @@ public class MainGUI implements ActionListener {
     private static final String SHOW_TRACK_ID = new ShowTrackIDControl(null,null,0,0).getTitle();
     private static final String TOTAL_PATH_LENGTH = new TotalPathLengthControl(null,null,0,0).getTitle();
     private static final String TRACK_INTENSITY = new TrackIntensityControl(null,null,0,0).getTitle();
+    private static final String TRACK_PLOT = new TrackPlotControl(null,null,0,0).getTitle();
 
     private static final String MODULE_CHANGED = "Module changed";
 
@@ -42,7 +43,8 @@ public class MainGUI implements ActionListener {
             MOTILITY_PLOT,
             SHOW_TRACK_ID,
             TOTAL_PATH_LENGTH,
-            TRACK_INTENSITY
+            TRACK_INTENSITY,
+            TRACK_PLOT
 
     };
 
@@ -53,7 +55,8 @@ public class MainGUI implements ActionListener {
             EUCLIDEAN_DISTANCE,
             MEAN_SQUARED_DISPLACEMENT,
             MOTILITY_PLOT,
-            TOTAL_PATH_LENGTH
+            TOTAL_PATH_LENGTH,
+            TRACK_PLOT
 
     };
 
@@ -122,6 +125,9 @@ public class MainGUI implements ActionListener {
 
         } else if (module.equals(TRACK_INTENSITY)) {
             control = new TrackIntensityControl(tracks, ipl, frameWidth, elementHeight);
+
+        }  else if (module.equals(TRACK_PLOT)) {
+            control = new TrackPlotControl(tracks, ipl, frameWidth, elementHeight);
 
         } else {
             return;

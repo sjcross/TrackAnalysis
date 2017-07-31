@@ -81,6 +81,8 @@
         <main-class>wbif.sjx.TrackAnalysis.IO.TrackAnalysisPlugin</main-class>
         <license.licenseName>gpl3</license.licenseName>
         <license.copyrightOwners>Stephen Cross</license.copyrightOwners>
+        <lwjgl.version>3.1.1</lwjgl.version>
+        <native.target>natives-windows</native.target>
     </properties>
 
     <repositories>
@@ -102,11 +104,54 @@
             <version>3.5.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl</artifactId>
+            <version>${lwjgl.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-glfw</artifactId>
+            <version>${lwjgl.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-opengl</artifactId>
+            <version>${lwjgl.version}</version>
+        </dependency>
+
+        <!-- Natives -->
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl</artifactId>
+            <version>${lwjgl.version}</version>
+            <classifier>${native.target}</classifier>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-glfw</artifactId>
+            <version>${lwjgl.version}</version>
+            <classifier>${native.target}</classifier>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-opengl</artifactId>
+            <version>${lwjgl.version}</version>
+            <classifier>${native.target}</classifier>
+            <scope>runtime</scope>
+        </dependency>
+
         <!--Local repository-->
         <dependency>
             <groupId>wbif.sjx</groupId>
             <artifactId>common</artifactId>
-            <version>1.2.7</version>
+            <version>1.2.8-SNAPSHOT</version>
         </dependency>
 
         <dependency>

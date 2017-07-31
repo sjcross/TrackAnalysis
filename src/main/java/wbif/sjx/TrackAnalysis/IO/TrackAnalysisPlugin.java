@@ -182,18 +182,18 @@ public class TrackAnalysisPlugin implements PlugIn {
             int f = Integer.parseInt(rt.getStringValue(fCol,row));
 
             tracks.putIfAbsent(ID, new Track(distXY,distZ,units));
-            tracks.get(ID).add(new Point(x,y,z,f));
+            tracks.get(ID).put(f,new Point(x,y,z,f));
 
         }
 
-        // Sorting spots in each track to ensure they are in chronological order
-        for (Track track:tracks.values()) {
-            track.sort((o1, o2) -> {
-                double t1 = o1.getF();
-                double t2 = o2.getF();
-                return t1 > t2 ? 1 : t1 == t2 ? 0 : -1;
-            });
-        }
+//        // Sorting spots in each track to ensure they are in chronological order
+//        for (Track track:tracks.values()) {
+//            track.sort((o1, o2) -> {
+//                double t1 = o1.getF();
+//                double t2 = o2.getF();
+//                return t1 > t2 ? 1 : t1 == t2 ? 0 : -1;
+//            });
+//        }
 
         return tracks;
 
