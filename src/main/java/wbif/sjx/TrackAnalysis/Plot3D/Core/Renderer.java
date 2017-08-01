@@ -1,19 +1,9 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
 
-import net.imglib2.ops.parse.token.Int;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Mesh;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
-import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataTypeUtils;
-import wbif.sjx.TrackAnalysis.Plot3D.Utils.RNG;
-import wbif.sjx.common.Object.Point;
-import wbif.sjx.common.Object.Track;
-import wbif.sjx.common.Object.TrackCollection;
-
-import java.awt.*;
-import java.util.HashMap;
 
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.opengl.GL11.*;
@@ -23,6 +13,11 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class Renderer {
     private ShaderProgram mainShader;
+    private Matrix4f projectionMatrix;
+    private Matrix4f cameraMatrix;
+
+    //This is the product of the projection and camera Matrix
+    private Matrix4f combinedViewMatrix;
 
     public Renderer() throws Exception{
         mainShader = new ShaderProgram("main");
@@ -31,8 +26,7 @@ public class Renderer {
         mainShader.createFragmentShader(DataTypeUtils.loadAsString("shaders/fragment.fs"));
         mainShader.link();
 
-        mainShader.createUniform("projectionMatrix");
-        mainShader.createUniform("cameraMatrix");
+        mainShader.createUniform("combinedViewMatrix");
         mainShader.createUniform("combinedTransformationMatrix");
 
         mainShader.createUniform("colour");
@@ -50,6 +44,8 @@ public class Renderer {
         }else {
             glfwSwapInterval(0);
         }
+
+        calcCombinedViewMatrix(window, camera);
     }
 
     public void render(GLFW_Window window, Camera camera, Scene scene){
@@ -59,19 +55,27 @@ public class Renderer {
         mainShader.bind();
 
         //Sets matrix uniforms for viewpoint
-        mainShader.setMatrix4fUniform("projectionMatrix", getProjectionMatrix(window, camera));
-        mainShader.setMatrix4fUniform("cameraMatrix", camera.getCameraMatrix());
-//        mainShader.setMatrix4fUniform("");
+        mainShader.setMatrix4fUniform("combinedViewMatrix", combinedViewMatrix);
 
 
-       scene.render(mainShader);
+        scene.render(mainShader);
 
         //Unbinds shader
         mainShader.unbind();
     }
 
-    private Matrix4f getProjectionMatrix(GLFW_Window window, Camera camera){
-        return Matrix4f.projection(camera.getFOV(), window.getAspectRatio(), camera.getViewDistanceNear(), camera.getViewDistanceFar());
+    private void calcProjectionMatrix(GLFW_Window window, Camera camera){
+        projectionMatrix = Matrix4f.projection(camera.getFOV(), window.getAspectRatio(), camera.getViewDistanceNear(), camera.getViewDistanceFar());
+    }
+
+    private void calcCameraMatrix(Camera camera){
+        cameraMatrix = camera.getCameraMatrix();
+    }
+
+    private void calcCombinedViewMatrix(GLFW_Window window, Camera camera){
+        calcProjectionMatrix(window, camera);
+        calcCameraMatrix(camera);
+        combinedViewMatrix = Matrix4f.multiply(cameraMatrix, projectionMatrix);
     }
 
     public void dispose(){

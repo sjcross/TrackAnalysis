@@ -1,6 +1,5 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Mesh;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.GenerateMesh;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.Cursor;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.Keyboard;
@@ -8,11 +7,12 @@ import wbif.sjx.TrackAnalysis.Plot3D.Input.MouseButtons;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.MouseWheel;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
-import wbif.sjx.TrackAnalysis.Plot3D.Utils.RNG;
 import wbif.sjx.common.Object.TrackCollection;
 
-import java.awt.*;
-import java.util.HashMap;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
@@ -20,7 +20,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 /**
  * Created by sc13967 on 31/07/2017.
  */
-public class Engine {
+public class Engine implements ActionListener, ChangeListener{
     private TrackCollection tracks;
     private boolean running;
     private GLFW_Window window;
@@ -28,7 +28,7 @@ public class Engine {
     private Camera camera;
     private Scene scene;
 
-    public Engine(TrackCollection tracks, boolean mosgfs){
+    public Engine(TrackCollection tracks){
         try {
             this.tracks = tracks;
             init();
@@ -51,6 +51,7 @@ public class Engine {
         running = true;
 
         while (running && window.isOpen()){
+//            System.out.println(camera.getPosition());
             handleInput();
             renderFrame();
         }
@@ -135,6 +136,9 @@ public class Engine {
             scene.decrementFrame();
         }
 
+        if(Keyboard.isKeyTapped(GLFW_KEY_T)){
+            scene.togglwAxesVisibility();
+        }
 
         //Essential static updates
         Keyboard.update();
@@ -146,5 +150,15 @@ public class Engine {
     private void renderFrame(){
         renderer.render(window, camera, scene);
         window.update();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println("jeff");
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        System.out.println("jeff");
     }
 }

@@ -1,18 +1,15 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Entity;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Mesh;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.GenerateMesh;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.ShaderProgram;
-import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
-import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
-import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataTypeUtils;
-import wbif.sjx.TrackAnalysis.Plot3D.Utils.RNG;
-import wbif.sjx.common.Object.Track;
+import ij.Prefs;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.*;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.Entity;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.Mesh;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.TrackEntity;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.TrackEntityCollection;
 import wbif.sjx.common.Object.TrackCollection;
 
 import java.awt.*;
-import java.util.HashMap;
+
 
 /**
  * Created by sc13967 on 31/07/2017.
@@ -20,39 +17,27 @@ import java.util.HashMap;
 public class Scene {
     private static Entity[] axes;
     private static final Color AXIS_COLOUR = Color.white;
-    private boolean showAxes;
-
     private TrackCollection tracks;
-    private Mesh pointMesh;
-    private HashMap<Integer, Color> trackColourMap;
+    private TrackEntityCollection tracksEntities;
     private int frame;
 
     public Scene(TrackCollection tracks, Mesh pointMesh){
         this.tracks = tracks;
-        this.pointMesh = pointMesh;
         this.frame = 0;
 
-        trackColourMap = new HashMap<>();
-        for(int ID: tracks.keySet()){
-            trackColourMap.put(ID, RNG.Colour());
-        }
+        TrackEntity.setPointMesh(pointMesh);
+        tracksEntities = new TrackEntityCollection(tracks);
     }
 
-    public void render(ShaderProgram shaderProgram){
-        renderAxes(shaderProgram);
-
-        for(int ID: tracks.keySet()) {
-            Track currentTrack = tracks.get(ID);
-            if(frame < currentTrack.size()) {
-                shaderProgram.setMatrix4fUniform("combinedTransformationMatrix", Matrix4f.translation(DataTypeUtils.toVector3f(currentTrack.get(frame))));
-                shaderProgram.setColourUniform("colour", trackColourMap.get(ID));
-                pointMesh.render();
-            }
+    public void render(ShaderProgram shaderProgram) {
+        if(showAxes) {
+            renderAxes(shaderProgram);
         }
+        tracksEntities.render(shaderProgram, frame);
     }
 
     public static void initAxes(){
-        Mesh axesMesh = GenerateMesh.cylinder(0.2f, 30, 10);
+        Mesh axesMesh = GenerateMesh.cylinder(0.2f, 30, 100000);
         Entity xAxis = new Entity(axesMesh, AXIS_COLOUR);
         Entity yAxis = new Entity(axesMesh, AXIS_COLOUR);
         Entity zAxis = new Entity(axesMesh, AXIS_COLOUR);
@@ -97,7 +82,24 @@ public class Scene {
         setFrame(getFrame() - 1);
     }
 
-    public void dispose(){
-        pointMesh.dispose();
+    public void dispose() {
+        Prefs.set("TrackAnalysis.TrackPlot.showAxes", showAxes);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private boolean showAxes = Prefs.get("TrackAnalysis.TrackPlot.showAxes",false);
+
+    public boolean isAxesVisible(){
+        return showAxes;
+    }
+
+    public void setAxesVisibility(boolean state){
+        showAxes = state;
+    }
+
+    public void togglwAxesVisibility(){
+        showAxes = !showAxes;
+    }
+
 }

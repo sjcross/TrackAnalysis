@@ -1,5 +1,6 @@
-package wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics;
+package wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item;
 
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;

@@ -1,10 +1,10 @@
-package wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics;
+package wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item;
 
 import org.lwjgl.system.MemoryUtil;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.Face;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3i;
 import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataTypeUtils;
-import wbif.sjx.TrackAnalysis.Plot3D.Utils.RNG;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
