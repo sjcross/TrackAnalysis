@@ -25,6 +25,8 @@ public class Mesh {
 
     private int vertexCount;
 
+    private float boundingSphereRadius;
+
     public Mesh(ArrayList<Face> faces){
         create(faces);
     }
@@ -52,15 +54,10 @@ public class Mesh {
             VertexIndices[i] = new Vector3i(i * 3    , i * 3 + 1, i * 3 + 2);
         }
 
-
-        create(VertexPositions, VertexIndices);
-    }
-
-    public void create(Vector3f[] VertexPositions, Vector3i[] VertexIndices){
+        calcBoundingSphereRadius(VertexPositions);
 
         float[] vertexPositions = DataTypeUtils.toFloatArray(VertexPositions);
         int[] vertexIndices = DataTypeUtils.toIntArray(VertexIndices);
-
 
         FloatBuffer vertexBuffer = null;
         IntBuffer indicesBuffer = null;
@@ -95,6 +92,17 @@ public class Mesh {
                 MemoryUtil.memFree(indicesBuffer);
             }
         }
+    }
+
+    public void calcBoundingSphereRadius(Vector3f[] vertexPositions){
+        for(Vector3f vertex: vertexPositions) {
+            float length = vertex.getLength();
+            boundingSphereRadius = length > boundingSphereRadius ? length : boundingSphereRadius;
+        }
+    }
+
+    public float getBoundingSphereRadius() {
+        return boundingSphereRadius;
     }
 
     public void render(){

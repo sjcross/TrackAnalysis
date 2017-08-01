@@ -6,6 +6,7 @@ package wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics;
 
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
+import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector4f;
 import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataTypeUtils;
 
 import java.awt.*;
@@ -124,8 +125,8 @@ public class ShaderProgram {
     }
 
     public void setColourUniform(String uniformName, Color colour) {
-        Vector3f Colour = DataTypeUtils.toOpenGlColour(colour);
-        glUniform4f(uniforms.get(uniformName), Colour.getX(), Colour.getY(), Colour.getZ(), 1.0f);
+        Vector4f Colour = DataTypeUtils.toOpenGlColour(colour);
+        glUniform4f(uniforms.get(uniformName), Colour.getX(), Colour.getY(), Colour.getZ(), Colour.getW());
     }
 
     public void setIntUniform(String uniformName, int value) {

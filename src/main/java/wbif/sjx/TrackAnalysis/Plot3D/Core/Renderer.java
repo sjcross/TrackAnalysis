@@ -1,6 +1,7 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
 
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.FrustumCuller;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
 import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataTypeUtils;
@@ -13,6 +14,9 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class Renderer {
     private ShaderProgram mainShader;
+
+    private FrustumCuller frustumCuller;
+
     private Matrix4f projectionMatrix;
     private Matrix4f cameraMatrix;
 
@@ -30,6 +34,8 @@ public class Renderer {
         mainShader.createUniform("combinedTransformationMatrix");
 
         mainShader.createUniform("colour");
+
+        frustumCuller = new FrustumCuller();
     }
 
     private void preRender(GLFW_Window window, Camera camera){
@@ -56,9 +62,9 @@ public class Renderer {
 
         //Sets matrix uniforms for viewpoint
         mainShader.setMatrix4fUniform("combinedViewMatrix", combinedViewMatrix);
+        frustumCuller.setCombinedViewMatrix(combinedViewMatrix);
 
-
-        scene.render(mainShader);
+        scene.render(mainShader, frustumCuller);
 
         //Unbinds shader
         mainShader.unbind();

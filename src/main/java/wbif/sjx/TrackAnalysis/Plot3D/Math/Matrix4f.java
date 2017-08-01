@@ -54,7 +54,7 @@ public class Matrix4f {
         Vector4f result;
         Float[] component = new Float[order];
         for (int row = 0; row < order; row++) {
-            component[row] = M.elements[row][0] * V.x +  M.elements[row][1] * V.y +  M.elements[row][2] * V.z +  M.elements[row][3] * V.w;
+            component[row] = M.elements[row][0] * V.getX() +  M.elements[row][1] * V.getY() +  M.elements[row][2] * V.getZ() +  M.elements[row][3] * V.getW();
         }
         result = new Vector4f(
                 component[0],
@@ -186,6 +186,40 @@ public class Matrix4f {
         }
         return result;
     }
+
+    public static Matrix4f stretchX(float sf) {
+        Matrix4f result = identity();
+        result.elements[0][0] = sf;
+        return result;
+    }
+
+    public static Matrix4f stretchY(float sf) {
+        Matrix4f result = identity();
+        result.elements[1][1] = sf;
+        return result;
+    }
+
+    public static Matrix4f stretchZ(float sf) {
+        Matrix4f result = identity();
+        result.elements[2][2] = sf;
+        return result;
+    }
+
+    public static Matrix4f stretch(float xSf, float ySf, float zSf) {
+        Matrix4f result = identity();
+        result.apply(stretchX(xSf));
+        result.apply(stretchY(ySf));
+        result.apply(stretchZ(zSf));
+        return result;
+    }
+
+    public static Matrix4f stretch(Vector3f vec) {
+        return stretch(vec.getX(), vec.getY(), vec.getZ());
+    }
+
+
+
+
 
     @Override
     public String toString() {

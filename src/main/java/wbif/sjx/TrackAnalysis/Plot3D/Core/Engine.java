@@ -1,16 +1,19 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.GenerateMesh;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.TrackEntity;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.Cursor;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.Keyboard;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.MouseButtons;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.MouseWheel;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
+import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataTypeUtils;
 import wbif.sjx.common.Object.TrackCollection;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.xml.crypto.Data;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -20,7 +23,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 /**
  * Created by sc13967 on 31/07/2017.
  */
-public class Engine implements ActionListener, ChangeListener{
+public class Engine {
     private TrackCollection tracks;
     private boolean running;
     private GLFW_Window window;
@@ -29,8 +32,11 @@ public class Engine implements ActionListener, ChangeListener{
     private Scene scene;
 
     public Engine(TrackCollection tracks){
+        this.tracks = tracks;
+    }
+
+    public void start(){
         try {
-            this.tracks = tracks;
             init();
             mainLoop();
         }catch (Exception e){
@@ -41,17 +47,18 @@ public class Engine implements ActionListener, ChangeListener{
     }
 
     private void init() throws Exception{
-        window = new GLFW_Window("window", 600, 600, true);
+        window = new GLFW_Window("3D Track Plot", 600, 600, true);
         renderer = new Renderer();
         camera = new Camera(70);
-        scene = new Scene(tracks, GenerateMesh.sphere(1f, 50));
+        Vector3f meanPoint = DataTypeUtils.toVector3f(tracks.getMeanPoint(0));
+        camera.setRotation(-meanPoint.getPhi(), meanPoint.getTheta() + 90, 0);
+        scene = new Scene(tracks);
     }
 
     private void mainLoop() throws Exception{
         running = true;
 
         while (running && window.isOpen()){
-//            System.out.println(camera.getPosition());
             handleInput();
             renderFrame();
         }
@@ -136,8 +143,10 @@ public class Engine implements ActionListener, ChangeListener{
             scene.decrementFrame();
         }
 
-        if(Keyboard.isKeyTapped(GLFW_KEY_T)){
-            scene.togglwAxesVisibility();
+        if(Keyboard.isKeyTapped(GLFW_KEY_PAGE_UP)){
+            scene.incrementFrame();
+        }else if(Keyboard.isKeyTapped(GLFW_KEY_PAGE_DOWN)){
+            scene.decrementFrame();
         }
 
         //Essential static updates
@@ -147,18 +156,16 @@ public class Engine implements ActionListener, ChangeListener{
         MouseWheel.update();
     }
 
-    private void renderFrame(){
+    private void renderFrame() {
         renderer.render(window, camera, scene);
         window.update();
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println("jeff");
+    public Camera getCamera() {
+        return camera;
     }
 
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        System.out.println("jeff");
+    public Scene getScene() {
+        return scene;
     }
 }

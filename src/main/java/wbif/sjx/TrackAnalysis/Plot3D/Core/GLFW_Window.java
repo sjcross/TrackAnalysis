@@ -58,6 +58,7 @@ public class GLFW_Window {
         }
 
         centreWindow();
+        changeWindowPosition(-500,0);
 
         glfwSetKeyCallback(windowHandle, new Keyboard());
         glfwSetMouseButtonCallback(windowHandle, new MouseButtons());
@@ -75,6 +76,10 @@ public class GLFW_Window {
         glCullFace(GL_BACK);
         glEnable(GL_CULL_FACE);
         glEnable(GL_MULTISAMPLE);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_ALPHA_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         glfwShowWindow(windowHandle);
     }
@@ -82,6 +87,18 @@ public class GLFW_Window {
     //Centres the window on the primary monitor
     public void centreWindow(){
         glfwSetWindowPos(windowHandle, (primaryMonitor.width() - width) / 2, (primaryMonitor.height() - height) / 2);
+    }
+
+    public void changeWindowPosition(int dx, int dy){
+        int[] windowPosition = glfwGetWindowPosition();
+        glfwSetWindowPos(windowHandle,windowPosition[0] + dx,windowPosition[1] + dy);
+    }
+
+    public int[] glfwGetWindowPosition(){
+        int[] x = new int[1];
+        int[] y = new int[1];
+        glfwGetWindowPos(windowHandle, x, y);
+        return new int[]{x[0], y[0]};
     }
 
     public void dispose(){

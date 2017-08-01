@@ -50,10 +50,10 @@ public class DataTypeUtils {
 	public static float[] toFloatArray(Vector4f[] array){
 		float[] result = new float[array.length * 4];
 		for(int i = 0; i < array.length; i++){
-			result[i * 4    ] = array[i].x;
-			result[i * 4 + 1] = array[i].y;
-			result[i * 4 + 2] = array[i].z;
-			result[i * 4 + 3] = array[i].w;
+			result[i * 4    ] = array[i].getX();
+			result[i * 4 + 1] = array[i].getY();
+			result[i * 4 + 2] = array[i].getZ();
+			result[i * 4 + 3] = array[i].getW();
 		}
 		return result;
 	}
@@ -95,12 +95,12 @@ public class DataTypeUtils {
 		return result;
 	}
 
-	public static Vector3f toOpenGlColour(Color color){
-		return new Vector3f(color.getRed()/255f, color.getGreen()/255f, color.getBlue()/255f);
+	public static Vector4f toOpenGlColour(Color color){
+		return new Vector4f(color.getRed()/255f, color.getGreen()/255f, color.getBlue()/255f, color.getAlpha()/255f);
 	}
 
-	public static Vector3f[] toOpenGlColour(Color[] colors){
-		Vector3f[] result = new Vector3f[colors.length];
+	public static Vector4f[] toOpenGlColour(Color[] colors){
+		Vector4f[] result = new Vector4f[colors.length];
 		for(int i = 0; i < colors.length; i++){
 			result[i] = toOpenGlColour(colors[i]);
 		}
@@ -108,7 +108,11 @@ public class DataTypeUtils {
 	}
 
 	public static Vector3f toVector3f(Point point){
-		return new Vector3f((float)point.getX(), (float)point.getY(), (float)point.getZ());
+	    if(point != null) {
+            return new Vector3f((float) point.getX(), (float) point.getY(), (float) point.getZ());
+        }else {
+	        return new Vector3f();
+        }
 	}
 
 	public static String loadAsString(String fileName) throws Exception {

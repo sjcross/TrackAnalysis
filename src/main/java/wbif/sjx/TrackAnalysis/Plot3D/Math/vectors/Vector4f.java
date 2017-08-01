@@ -6,7 +6,7 @@ import org.apache.commons.math3.util.FastMath;
  * Created by Jordan Fisher on 02/07/2017.
  */
 public class Vector4f {
-    public float x, y, z, w;
+    private float x, y, z, w;
 
     public Vector4f() {
         x = 0;
@@ -82,5 +82,37 @@ public class Vector4f {
     public String toString() {
         return String.format("Vec4f: [ %f, %f, %f, %f ]",x ,y, z, w);
 
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public float getZ() {
+        return z;
+    }
+
+    public void setZ(float z) {
+        this.z = z;
+    }
+
+    public float getW() {
+        return w;
+    }
+
+    public void setW(float w) {
+        this.w = w;
     }
 }

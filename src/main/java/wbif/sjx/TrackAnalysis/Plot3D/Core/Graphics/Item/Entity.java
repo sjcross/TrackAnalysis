@@ -3,6 +3,7 @@ package wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
+import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Utils.RNG;
 
@@ -16,6 +17,7 @@ public class Entity {
     private Color colour;
     private Vector3f position;
     private Vector3f rotation;
+    private Vector3f scale;
 
     public Entity(Mesh mesh){
         this(mesh, RNG.Colour());
@@ -26,13 +28,14 @@ public class Entity {
         this.colour = colour;
         position = new Vector3f();
         rotation = new Vector3f();
+        scale = new Vector3f(1,1,1);
     }
 
     private Matrix4f getGlobalMatrix(){
         Matrix4f result = Matrix4f.identity();
         result.apply(Matrix4f.translation(position));
         result.apply(Matrix4f.rotation(rotation));
-//        result.apply(Matrix4f.enlargement(scale));
+        result.apply(Matrix4f.stretch(scale));
         return result;
     }
 
@@ -66,6 +69,16 @@ public class Entity {
 
     public Vector3f getPosition(){
         return position;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Vector3f getScale(){
+        return scale;
+    }
+
+    public void setScale(float sf){
+        scale.set(sf, sf, sf);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

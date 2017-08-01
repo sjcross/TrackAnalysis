@@ -6,6 +6,7 @@ import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.Entity;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.Mesh;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.TrackEntity;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.TrackEntityCollection;
+import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
 import wbif.sjx.common.Object.TrackCollection;
 
 import java.awt.*;
@@ -17,23 +18,34 @@ import java.awt.*;
 public class Scene {
     private static Entity[] axes;
     private static final Color AXIS_COLOUR = Color.white;
+    private static Entity boundingBox;
     private TrackCollection tracks;
     private TrackEntityCollection tracksEntities;
     private int frame;
 
-    public Scene(TrackCollection tracks, Mesh pointMesh){
+    public Scene(TrackCollection tracks){
         this.tracks = tracks;
         this.frame = 0;
 
-        TrackEntity.setPointMesh(pointMesh);
+        initAxes();
+        initBoundingBox(tracks);
+
         tracksEntities = new TrackEntityCollection(tracks);
+
+        showAxes = showAxes_DEFAULT;
+        showBoundingBox = showBoundingBox_DEFAULT;
     }
 
-    public void render(ShaderProgram shaderProgram) {
+    public void render(ShaderProgram shaderProgram, FrustumCuller frustumCuller) {
         if(showAxes) {
             renderAxes(shaderProgram);
         }
-        tracksEntities.render(shaderProgram, frame);
+
+        tracksEntities.render(shaderProgram, frustumCuller, frame);
+
+        if(showBoundingBox) {
+            renderBoundingBox(shaderProgram, frustumCuller);
+        }
     }
 
     public static void initAxes(){
@@ -51,13 +63,28 @@ public class Scene {
     }
 
     private static void renderAxes(ShaderProgram shaderProgram){
-        if(axes == null){
-            initAxes();
-        }
-
         for(Entity axis: axes){
             axis.render(shaderProgram);
         }
+    }
+
+    private static void renderBoundingBox(ShaderProgram shaderProgram, FrustumCuller frustumCuller){
+        if(frustumCuller.isInsideFrustum(boundingBox)) {
+            boundingBox.render(shaderProgram);
+        }
+    }
+
+    private static void initBoundingBox(TrackCollection tracks){
+        double[][] spacialLimits  = tracks.getSpatialLimits(false);
+        float width = (float)(spacialLimits[0][1] - spacialLimits[0][0]);
+        float height = (float)(spacialLimits[1][1] - spacialLimits[1][0]);
+        float length = (float)(spacialLimits[2][1] - spacialLimits[2][0]);
+        boundingBox = new Entity(GenerateMesh.cuboid(width, height, length), new Color(255,0,0, 60));
+        boundingBox.getPosition().set(
+                (float)spacialLimits[0][0] + width/2,
+                (float)spacialLimits[1][0] + height/2,
+                (float)spacialLimits[2][0] + length/2
+        );
     }
 
     public int getFrame() {
@@ -82,24 +109,47 @@ public class Scene {
         setFrame(getFrame() - 1);
     }
 
-    public void dispose() {
-        Prefs.set("TrackAnalysis.TrackPlot.showAxes", showAxes);
+    public void dispose(){
+    }
+
+    public TrackEntityCollection getTracksEntities() {
+        return tracksEntities;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private boolean showAxes = Prefs.get("TrackAnalysis.TrackPlot.showAxes",false);
+    public static final boolean showAxes_DEFAULT = false;
 
-    public boolean isAxesVisible(){
+    private static boolean showAxes;
+
+    public static boolean isAxesVisible(){
         return showAxes;
     }
 
-    public void setAxesVisibility(boolean state){
+    public static void setAxesVisibility(boolean state){
         showAxes = state;
     }
 
-    public void togglwAxesVisibility(){
+    public static void toggleAxesVisibility(){
         showAxes = !showAxes;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final boolean showBoundingBox_DEFAULT = false;
+
+    private static boolean showBoundingBox;
+
+    public static boolean isBoundingBoxVisible(){
+        return showBoundingBox;
+    }
+
+    public static void setBoundingBoxVisibility(boolean state){
+        showBoundingBox = state;
+    }
+
+    public static void toggleBoundingBoxVisibility(){
+        showBoundingBox = !showBoundingBox;
     }
 
 }

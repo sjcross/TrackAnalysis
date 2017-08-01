@@ -25,4 +25,10 @@ public class Maths {
             rotation.setZ(Maths.floorMod(rotation.getZ(), 360));
         }
     }
+
+    public static Vector3f midpointBetweenVectorPositions(Vector3f vec1, Vector3f vec2){
+        Vector3f result  = Vector3f.Add(vec1, vec2);
+        result.scale(0.5f);
+        return result;
+    }
 }

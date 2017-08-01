@@ -2,31 +2,33 @@ package wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics;
 
 
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.Entity;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.Mesh;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
+import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector4f;
 
 /**
  * Created by Jordan Fisher on 02/07/2017.
  */
 public class FrustumCuller {
-    private Matrix4f clipMatrix;
+    private Matrix4f combinedViewMatrix;
     private Vector4f[] frustumPlanes;
 
     public FrustumCuller(){
-        clipMatrix = new Matrix4f();
+        combinedViewMatrix = new Matrix4f();
         frustumPlanes = new Vector4f[6];
         for (int i = 0; i < frustumPlanes.length; i++){
             frustumPlanes[i] = new Vector4f();
         }
     }
 
-    public void setClipMatrix(Matrix4f projectionMatrix, Matrix4f cameraMatrix) {
-        clipMatrix = Matrix4f.multiply(cameraMatrix, projectionMatrix);
+    public void setCombinedViewMatrix(Matrix4f combinedViewMatrix) {
+        this.combinedViewMatrix = combinedViewMatrix;
         update();
     }
 
     public void update(){
-        float[][] E = clipMatrix.elements;
+        float[][] E = combinedViewMatrix.elements;
 
         frustumPlanes[0].set(E[3][0] + E[0][0], E[3][1] + E[0][1], E[3][2] + E[0][2], E[3][3] + E[0][3]);
         frustumPlanes[1].set(E[3][0] - E[0][0], E[3][1] - E[0][1], E[3][2] - E[0][2], E[3][3] - E[0][3]);
@@ -40,21 +42,25 @@ public class FrustumCuller {
         }
     }
 
-
     public boolean isInsideFrustum(Entity e) {
-        boolean result = true;
-//        for (int i = 0; i < frustumPlanes.length; i++) {
-//            Vector4f plane = frustumPlanes[i];
-//            if (plane.x * e.getPosition().getX() + plane.y * e.getPosition().getY() + plane.z * e.getPosition().getZ() + plane.w <= - e.getMesh().getBoundingSphereRadius() * e.getScale()) {
-//                result = false;
-//                return result;
-//            }
-//        }
-        return result;
+        return isInsideFrustum(e.getPosition(), e.getScale(), e.getMesh());
+    }
+
+    public boolean isInsideFrustum(Vector3f position, Vector3f scale, Mesh mesh) {
+        return isInsideFrustum(position, scale.getLargestElement(), mesh);
+    }
+
+    public boolean isInsideFrustum(Vector3f position, float scale, Mesh mesh) {
+        for (Vector4f plane: frustumPlanes) {
+            if (plane.getX() * position.getX() + plane.getY() * position.getY() + plane.getZ() * position.getZ() + plane.getW() <= - mesh.getBoundingSphereRadius() * scale) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void dispose(){
-        clipMatrix = null;
+        combinedViewMatrix = null;
         frustumPlanes = null;
     }
 }

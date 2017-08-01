@@ -98,7 +98,7 @@ public class Camera {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private int FOV;
-    private final static int FOV_DEFAULT = 70;
+    public final static int FOV_DEFAULT = 70;
     public final static int FOV_MINIMUM = 20;
     public final static int FOV_MAXIMUM = 160;
 
@@ -198,9 +198,9 @@ public class Camera {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private float mouseSensitivity;
-    private final static float mouseSensitivity_DEFAULT = 0.3f;
-    private final static float mouseSensitivity_MINIMUM = 0.01f;
-    private final static float mouseSensitivity_MAXIMUM = 5f;
+    public final static float mouseSensitivity_DEFAULT = 0.3f;
+    public final static float mouseSensitivity_MINIMUM = 0.01f;
+    public final static float mouseSensitivity_MAXIMUM = 5f;
 
     public void setMouseSensitivity(float value){
         if(value < mouseSensitivity_MINIMUM){

@@ -93,6 +93,19 @@ public class Vector3f {
 		return (float) FastMath.sqrt(FastMath.pow(x, 2) + FastMath.pow(y, 2) + FastMath.pow(z, 2));
 	}
 
+    public float getTheta(){
+        return (float)FastMath.toDegrees(FastMath.atan2(z, x));
+    }
+
+    public float getPhi(){
+        float length = getLength();
+        if(length != 0){
+            return (float)FastMath.toDegrees(FastMath.acos(y / length));
+        }else {
+            return 0;
+        }
+    }
+
 	public void scale(float scaler){
 		setX(getX() * scaler);
 		setY(getY() * scaler);
@@ -101,6 +114,14 @@ public class Vector3f {
 
     public void normalize(){
         scale(1/getLength());
+    }
+
+    public float getLargestElement(){
+        float result = 0;
+        result = x > result ? x : result;
+        result = y > result ? y : result;
+        result = z > result ? z : result;
+        return result;
     }
 
 	@Override
@@ -148,5 +169,10 @@ public class Vector3f {
 
 	public static Vector3f Negative(Vector3f vec){
 		return Scale(vec, -1);
+	}
+
+	public static float DistanceBetweenVectors(Vector3f vec1, Vector3f vec2){
+		Vector3f deltaVec = Vector3f.Subtract(vec1, vec2);
+		return deltaVec.getLength();
 	}
 }
