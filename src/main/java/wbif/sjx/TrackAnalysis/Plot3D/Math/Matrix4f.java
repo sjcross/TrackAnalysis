@@ -112,9 +112,9 @@ public class Matrix4f {
     public static Matrix4f orthographic(int left, int right, int top, int bottom){
         Matrix4f result = identity();
         result.elements[0][0] = 2f/(right - left);
-        result.elements[0][3] = (-(right + left)) / (right - left);
+        result.elements[0][3] = right == left ? 0 : (-(right + left)) / (right - left);
         result.elements[1][1] = 2f/(top - bottom);
-        result.elements[1][3] = (-(top + bottom))/(top - bottom);
+        result.elements[1][3] = top == bottom ? 0 : (-(top + bottom)) / (top - bottom);
         result.elements[2][2] = -1f;
         return result;
     }

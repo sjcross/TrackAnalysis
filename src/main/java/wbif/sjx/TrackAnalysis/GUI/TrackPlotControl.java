@@ -1,10 +1,9 @@
 package wbif.sjx.TrackAnalysis.GUI;
 
 import ij.ImagePlus;
-import ij.plugin.ZProjector;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Camera;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Engine;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.TrackEntity;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Renderer;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.TrackEntityCollection;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Scene;
 import wbif.sjx.common.Object.TrackCollection;
@@ -58,6 +57,15 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
 
     private JToggleButton playFramesButton;
     private final static String PLAY_FRAMES = "Play";
+
+    private JButton viewXZplaneButton;
+    private final static String XZ_PLANE = "XZ plane";
+
+    private JButton viewYZplaneButton;
+    private final static String YZ_PLANE = "YZ plane";
+
+    private JButton viewXYplaneButton;
+    private final static String XY_PLANE = "XY plane";
 
     private JComboBox<TrackEntityCollection.displayColourOptions> displayColourComboBox;
     private final static String DISPLAY_COLOUR = "Display colour";
@@ -223,6 +231,32 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         c.gridx++;
         panel.add(playFramesButton,c);
 
+        viewXZplaneButton = new JButton(XZ_PLANE);
+        viewXZplaneButton.setPreferredSize(new Dimension(panelWidth/3,elementHeight));
+        viewXZplaneButton.setEnabled(false);
+        viewXZplaneButton.addActionListener(this);
+        viewXZplaneButton.setName(XZ_PLANE);
+
+        viewYZplaneButton = new JButton(YZ_PLANE);
+        viewYZplaneButton.setPreferredSize(new Dimension(panelWidth/3,elementHeight));
+        viewYZplaneButton.setEnabled(false);
+        viewYZplaneButton.addActionListener(this);
+        viewYZplaneButton.setName(YZ_PLANE);
+
+        viewXYplaneButton = new JButton(XY_PLANE);
+        viewXYplaneButton.setPreferredSize(new Dimension(panelWidth/3,elementHeight));
+        viewXYplaneButton.setEnabled(false);
+        viewXYplaneButton.addActionListener(this);
+        viewXYplaneButton.setName(XY_PLANE);
+
+        c.gridx = 0;
+        c.gridwidth = 1;
+        c.gridy++;
+        panel.add(viewXZplaneButton,c);
+        c.gridx++;
+        panel.add(viewYZplaneButton,c);
+        c.gridx++;
+        panel.add(viewXYplaneButton,c);
 
         displayColourComboBox = new JComboBox<>(TrackEntityCollection.displayColourOptions.values());
         displayColourComboBox.setPreferredSize(new Dimension(panelWidth,elementHeight));
@@ -245,7 +279,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
     @Override
     public void run(int ID) {
         new Thread(() -> {
-            engine.start(this);
+            engine.init(this);
             plotAllButton.setEnabled(true);
             showTrailCheckbox.setEnabled(false);
             showAxesCheckbox.setEnabled(false);
@@ -259,6 +293,9 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
             incrementFrameButton.setEnabled(false);
             decrementFrameButton.setEnabled(false);
             playFramesButton.setEnabled(false);
+            viewXZplaneButton.setEnabled(false);
+            viewYZplaneButton.setEnabled(false);
+            viewXYplaneButton.setEnabled(false);
             displayColourComboBox.setEnabled(false);
         }).start();
 
@@ -275,6 +312,9 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         incrementFrameButton.setEnabled(true);
         decrementFrameButton.setEnabled(true);
         playFramesButton.setEnabled(true);
+        viewXZplaneButton.setEnabled(true);
+        viewYZplaneButton.setEnabled(true);
+        viewXYplaneButton.setEnabled(true);
         displayColourComboBox.setEnabled(true);
     }
 
@@ -309,6 +349,15 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
                 break;
             case PLAY_FRAMES:
                 engine.getScene().setPlayFrames(((JToggleButton)e.getSource()).isSelected());
+                break;
+            case XZ_PLANE:
+                engine.getCamera().viewXZplane(Scene.getBoundingBox());
+                break;
+            case YZ_PLANE:
+                engine.getCamera().viewYZplane(Scene.getBoundingBox());
+                break;
+            case XY_PLANE:
+                engine.getCamera().viewXYplane(Scene.getBoundingBox());
                 break;
             case DISPLAY_COLOUR:
                 engine.getScene().getTracksEntities().displayColour = (TrackEntityCollection.displayColourOptions)((JComboBox)e.getSource()).getSelectedItem();;
@@ -350,6 +399,9 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         playFramesButton.setSelected(engine.getScene().isPlayingFrames());
         faceCentreCheckbox.setSelected(engine.getCamera().isFacingCentre());
         orbitVelocitySlider.setEnabled(faceCentreCheckbox.isSelected());
+        viewXZplaneButton.setEnabled(!faceCentreCheckbox.isSelected());
+        viewYZplaneButton.setEnabled(!faceCentreCheckbox.isSelected());
+        viewXYplaneButton.setEnabled(!faceCentreCheckbox.isSelected());
     }
 
     public TrackCollection getTracks() {

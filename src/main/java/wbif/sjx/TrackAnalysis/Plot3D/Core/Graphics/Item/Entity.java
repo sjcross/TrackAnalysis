@@ -41,9 +41,10 @@ public class Entity {
     }
 
     public void render(ShaderProgram shaderProgram, FrustumCuller frustumCuller){
-        if(frustumCuller.isInsideFrustum(this)) {
+        if(frustumCuller == null || frustumCuller.isInsideFrustum(this)) {
             shaderProgram.setMatrix4fUniform("combinedTransformationMatrix", getGlobalMatrix());
             shaderProgram.setColourUniform("colour", colour);
+
             mesh.render();
         }
     }

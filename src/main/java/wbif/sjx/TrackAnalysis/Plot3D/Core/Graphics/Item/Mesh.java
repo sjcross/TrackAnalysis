@@ -51,7 +51,7 @@ public class Mesh {
             VertexPositions[i * 3 + 1] = faces[i].getvB();
             VertexPositions[i * 3 + 2] = faces[i].getvC();
 
-            VertexIndices[i] = new Vector3i(i * 3    , i * 3 + 1, i * 3 + 2);
+            VertexIndices[i] = new Vector3i(i * 3, i * 3 + 1, i * 3 + 2);
         }
 
         calcBoundingSphereRadius(VertexPositions);

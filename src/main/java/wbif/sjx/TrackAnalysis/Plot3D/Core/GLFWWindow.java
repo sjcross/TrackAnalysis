@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL13.GL_MULTISAMPLE;
 /**
  * Created by sc13967 on 31/07/2017.
  */
-public class GLFW_Window {
+public class GLFWWindow {
     private GLFWVidMode primaryMonitor;
     private String title;
     private int width;
@@ -28,7 +28,7 @@ public class GLFW_Window {
     private long windowHandle;
 
     //Creates window object
-    public GLFW_Window(String title, int width, int height, boolean vSync){
+    public GLFWWindow(String title, int width, int height, boolean vSync){
         GLFWErrorCallback.createPrint(System.err).set();
 
         if (!glfwInit()) {
@@ -80,8 +80,14 @@ public class GLFW_Window {
         glEnable(GL_ALPHA_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
 
-        glfwShowWindow(windowHandle);
+    public void setVisibility(boolean state){
+        if(state) {
+            glfwShowWindow(windowHandle);
+        }else {
+            glfwHideWindow(windowHandle);
+        }
     }
 
     //Centres the window on the primary monitor

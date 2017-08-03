@@ -1,6 +1,7 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
 
+import org.lwjgl.system.CallbackI;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.FrustumCuller;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
@@ -20,7 +21,7 @@ public class Renderer {
     private Matrix4f projectionMatrix;
     private Matrix4f cameraMatrix;
 
-    //This is the product of the projection and camera Matrix
+    //This is the product of the projection/orthographic and camera Matrix
     private Matrix4f combinedViewMatrix;
 
     public Renderer() throws Exception{
@@ -38,7 +39,7 @@ public class Renderer {
         frustumCuller = new FrustumCuller();
     }
 
-    private void preRender(GLFW_Window window, Camera camera){
+    private void preRender(GLFWWindow window, Camera camera){
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         if(window.hasResized()){
@@ -54,7 +55,7 @@ public class Renderer {
         calcCombinedViewMatrix(window, camera);
     }
 
-    public void render(GLFW_Window window, Camera camera, Scene scene){
+    public void render(GLFWWindow window, Camera camera, Scene scene){
         preRender(window, camera);
 
         //Binds shader
@@ -70,15 +71,15 @@ public class Renderer {
         mainShader.unbind();
     }
 
-    private void calcProjectionMatrix(GLFW_Window window, Camera camera){
-        projectionMatrix = Matrix4f.projection(camera.getFOV(), window.getAspectRatio(), camera.getViewDistanceNear(), camera.getViewDistanceFar());
+    private void calcProjectionMatrix(GLFWWindow window, Camera camera){
+        projectionMatrix = Matrix4f.projection(camera.getFOV(), window.getAspectRatio(), Camera.VIEW_DISTANCE_NEAR, Camera.VIEW_DISTANCE_FAR);
     }
 
     private void calcCameraMatrix(Camera camera){
         cameraMatrix = camera.getCameraMatrix();
     }
 
-    private void calcCombinedViewMatrix(GLFW_Window window, Camera camera){
+    private void calcCombinedViewMatrix(GLFWWindow window, Camera camera){
         calcProjectionMatrix(window, camera);
         calcCameraMatrix(camera);
         combinedViewMatrix = Matrix4f.multiply(cameraMatrix, projectionMatrix);

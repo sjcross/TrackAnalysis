@@ -16,6 +16,7 @@ public class TrackEntityCollection extends LinkedHashMap<Integer, TrackEntity>{
     private TrackCollection tracks;
     private final int highestFrame;
     private final Vector3f centreOfCollection;
+    private double[][] spacialLimits;
 
     public TrackEntityCollection(TrackCollection tracks){
         this.tracks = tracks;
@@ -24,6 +25,7 @@ public class TrackEntityCollection extends LinkedHashMap<Integer, TrackEntity>{
         }
 
         centreOfCollection = DataTypeUtils.toVector3f(tracks.getMeanPoint(0));
+        spacialLimits = tracks.getSpatialLimits(true);
 
         this.highestFrame = tracks.getHighestFrame();
         this.displayColour = displayColour_DEFAULT;
@@ -43,8 +45,24 @@ public class TrackEntityCollection extends LinkedHashMap<Integer, TrackEntity>{
         return tracks;
     }
 
-    public Vector3f getCentreOfCollection() {
+    public Vector3f getGlobalCentreOfCollection() {
         return centreOfCollection;
+    }
+
+    public Vector3f getCurrentCentreOfCollection(){
+        if(motilityPlot){
+            return new Vector3f();
+        }else {
+            return getGlobalCentreOfCollection();
+        }
+    }
+
+    public int getHighestFrame() {
+        return highestFrame;
+    }
+
+    public double[][] getSpacialLimits() {
+        return spacialLimits;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

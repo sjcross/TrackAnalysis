@@ -1,8 +1,6 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
-import com.itextpdf.text.pdf.PRAcroForm;
 import wbif.sjx.TrackAnalysis.GUI.TrackPlotControl;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.TrackEntity;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.Cursor;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.Keyboard;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.MouseButtons;
@@ -10,14 +8,6 @@ import wbif.sjx.TrackAnalysis.Plot3D.Input.MouseWheel;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataTypeUtils;
-import wbif.sjx.common.Object.TrackCollection;
-
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.xml.crypto.Data;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
@@ -28,7 +18,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 public class Engine {
     private TrackPlotControl trackPlotControl;
     private boolean running;
-    private GLFW_Window window;
+    private GLFWWindow window;
     private Renderer renderer;
     private Camera camera;
     private Scene scene;
@@ -36,29 +26,37 @@ public class Engine {
     public Engine(){
     }
 
-    public void start(TrackPlotControl trackPlotControl){
+    public void init(TrackPlotControl trackPlotControl){
         try {
             this.trackPlotControl = trackPlotControl;
-            init();
-            mainLoop();
+
+            window = new GLFWWindow("3D Track Plot", 600, 600, true);
+            renderer = new Renderer();
+            camera = new Camera();
+            scene = new Scene(trackPlotControl.getTracks());
+
+            camera.getPosition().set(400,400,100);
+            camera.facePoint(scene.getTracksEntities().getCurrentCentreOfCollection());
+
+            start();
         }catch (Exception e){
             e.printStackTrace();
         }finally {
-            shutdown();
+            dispose();
         }
     }
 
-    private void init() throws Exception{
-        window = new GLFW_Window("3D Track Plot", 600, 600, true);
-        renderer = new Renderer();
-        camera = new Camera(70);
-        scene = new Scene(trackPlotControl.getTracks());
+    public void start() throws Exception{
+        mainLoop();
+    }
 
-        camera.getPosition().set(500,500,0);
-        camera.facePoint(scene.getTracksEntities().getCentreOfCollection());
+    public void stop() {
+        window.setVisibility(false);
+        running = false;
     }
 
     private void mainLoop() throws Exception{
+        window.setVisibility(true);
         running = true;
 
         while (running && window.isOpen()){
@@ -68,59 +66,36 @@ public class Engine {
         }
     }
 
-    public void stop(){
-        running = false;
-    }
-
-    private void shutdown(){
+    private void dispose(){
         window.dispose();
         renderer.dispose();
+        scene.dispose();
     }
 
     private void handleInput(){
-
-        //Handles switching between camera mode
-        if(Cursor.inCameraMode()){
-            if (Keyboard.isKeyTapped(GLFW_KEY_ESCAPE)) {
-                Cursor.setCameraMode(window, false);
-            }
-        }else {
-            if(MouseButtons.isButtonTapped(GLFW_MOUSE_BUTTON_1)){
-                Cursor.setCameraMode(window, true);
-            }
-            if (Keyboard.isKeyTapped(GLFW_KEY_ESCAPE)) {
-                stop();
-            }
-        }
-
-
-
-        //Handles camera WASD movement
+        //Handles camera movement
         Vector3f deltaCamPos = new Vector3f();
         float cameraPositionStep = camera.getCameraPositionStep();
 
+        //left right
         if(Keyboard.isKeyDown(GLFW_KEY_A)){
             deltaCamPos.setX(-cameraPositionStep);
         } else if(Keyboard.isKeyDown(GLFW_KEY_D)){
             deltaCamPos.setX(cameraPositionStep);
-        } else{
-            deltaCamPos.setX(0);
         }
 
+        //forwards backwards
         if(Keyboard.isKeyDown(GLFW_KEY_W)){
             deltaCamPos.setY(-cameraPositionStep);
         } else if(Keyboard.isKeyDown(GLFW_KEY_S)){
             deltaCamPos.setY(cameraPositionStep);
-        } else{
-            deltaCamPos.setY(0);
         }
 
-        if(MouseButtons.isButtonDown(GLFW_MOUSE_BUTTON_LEFT)){
-            deltaCamPos.setZ(cameraPositionStep);
-        } else if(MouseButtons.isButtonDown(GLFW_MOUSE_BUTTON_RIGHT)){
+        //up down
+        if(Keyboard.isKeyDown(GLFW_KEY_E)){
             deltaCamPos.setZ(-cameraPositionStep);
-        } else{
-            deltaCamPos.setZ(0);
+        } else if(Keyboard.isKeyDown(GLFW_KEY_Q)){
+            deltaCamPos.setZ(cameraPositionStep);
         }
 
         //movement speed boost
@@ -129,6 +104,14 @@ public class Engine {
         }
 
         camera.changePositionRelativeToOrientation(deltaCamPos);
+
+        //Handles camera rotation
+        if(MouseButtons.isButtonDown(GLFW_MOUSE_BUTTON_LEFT) || MouseButtons.isButtonDown(GLFW_MOUSE_BUTTON_RIGHT)) {
+            Vector2f deltaCursorPos = Cursor.getDeltaPosition();
+            deltaCursorPos.scale(camera.getMouseSensitivity());
+            camera.changeTilt(deltaCursorPos.y);
+            camera.changePan(deltaCursorPos.x);
+        }
 
         //Handles frame switching
         if(Keyboard.isKeyDown(GLFW_KEY_UP)){
@@ -142,6 +125,8 @@ public class Engine {
         }else if(Keyboard.isKeyTapped(GLFW_KEY_PAGE_DOWN)){
             scene.decrementFrame();
         }
+
+        scene.changeFrame(MouseWheel.getDeltaScroll());
 
         if(Keyboard.isKeyTapped(GLFW_KEY_F)) {
             scene.togglePlayFrames();
@@ -159,6 +144,7 @@ public class Engine {
 
         //Essential static updates
         Keyboard.update();
+        Cursor.update(window.getPrimaryMonitor());
         MouseButtons.update();
         MouseWheel.update();
     }
@@ -183,4 +169,11 @@ public class Engine {
         return scene;
     }
 
+    public Renderer getRenderer() {
+        return renderer;
+    }
+
+    public GLFWWindow getWindow() {
+        return window;
+    }
 }

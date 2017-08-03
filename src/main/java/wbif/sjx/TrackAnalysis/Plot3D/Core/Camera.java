@@ -1,29 +1,30 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
 import org.apache.commons.math3.util.FastMath;
-import wbif.sjx.TrackAnalysis.Plot3D.Input.Cursor;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.Entity;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
-import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
+
+import java.util.LinkedHashMap;
 
 /**
  * Created by Jordan Fisher on 19/05/2017.
  */
 public class Camera {
+    public final static float VIEW_DISTANCE_NEAR = 0.01f;
+    public final static int VIEW_DISTANCE_FAR = 100000;
+    private static final int MAX_TILT = 90;
+
     private Vector3f position;
     private float tilt;
     private float pan;
-    private int MAX_TILT;
 
-    public Camera(int MAX_VERTICAL_ROTATION){
-        this.MAX_TILT = MAX_VERTICAL_ROTATION;
+    public Camera(){
         this.position = new Vector3f(0,0,0);
         this.tilt = 0;
         this.pan = 0;
         this.FOV = FOV_DEFAULT;
-        this.viewDistanceNear = viewDistanceNear_DEFAULT;
-        this.viewDistanceFar = viewDistanceFar_DEFAULT;
         this.cameraPositionStep = cameraPositionStep_DEFAULT;
         this.mouseSensitivity = mouseSensitivity_DEFAULT;
         this.faceCentre = faceCentre_DEFAULT;
@@ -40,20 +41,9 @@ public class Camera {
     public void update(Scene scene){
         //Handles camera rotation
         if (faceCentre) {
-            if (scene.getTracksEntities().ifMotilityPlot()) {
-                facePoint(0, 0, 0);
-            } else {
-                facePoint(scene.getTracksEntities().getCentreOfCollection());
-            }
+            facePoint(scene.getTracksEntities().getCurrentCentreOfCollection());
             changePositionXRelativeToOrientation(orbitVelocity);
-        }else if(Cursor.inCameraMode()) {
-            Vector2f deltaCursorPos = Cursor.getDeltaPosition();
-            deltaCursorPos.scale(mouseSensitivity);
-            changeTilt(deltaCursorPos.y);
-            changePan(deltaCursorPos.x);
         }
-
-        Cursor.update();
     }
 
     public void returnToOrigin(){
@@ -61,7 +51,6 @@ public class Camera {
         tilt = 0;
         pan = 0;
     }
-
 
     public void facePoint(float x, float y, float z){
         facePoint(new Vector3f(x, y, z));
@@ -71,6 +60,57 @@ public class Camera {
         Vector3f vec = Vector3f.Subtract(pointVector, position);
         tilt = vec.getPhi() - 90;
         pan = 90 + vec.getTheta();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public float calcOptimalBoundingBoxViewingDistance(float sideLength){
+        return (float)((sideLength / 2) / FastMath.tan(FOV / 2));
+    }
+
+    public void viewXZplane(Entity boundingBox){
+        setTilt(0);
+        setPan(0);
+
+        position.set(boundingBox.getPosition());
+
+        float width = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getX());
+        float length = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getY());
+        float height = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getZ());
+
+        float distance = FastMath.max(width, height);
+
+        position.changeY(length / 2 + distance);
+    }
+
+    public void viewYZplane(Entity boundingBox){
+        setTilt(0);
+        setPan(-90);
+
+        position.set(boundingBox.getPosition());
+
+        float width = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getX());
+        float length = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getY());
+        float height = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getZ());
+
+        float distance = FastMath.max(length, height);
+
+        position.changeX(width / 2 + distance);
+    }
+
+    public void viewXYplane(Entity boundingBox){
+        setTilt(90);
+        setPan(0);
+
+        position.set(boundingBox.getPosition());
+
+        float width = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getX());
+        float length = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getY());
+        float height = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getZ());
+
+        float distance = FastMath.max(width, length);
+
+        position.changeZ(height / 2 + distance);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -170,56 +210,6 @@ public class Camera {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private float viewDistanceNear;
-    private final static float viewDistanceNear_DEFAULT = 0.01f;
-    private final static float viewDistanceNear_MINIMUM = 0.001f;
-    private final static float viewDistanceNear_MAXIMUM = 10f;
-
-    public void setViewDistanceNear(float value){
-        if(value < viewDistanceNear_MINIMUM){
-            viewDistanceNear = viewDistanceNear_MINIMUM;
-        }else if(value > viewDistanceNear_MAXIMUM){
-            viewDistanceNear = viewDistanceNear_MAXIMUM;
-        }else {
-            viewDistanceNear = value;
-        }
-    }
-
-    public void changeViewDistanceNear(float value){
-        setViewDistanceNear(getViewDistanceNear() + value);
-    }
-
-    public float getViewDistanceNear(){
-        return viewDistanceNear;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private int viewDistanceFar;
-    private final static int viewDistanceFar_DEFAULT = 5000;
-    public final static int viewDistanceFar_MINIMUM = 200;
-    public final static int viewDistanceFar_MAXIMUM = 10200;
-
-    public void setViewDistanceFar(int value){
-        if(value < viewDistanceFar_MINIMUM){
-            viewDistanceFar = viewDistanceFar_MINIMUM;
-        }else if(value > viewDistanceFar_MAXIMUM){
-            viewDistanceFar = viewDistanceFar_MAXIMUM;
-        }else {
-            viewDistanceFar = value;
-        }
-    }
-
-    public void changeViewDistanceFar(int value){
-        setViewDistanceFar(getViewDistanceFar() + value);
-    }
-
-    public int getViewDistanceFar(){
-        return viewDistanceFar;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     private float cameraPositionStep;
     private final static float cameraPositionStep_DEFAULT = 0.5f;
     private final static float cameraPositionStep_MINIMUM = 0.01f;
@@ -228,7 +218,7 @@ public class Camera {
     public void setCameraPositionStep(float value){
         if(value < cameraPositionStep_MINIMUM){
             cameraPositionStep = cameraPositionStep_MINIMUM;
-        }else if(value > viewDistanceNear_MAXIMUM){
+        }else if(value > cameraPositionStep_MAXIMUM){
             cameraPositionStep = cameraPositionStep_MAXIMUM;
         }else {
             cameraPositionStep = value;
