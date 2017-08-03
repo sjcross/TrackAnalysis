@@ -24,6 +24,7 @@ public class PointEntity {
     private TrackEntity trackEntity;
     private Vector3f globalPosition;
     private Vector3f motilityPosition;
+    private Vector3f displayPosition;
     private Color velocityColour;
 
     public PointEntity(TrackEntity trackEntity, Point point){
@@ -42,36 +43,51 @@ public class PointEntity {
     private float pipeLength;
     private Vector3f pipeRotation;
 
-    public void createPipe(Vector3f nextPointPosition) {
-        Vector3f pointToNextPoint = Vector3f.Subtract(globalPosition, nextPointPosition);
-        pipeRotation = new Vector3f(0, -pointToNextPoint.getTheta(), -pointToNextPoint.getPhi());
+    public void createPipe(Vector3f nextPointGlobalPosition) {
+        Vector3f pointToNextPoint = Vector3f.Subtract(nextPointGlobalPosition, globalPosition);
+        pipeRotation = new Vector3f(0, pointToNextPoint.getPhi(),180 - pointToNextPoint.getTheta());
         pipeLength = pointToNextPoint.getLength();
         hasPipe = true;
     }
 
     public void renderParticle(ShaderProgram shaderProgram, FrustumCuller frustumCuller){
-        setDisplayColourUniform(shaderProgram);
+        updateDisplayPosition();
 
-        Matrix4f combinedTransformationMatrix = getPositionMatrix();
-        shaderProgram.setMatrix4fUniform("combinedTransformationMatrix", combinedTransformationMatrix);
+        if(frustumCuller.isInsideFrustum(displayPosition, 1, PARTICLE_MESH)) {
+            setDisplayColourUniform(shaderProgram);
+            Matrix4f combinedTransformationMatrix = Matrix4f.translation(displayPosition.getX(), displayPosition.getZ(), displayPosition.getY());
+            shaderProgram.setMatrix4fUniform("combinedTransformationMatrix", combinedTransformationMatrix);
 
-        PARTICLE_MESH.render();
+            PARTICLE_MESH.render();
+        }
     }
 
     public void renderPipe(ShaderProgram shaderProgram, FrustumCuller frustumCuller){
+        updateDisplayPosition();
         setDisplayColourUniform(shaderProgram);
+        Matrix4f combinedTransformationMatrix = Matrix4f.translation(displayPosition.getX(), displayPosition.getZ(), displayPosition.getY());
 
-        Matrix4f combinedTransformationMatrix = getPositionMatrix();
-        shaderProgram.setMatrix4fUniform("combinedTransformationMatrix", combinedTransformationMatrix);
+        if(frustumCuller.isInsideFrustum(displayPosition, 1, HINGE_POINT_MESH)) {
+            shaderProgram.setMatrix4fUniform("combinedTransformationMatrix", combinedTransformationMatrix);
 
-        HINGE_POINT_MESH.render();
+            HINGE_POINT_MESH.render();
+        }
 
-        combinedTransformationMatrix.apply(Matrix4f.rotation(pipeRotation));
-        combinedTransformationMatrix.apply(Matrix4f.stretchY(pipeLength));
+        if(frustumCuller.isInsideFrustum(displayPosition, new Vector3f(1,pipeLength,1), PIPE_MESH)) {
+            combinedTransformationMatrix.apply(Matrix4f.rotation(pipeRotation.getX(), pipeRotation.getZ(), pipeRotation.getY()));
+            combinedTransformationMatrix.apply(Matrix4f.stretchY(pipeLength));
+            shaderProgram.setMatrix4fUniform("combinedTransformationMatrix", combinedTransformationMatrix);
 
-        shaderProgram.setMatrix4fUniform("combinedTransformationMatrix", combinedTransformationMatrix);
+            PIPE_MESH.render();
+        }
+    }
 
-        PIPE_MESH.render();
+    private void updateDisplayPosition(){
+        if(trackEntity.getTrackEntityCollection().ifMotilityPlot()){
+            displayPosition = motilityPosition;
+        }else {
+            displayPosition = globalPosition;
+        }
     }
 
     private void setDisplayColourUniform(ShaderProgram shaderProgram){

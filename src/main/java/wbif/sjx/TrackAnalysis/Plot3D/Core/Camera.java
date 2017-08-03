@@ -1,8 +1,10 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
 import org.apache.commons.math3.util.FastMath;
+import wbif.sjx.TrackAnalysis.Plot3D.Input.Cursor;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
+import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 
 /**
@@ -24,6 +26,8 @@ public class Camera {
         this.viewDistanceFar = viewDistanceFar_DEFAULT;
         this.cameraPositionStep = cameraPositionStep_DEFAULT;
         this.mouseSensitivity = mouseSensitivity_DEFAULT;
+        this.faceCentre = faceCentre_DEFAULT;
+        this.orbitVelocity = orbitVelocity_DEFAULT;
     }
 
     public Matrix4f getCameraMatrix(){
@@ -33,16 +37,40 @@ public class Camera {
         return result;
     }
 
+    public void update(Scene scene){
+        //Handles camera rotation
+        if (faceCentre) {
+            if (scene.getTracksEntities().ifMotilityPlot()) {
+                facePoint(0, 0, 0);
+            } else {
+                facePoint(scene.getTracksEntities().getCentreOfCollection());
+            }
+            changePositionXRelativeToOrientation(orbitVelocity);
+        }else if(Cursor.inCameraMode()) {
+            Vector2f deltaCursorPos = Cursor.getDeltaPosition();
+            deltaCursorPos.scale(mouseSensitivity);
+            changeTilt(deltaCursorPos.y);
+            changePan(deltaCursorPos.x);
+        }
+
+        Cursor.update();
+    }
+
     public void returnToOrigin(){
         position = new Vector3f(0,0,0);
         tilt = 0;
         pan = 0;
     }
 
+
+    public void facePoint(float x, float y, float z){
+        facePoint(new Vector3f(x, y, z));
+    }
+
     public void facePoint(Vector3f pointVector){
         Vector3f vec = Vector3f.Subtract(pointVector, position);
-        tilt = -vec.getPhi() + 90;// needs fix
-        pan = -vec.getTheta();//this works
+        tilt = vec.getPhi() - 90;
+        pan = 90 + vec.getTheta();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,17 +84,29 @@ public class Camera {
     }
 
     public void changePositionRelativeToOrientation(float dx, float dy, float dz) {
-        if(dx != 0){//left right
-            position.changeX(-dx * (float) FastMath.sin(FastMath.toRadians(pan - 90)));
-            position.changeY(dx * (float) FastMath.cos(FastMath.toRadians(pan - 90)));
+        if(dx != 0){
+            changePositionXRelativeToOrientation(dx);
         }
         if(dy != 0){
-            position.changeX(-dy * (float) FastMath.sin(FastMath.toRadians(pan)));
-            position.changeY(dy * (float) FastMath.cos(FastMath.toRadians(pan)));
+            changePositionYRelativeToOrientation(dy);
         }
         if(dz != 0){
-            position.changeZ(dz);
+            changePositionZRelativeToOrientation(dz);
         }
+    }
+
+    public void changePositionXRelativeToOrientation(float dx) {
+        position.changeX(-dx * (float) FastMath.sin(FastMath.toRadians(pan - 90)));
+        position.changeY(dx * (float) FastMath.cos(FastMath.toRadians(pan - 90)));
+    }
+
+    public void changePositionYRelativeToOrientation(float dy) {
+        position.changeX(-dy * (float) FastMath.sin(FastMath.toRadians(pan)));
+        position.changeY(dy * (float) FastMath.cos(FastMath.toRadians(pan)));
+    }
+
+    public void changePositionZRelativeToOrientation(float dz) {
+        position.changeZ(dz);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -181,7 +221,7 @@ public class Camera {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private float cameraPositionStep;
-    private final static float cameraPositionStep_DEFAULT = 0.3f;
+    private final static float cameraPositionStep_DEFAULT = 0.5f;
     private final static float cameraPositionStep_MINIMUM = 0.01f;
     private final static float cameraPositionStep_MAXIMUM = 10f;
 
@@ -226,5 +266,47 @@ public class Camera {
 
     public float getMouseSensitivity(){
         return mouseSensitivity;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private boolean faceCentre;
+    public static final boolean faceCentre_DEFAULT = false;
+
+    public boolean isFacingCentre() {
+        return faceCentre;
+    }
+
+    public void setFaceCentre(boolean state){
+        faceCentre = state;
+    }
+
+    public void toggleFaceCentre(){
+        faceCentre = ! faceCentre;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private int orbitVelocity;
+    public final static int orbitVelocity_DEFAULT = 0;
+    public final static int orbitVelocity_MAXIMUM = 20;
+    public final static int orbitVelocity_MINIMUM = -orbitVelocity_MAXIMUM;
+
+    public void setOrbitVelocity(int value){
+        if(value < orbitVelocity_MINIMUM){
+            orbitVelocity = orbitVelocity_MINIMUM;
+        }else if(value > orbitVelocity_MAXIMUM){
+            orbitVelocity = orbitVelocity_MAXIMUM;
+        }else {
+            orbitVelocity = value;
+        }
+    }
+
+    public void changeOrbitVelocity(int value){
+        setOrbitVelocity(getOrbitVelocity() + value);
+    }
+
+    public int getOrbitVelocity(){
+        return orbitVelocity;
     }
 }

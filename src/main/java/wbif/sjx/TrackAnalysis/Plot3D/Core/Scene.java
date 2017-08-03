@@ -30,6 +30,8 @@ public class Scene {
         initAxes();
         initBoundingBox(tracks);
 
+
+
         tracksEntities = new TrackEntityCollection(tracks);
 
         showAxes = showAxes_DEFAULT;
@@ -65,7 +67,7 @@ public class Scene {
         Entity xAxis = new Entity(axesMesh, Color.RED);
         Entity yAxis = new Entity(axesMesh, Color.GREEN);
         Entity zAxis = new Entity(axesMesh, Color.BLUE);
-        Entity origin = new Entity(GenerateMesh.sphere(0.5f, 20), Color.WHITE);
+        Entity origin = new Entity(GenerateMesh.cube(1), Color.WHITE);
         xAxis.getRotation().setY(90f);
         yAxis.getRotation().setX(90f);
         axes = new Entity[]{
@@ -129,7 +131,7 @@ public class Scene {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final boolean showAxes_DEFAULT = true;
+    public static final boolean showAxes_DEFAULT = false;
 
     private static boolean showAxes;
 

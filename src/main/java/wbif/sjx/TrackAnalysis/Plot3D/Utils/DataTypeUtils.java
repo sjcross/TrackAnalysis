@@ -110,7 +110,7 @@ public class DataTypeUtils {
 
 	public static Vector3f toVector3f(Point point){
 	    if(point != null) {
-            return new Vector3f((float) point.getX(), (float) point.getZ(), (float) point.getY());
+            return new Vector3f((float) point.getX(), (float) point.getY(), (float) point.getZ());
         }else {
 	        return new Vector3f();
         }

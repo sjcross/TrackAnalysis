@@ -35,14 +35,20 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
     private JCheckBox motilityPlotCheckbox;
     private final static String MOTILITY_PLOT = "Motility plot";
 
-    private JSlider FOVSlider;
-    private final static String FOV_SLIDER = "FOV Slider";
+    private JCheckBox faceCentreCheckbox;
+    private final static String FACE_CENTRE = "Face centre";
 
-    private JSlider frameSlider;
-    private final static String FRAME_SLIDER = "Frame Slider";
+    private JSlider orbitVelocitySlider;
+    private final static String ORBIT_VELOCITY = "Orbit velocity";
+
+    private JSlider FOVSlider;
+    private final static String FOV_SLIDER = "FOV";
 
     private JSlider trailLengthSlider;
     private final static String TRAIL_LENGTH_SLIDER = "Trail length";
+
+    private JSlider frameSlider;
+    private final static String FRAME_SLIDER = "Frame Slider";
 
     private JButton incrementFrameButton;
     private final static String ADD_FRAME = "Frame ++";
@@ -139,6 +145,25 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         c.gridy++;
         panel.add(motilityPlotCheckbox,c);
 
+        faceCentreCheckbox = new JCheckBox(FACE_CENTRE);
+        faceCentreCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
+        faceCentreCheckbox.setSelected(Camera.faceCentre_DEFAULT);
+        faceCentreCheckbox.setEnabled(false);
+        faceCentreCheckbox.setName(FACE_CENTRE);
+        faceCentreCheckbox.addActionListener(this);
+        c.gridy++;
+        panel.add(faceCentreCheckbox,c);
+
+        orbitVelocitySlider = new JSlider(JSlider.HORIZONTAL, Camera.orbitVelocity_MINIMUM, Camera.orbitVelocity_MAXIMUM, Camera.orbitVelocity_DEFAULT);
+        orbitVelocitySlider.setPreferredSize(new Dimension(panelWidth,elementHeight));
+        orbitVelocitySlider.setEnabled(false);
+        orbitVelocitySlider.addChangeListener(this);
+        orbitVelocitySlider.setName(ORBIT_VELOCITY);
+        c.gridy++;
+        panel.add(new JLabel(ORBIT_VELOCITY),c);
+        c.gridy++;
+        panel.add(orbitVelocitySlider,c);
+
         FOVSlider = new JSlider(JSlider.HORIZONTAL, Camera.FOV_MINIMUM, Camera.FOV_MAXIMUM, Camera.FOV_DEFAULT);
         FOVSlider.setPreferredSize(new Dimension(panelWidth,elementHeight));
         FOVSlider.setEnabled(false);
@@ -148,16 +173,6 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         panel.add(new JLabel(FOV_SLIDER),c);
         c.gridy++;
         panel.add(FOVSlider,c);
-
-        frameSlider = new JSlider(JSlider.HORIZONTAL, 0, tracks.getHighestFrame(), Scene.frame_DEFAULT);
-        frameSlider.setPreferredSize(new Dimension(panelWidth,elementHeight));
-        frameSlider.setEnabled(false);
-        frameSlider.addChangeListener(this);
-        frameSlider.setName(FRAME_SLIDER);
-        c.gridy++;
-        panel.add(new JLabel(FRAME_SLIDER),c);
-        c.gridy++;
-        panel.add(frameSlider,c);
 
         final int highestFrame = tracks.getHighestFrame();
         final int trailLength_MAXIMUM = highestFrame < 1 ? 1 : highestFrame;
@@ -170,6 +185,16 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         panel.add(new JLabel(TRAIL_LENGTH_SLIDER),c);
         c.gridy++;
         panel.add(trailLengthSlider,c);
+
+        frameSlider = new JSlider(JSlider.HORIZONTAL, 0, tracks.getHighestFrame(), Scene.frame_DEFAULT);
+        frameSlider.setPreferredSize(new Dimension(panelWidth,elementHeight));
+        frameSlider.setEnabled(false);
+        frameSlider.addChangeListener(this);
+        frameSlider.setName(FRAME_SLIDER);
+        c.gridy++;
+        panel.add(new JLabel(FRAME_SLIDER),c);
+        c.gridy++;
+        panel.add(frameSlider,c);
 
         incrementFrameButton = new JButton(ADD_FRAME);
         incrementFrameButton.setPreferredSize(new Dimension(panelWidth/3,elementHeight));
@@ -226,9 +251,11 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
             showAxesCheckbox.setEnabled(false);
             showBoundingBoxCheckbox.setEnabled(false);
             motilityPlotCheckbox.setEnabled(false);
+            faceCentreCheckbox.setEnabled(false);
+            orbitVelocitySlider.setEnabled(false);
             FOVSlider.setEnabled(false);
-            frameSlider.setEnabled(false);
             trailLengthSlider.setEnabled(false);
+            frameSlider.setEnabled(false);
             incrementFrameButton.setEnabled(false);
             decrementFrameButton.setEnabled(false);
             playFramesButton.setEnabled(false);
@@ -240,9 +267,11 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         showAxesCheckbox.setEnabled(true);
         showBoundingBoxCheckbox.setEnabled(true);
         motilityPlotCheckbox.setEnabled(true);
+        faceCentreCheckbox.setEnabled(true);
+        orbitVelocitySlider.setEnabled(true);
         FOVSlider.setEnabled(true);
-        frameSlider.setEnabled(true);
         trailLengthSlider.setEnabled(true);
+        frameSlider.setEnabled(true);
         incrementFrameButton.setEnabled(true);
         decrementFrameButton.setEnabled(true);
         playFramesButton.setEnabled(true);
@@ -268,6 +297,9 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
                 break;
             case MOTILITY_PLOT:
                 engine.getScene().getTracksEntities().setMotilityPlot(((JCheckBox)e.getSource()).isSelected());
+                break;
+            case FACE_CENTRE:
+                engine.getCamera().setFaceCentre(((JCheckBox)e.getSource()).isSelected());
                 break;
             case ADD_FRAME:
                 engine.getScene().incrementFrame();
@@ -296,14 +328,17 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         String action = ((Component) e.getSource()).getName();
 
         switch (action){
+            case ORBIT_VELOCITY:
+                engine.getCamera().setOrbitVelocity(((JSlider)e.getSource()).getValue());
+                break;
             case FOV_SLIDER:
                 engine.getCamera().setFOV(((JSlider)e.getSource()).getValue());
                 break;
-            case FRAME_SLIDER:
-                engine.getScene().setFrame(((JSlider)e.getSource()).getValue());
-                break;
             case TRAIL_LENGTH_SLIDER:
                 engine.getScene().getTracksEntities().setTrailLength(((JSlider)e.getSource()).getValue());
+                break;
+            case FRAME_SLIDER:
+                engine.getScene().setFrame(((JSlider)e.getSource()).getValue());
                 break;
             default:
                 break;
@@ -312,6 +347,9 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
 
     public void updateGui(){
         frameSlider.setValue(engine.getScene().getFrame());
+        playFramesButton.setSelected(engine.getScene().isPlayingFrames());
+        faceCentreCheckbox.setSelected(engine.getCamera().isFacingCentre());
+        orbitVelocitySlider.setEnabled(faceCentreCheckbox.isSelected());
     }
 
     public TrackCollection getTracks() {

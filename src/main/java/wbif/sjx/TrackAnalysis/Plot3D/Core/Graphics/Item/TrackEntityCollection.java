@@ -3,6 +3,8 @@ package wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.FrustumCuller;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.TrackEntity;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.ShaderProgram;
+import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
+import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataTypeUtils;
 import wbif.sjx.common.Object.TrackCollection;
 
 import java.util.LinkedHashMap;
@@ -13,12 +15,15 @@ import java.util.LinkedHashMap;
 public class TrackEntityCollection extends LinkedHashMap<Integer, TrackEntity>{
     private TrackCollection tracks;
     private final int highestFrame;
+    private final Vector3f centreOfCollection;
 
     public TrackEntityCollection(TrackCollection tracks){
         this.tracks = tracks;
         for(int trackID: tracks.keySet()){
             put(trackID, new TrackEntity(this, tracks.get(trackID)));
         }
+
+        centreOfCollection = DataTypeUtils.toVector3f(tracks.getMeanPoint(0));
 
         this.highestFrame = tracks.getHighestFrame();
         this.displayColour = displayColour_DEFAULT;
@@ -36,6 +41,10 @@ public class TrackEntityCollection extends LinkedHashMap<Integer, TrackEntity>{
 
     public TrackCollection getTracks() {
         return tracks;
+    }
+
+    public Vector3f getCentreOfCollection() {
+        return centreOfCollection;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

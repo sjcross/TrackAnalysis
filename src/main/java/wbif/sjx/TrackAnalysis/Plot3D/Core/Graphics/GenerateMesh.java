@@ -54,6 +54,10 @@ public class GenerateMesh {
         return new Mesh(faces);
     }
 
+    public static Mesh cube(float length){
+        return cuboid(length, length, length);
+    }
+
     public static Mesh cuboid(float width, float height, float length) {
         Vector3f[] vertices = new Vector3f[]{
                 new Vector3f(-width / 2, height / 2, length / 2),   //V0
@@ -602,9 +606,9 @@ public class GenerateMesh {
         for(int i = 0; i < resolution; i++){
             float rSinθ = radius * (float) FastMath.sin(theta);
             float rCosθ = radius * (float) FastMath.cos(theta);
-            topVertices[i] = new Vector3f(rCosθ,0, rSinθ);
-            botVertices[i] = new Vector3f(rCosθ, -length, rSinθ);
-            theta -= deltaTheta; //beacause faces defined anticlockwise
+            topVertices[i] = new Vector3f(rCosθ,length, rSinθ);
+            botVertices[i] = new Vector3f(rCosθ, 0, rSinθ);
+            theta -= deltaTheta;
         }
 
         for(int i = 0; i < resolution -1; i++){
@@ -667,7 +671,7 @@ public class GenerateMesh {
             outerBotVertices[i] = new Vector3f(outerRadius * Cosθ,-length / 2, outerRadius * Sinθ);
             innerTopVertices[i] = new Vector3f(innerRadius * Cosθ,length / 2, innerRadius * Sinθ);
             innerBotVertices[i] = new Vector3f(innerRadius * Cosθ,-length / 2, innerRadius * Sinθ);
-            theta -= deltaTheta; //beacause faces defined anticlockwise
+            theta -= deltaTheta;
         }
 
         Vector2f[] textureCoords = new Vector2f[]{

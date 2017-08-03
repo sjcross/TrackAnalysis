@@ -31,12 +31,9 @@ public class Cursor extends GLFWCursorPosCallback{
         currentPosition.y = y;
     }
 
-    public static void update(GLFWVidMode primaryMonitor){
+    public static void update(){
         previousPosition.x = currentPosition.x;
         previousPosition.y = currentPosition.y;
-        if(!cameraMode){
-            onScreen = (currentPosition.x > 0 && currentPosition.y > 0 && currentPosition.x < primaryMonitor.width() && currentPosition.y < primaryMonitor.height());
-        }
     }
 
     public static Vector2d getCurrentPosition(){
@@ -70,7 +67,10 @@ public class Cursor extends GLFWCursorPosCallback{
         return cameraMode;
     }
 
-    public static boolean onScreen(){
+    public static boolean onScreen(GLFWVidMode primaryMonitor){
+        if(!cameraMode){
+            onScreen = (currentPosition.x > 0 && currentPosition.y > 0 && currentPosition.x < primaryMonitor.width() && currentPosition.y < primaryMonitor.height());
+        }
         return onScreen;
     }
 }

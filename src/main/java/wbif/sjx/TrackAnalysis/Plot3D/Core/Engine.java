@@ -52,9 +52,10 @@ public class Engine {
         window = new GLFW_Window("3D Track Plot", 600, 600, true);
         renderer = new Renderer();
         camera = new Camera(70);
-//        camera.facePoint(DataTypeUtils.toVector3f(trackPlotControl.getTracks().getMeanPoint(0)));
-//        camera.getGlobalPosition().set(500,500,-100);
         scene = new Scene(trackPlotControl.getTracks());
+
+        camera.getPosition().set(500,500,0);
+        camera.facePoint(scene.getTracksEntities().getCentreOfCollection());
     }
 
     private void mainLoop() throws Exception{
@@ -122,19 +123,12 @@ public class Engine {
             deltaCamPos.setZ(0);
         }
 
+        //movement speed boost
         if(Keyboard.isKeyDown(GLFW_KEY_SPACE)){
-            deltaCamPos.scale(5);
+            deltaCamPos.scale(10);
         }
 
         camera.changePositionRelativeToOrientation(deltaCamPos);
-
-        //Handles camera rotation
-        if(Cursor.inCameraMode()) {
-            Vector2f deltaCursorPos = Cursor.getDeltaPosition();
-            deltaCursorPos.scale(camera.getMouseSensitivity());
-            camera.changeTilt(deltaCursorPos.y);
-            camera.changePan(deltaCursorPos.x);
-        }
 
         //Handles frame switching
         if(Keyboard.isKeyDown(GLFW_KEY_UP)){
@@ -149,28 +143,29 @@ public class Engine {
             scene.decrementFrame();
         }
 
-        if(Keyboard.isKeyTapped(GLFW_KEY_F)){
+        if(Keyboard.isKeyTapped(GLFW_KEY_F)) {
             scene.togglePlayFrames();
         }
 
-        if(Keyboard.isKeyTapped(GLFW_KEY_T)){
-            camera.changeTilt(10);
+        if(Keyboard.isKeyTapped(GLFW_KEY_P)) {
+            camera.toggleFaceCentre();
         }
 
-        if(Keyboard.isKeyDown(GLFW_KEY_P)) {
-            camera.changePan(1);
+        if(Keyboard.isKeyDown(GLFW_KEY_M)) {
+            camera.facePoint(DataTypeUtils.toVector3f(trackPlotControl.getTracks().getMeanPoint(0)));
+        }else if(Keyboard.isKeyDown(GLFW_KEY_O)){
+            camera.facePoint(0,0,0);
         }
-
 
         //Essential static updates
         Keyboard.update();
         MouseButtons.update();
-        Cursor.update(window.getPrimaryMonitor());
         MouseWheel.update();
     }
 
     private void update(){
         scene.update();
+        camera.update(scene);
         trackPlotControl.updateGui();
     }
 
@@ -187,4 +182,5 @@ public class Engine {
     public Scene getScene() {
         return scene;
     }
+
 }

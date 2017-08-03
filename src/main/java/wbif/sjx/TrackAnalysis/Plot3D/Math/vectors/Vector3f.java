@@ -94,13 +94,13 @@ public class Vector3f {
 	}
 
     public float getTheta(){
-        return (float)FastMath.toDegrees(FastMath.atan2(z, x));
+        return (float)FastMath.toDegrees(FastMath.atan2(y, x));
     }
 
     public float getPhi(){
         float length = getLength();
         if(length != 0){
-            return (float)FastMath.toDegrees(FastMath.acos(y / length));
+            return (float)FastMath.toDegrees(FastMath.acos(z / length));
         }else {
             return 0;
         }
