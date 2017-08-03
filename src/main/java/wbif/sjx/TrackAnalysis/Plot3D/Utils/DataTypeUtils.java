@@ -95,6 +95,7 @@ public class DataTypeUtils {
 		return result;
 	}
 
+
 	public static Vector4f toOpenGlColour(Color color){
 		return new Vector4f(color.getRed()/255f, color.getGreen()/255f, color.getBlue()/255f, color.getAlpha()/255f);
 	}
@@ -109,7 +110,7 @@ public class DataTypeUtils {
 
 	public static Vector3f toVector3f(Point point){
 	    if(point != null) {
-            return new Vector3f((float) point.getX(), (float) point.getY(), (float) point.getZ());
+            return new Vector3f((float) point.getX(), (float) point.getZ(), (float) point.getY());
         }else {
 	        return new Vector3f();
         }

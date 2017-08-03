@@ -1,12 +1,9 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
-import ij.Prefs;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.*;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.Entity;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.Mesh;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.TrackEntity;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.TrackEntityCollection;
-import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
 import wbif.sjx.common.Object.TrackCollection;
 
 import java.awt.*;
@@ -17,15 +14,18 @@ import java.awt.*;
  */
 public class Scene {
     private static Entity[] axes;
-    private static final Color AXIS_COLOUR = Color.white;
     private static Entity boundingBox;
     private TrackCollection tracks;
     private TrackEntityCollection tracksEntities;
     private int frame;
+    public static final int frame_DEFAULT = 0;
+    public final static boolean playFrames_DEFAULT = false;
+    private boolean playFrames;
 
     public Scene(TrackCollection tracks){
         this.tracks = tracks;
-        this.frame = 0;
+        this.frame = frame_DEFAULT;
+        this.playFrames = playFrames_DEFAULT;
 
         initAxes();
         initBoundingBox(tracks);
@@ -36,42 +36,44 @@ public class Scene {
         showBoundingBox = showBoundingBox_DEFAULT;
     }
 
+    public void update(){
+        if(playFrames){
+            if(frame == tracks.getHighestFrame()){
+                frame = 0;
+            }else {
+                incrementFrame();
+            }
+        }
+    }
+
     public void render(ShaderProgram shaderProgram, FrustumCuller frustumCuller) {
         if(showAxes) {
-            renderAxes(shaderProgram);
+            for(Entity axis: axes) {
+                axis.render(shaderProgram, frustumCuller);
+            }
         }
 
         tracksEntities.render(shaderProgram, frustumCuller, frame);
 
         if(showBoundingBox) {
-            renderBoundingBox(shaderProgram, frustumCuller);
+            boundingBox.render(shaderProgram, frustumCuller);
         }
     }
 
     public static void initAxes(){
-        Mesh axesMesh = GenerateMesh.cylinder(0.2f, 30, 100000);
-        Entity xAxis = new Entity(axesMesh, AXIS_COLOUR);
-        Entity yAxis = new Entity(axesMesh, AXIS_COLOUR);
-        Entity zAxis = new Entity(axesMesh, AXIS_COLOUR);
-        xAxis.getRotation().setZ(90f);
-        zAxis.getRotation().setX(90f);
+        Mesh axesMesh = GenerateMesh.cylinder(0.3f, 30, 100000);
+        Entity xAxis = new Entity(axesMesh, Color.RED);
+        Entity yAxis = new Entity(axesMesh, Color.GREEN);
+        Entity zAxis = new Entity(axesMesh, Color.BLUE);
+        Entity origin = new Entity(GenerateMesh.sphere(0.5f, 20), Color.WHITE);
+        xAxis.getRotation().setY(90f);
+        yAxis.getRotation().setX(90f);
         axes = new Entity[]{
                 xAxis,
                 yAxis,
-                zAxis
+                zAxis,
+                origin
         };
-    }
-
-    private static void renderAxes(ShaderProgram shaderProgram){
-        for(Entity axis: axes){
-            axis.render(shaderProgram);
-        }
-    }
-
-    private static void renderBoundingBox(ShaderProgram shaderProgram, FrustumCuller frustumCuller){
-        if(frustumCuller.isInsideFrustum(boundingBox)) {
-            boundingBox.render(shaderProgram);
-        }
     }
 
     private static void initBoundingBox(TrackCollection tracks){
@@ -109,7 +111,16 @@ public class Scene {
         setFrame(getFrame() - 1);
     }
 
-    public void dispose(){
+    public boolean isPlayingFrames(){
+        return playFrames;
+    }
+
+    public void setPlayFrames(boolean state){
+        playFrames = state;
+    }
+
+    public void togglePlayFrames(){
+        playFrames = !playFrames;
     }
 
     public TrackEntityCollection getTracksEntities() {
@@ -118,7 +129,7 @@ public class Scene {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final boolean showAxes_DEFAULT = false;
+    public static final boolean showAxes_DEFAULT = true;
 
     private static boolean showAxes;
 

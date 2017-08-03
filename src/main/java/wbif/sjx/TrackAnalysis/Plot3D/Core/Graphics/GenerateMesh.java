@@ -589,7 +589,7 @@ public class GenerateMesh {
         return new Mesh(faces);
     }
 
-    public static Mesh uncappedCylinder(float radius, int resolution, float length){
+    public static Mesh pipe(float radius, int resolution, float length){
         resolution = resolution < 3 ? 3 : resolution;
 
         ArrayList<Face> faces = new ArrayList<>();
@@ -602,8 +602,8 @@ public class GenerateMesh {
         for(int i = 0; i < resolution; i++){
             float rSinθ = radius * (float) FastMath.sin(theta);
             float rCosθ = radius * (float) FastMath.cos(theta);
-            topVertices[i] = new Vector3f(rCosθ,length / 2, rSinθ);
-            botVertices[i] = new Vector3f(rCosθ,-length / 2, rSinθ);
+            topVertices[i] = new Vector3f(rCosθ,0, rSinθ);
+            botVertices[i] = new Vector3f(rCosθ, -length, rSinθ);
             theta -= deltaTheta; //beacause faces defined anticlockwise
         }
 

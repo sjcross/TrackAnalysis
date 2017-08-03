@@ -1,6 +1,5 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
-import com.sun.org.apache.bcel.internal.generic.FLOAD;
 import org.apache.commons.math3.util.FastMath;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
@@ -11,13 +10,15 @@ import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
  */
 public class Camera {
     private Vector3f position;
-    private Vector3f rotation;
-    private int MAX_VERTICAL_ROTATION;
+    private float tilt;
+    private float pan;
+    private int MAX_TILT;
 
     public Camera(int MAX_VERTICAL_ROTATION){
-        this.MAX_VERTICAL_ROTATION = MAX_VERTICAL_ROTATION;
+        this.MAX_TILT = MAX_VERTICAL_ROTATION;
         this.position = new Vector3f(0,0,0);
-        this.rotation = new Vector3f(0,0,0);
+        this.tilt = 0;
+        this.pan = 0;
         this.FOV = FOV_DEFAULT;
         this.viewDistanceNear = viewDistanceNear_DEFAULT;
         this.viewDistanceFar = viewDistanceFar_DEFAULT;
@@ -27,14 +28,21 @@ public class Camera {
 
     public Matrix4f getCameraMatrix(){
         Matrix4f result = Matrix4f.identity();
-        result.apply(Matrix4f.rotation(rotation));
-        result.apply(Matrix4f.translation(Vector3f.Negative(position)));
+        result.apply(Matrix4f.rotation(tilt, pan, 0));
+        result.apply(Matrix4f.translation(-position.getX(), -position.getZ(), -position.getY()));
         return result;
     }
 
     public void returnToOrigin(){
         position = new Vector3f(0,0,0);
-        rotation = new Vector3f(0,0,0);
+        tilt = 0;
+        pan = 0;
+    }
+
+    public void facePoint(Vector3f pointVector){
+        Vector3f vec = Vector3f.Subtract(pointVector, position);
+        tilt = -vec.getPhi() + 90;// needs fix
+        pan = -vec.getTheta();//this works
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,51 +56,51 @@ public class Camera {
     }
 
     public void changePositionRelativeToOrientation(float dx, float dy, float dz) {
-        if(dx != 0){
-            position.changeX(-dx * (float) FastMath.sin(FastMath.toRadians(rotation.getY() - 90)));
-            position.changeZ(dx * (float) FastMath.cos(FastMath.toRadians(rotation.getY() - 90)));
+        if(dx != 0){//left right
+            position.changeX(-dx * (float) FastMath.sin(FastMath.toRadians(pan - 90)));
+            position.changeY(dx * (float) FastMath.cos(FastMath.toRadians(pan - 90)));
         }
         if(dy != 0){
-            position.changeY(dy);
+            position.changeX(-dy * (float) FastMath.sin(FastMath.toRadians(pan)));
+            position.changeY(dy * (float) FastMath.cos(FastMath.toRadians(pan)));
         }
         if(dz != 0){
-            position.changeX(-dz * (float) FastMath.sin(FastMath.toRadians(rotation.getY())));
-            position.changeZ(dz * (float) FastMath.cos(FastMath.toRadians(rotation.getY())));
+            position.changeZ(dz);
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Vector3f getRotation(){
-        return rotation;
+    public float getTilt(){
+        return tilt;
     }
 
-    public void changeRotation(Vector3f deltaRotation){
-        changeRotation(deltaRotation.getX(), deltaRotation.getY(), deltaRotation.getZ());
-    }
-
-    public void changeRotation(float dx, float dy, float dz) {
-        rotation.change(dx, dy, dz);
-        Maths.normaliseRotationVector(rotation);
-        limitVerticalRotation();
-    }
-
-    public void setRotation(Vector3f rotation) {
-        setRotation(rotation.getX(), rotation.getY(), rotation.getZ());
-    }
-
-    public void setRotation(float x, float y, float z) {
-        rotation.set(x, y, z);
-        Maths.normaliseRotationVector(rotation);
-        limitVerticalRotation();
-    }
-
-    public void limitVerticalRotation(){
-        if(rotation.getX() > MAX_VERTICAL_ROTATION){
-            rotation.setX(MAX_VERTICAL_ROTATION);
-        }else if(rotation.getX() < -MAX_VERTICAL_ROTATION){
-            rotation.setX(-MAX_VERTICAL_ROTATION);
+    public void setTilt(float value){
+        if(value > MAX_TILT){
+            tilt = MAX_TILT;
+        }else if(value < -MAX_TILT){
+            tilt = -MAX_TILT;
+        }else {
+            tilt = value;
         }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void changeTilt(float deltaTilt){
+        setTilt(getTilt() + deltaTilt);
+    }
+
+    public float getPan(){
+        return pan;
+    }
+
+    public void setPan(float value){
+        pan = Maths.floorMod(value, 360f);
+    }
+
+    public void changePan(float deltaValue){
+        setPan(getPan() + deltaValue);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

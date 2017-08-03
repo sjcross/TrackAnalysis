@@ -1,5 +1,7 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
+import com.itextpdf.text.pdf.PRAcroForm;
+import wbif.sjx.TrackAnalysis.GUI.TrackPlotControl;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.TrackEntity;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.Cursor;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.Keyboard;
@@ -24,19 +26,19 @@ import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
  * Created by sc13967 on 31/07/2017.
  */
 public class Engine {
-    private TrackCollection tracks;
+    private TrackPlotControl trackPlotControl;
     private boolean running;
     private GLFW_Window window;
     private Renderer renderer;
     private Camera camera;
     private Scene scene;
 
-    public Engine(TrackCollection tracks){
-        this.tracks = tracks;
+    public Engine(){
     }
 
-    public void start(){
+    public void start(TrackPlotControl trackPlotControl){
         try {
+            this.trackPlotControl = trackPlotControl;
             init();
             mainLoop();
         }catch (Exception e){
@@ -50,9 +52,9 @@ public class Engine {
         window = new GLFW_Window("3D Track Plot", 600, 600, true);
         renderer = new Renderer();
         camera = new Camera(70);
-        Vector3f meanPoint = DataTypeUtils.toVector3f(tracks.getMeanPoint(0));
-        camera.setRotation(-meanPoint.getPhi(), meanPoint.getTheta() + 90, 0);
-        scene = new Scene(tracks);
+//        camera.facePoint(DataTypeUtils.toVector3f(trackPlotControl.getTracks().getMeanPoint(0)));
+//        camera.getGlobalPosition().set(500,500,-100);
+        scene = new Scene(trackPlotControl.getTracks());
     }
 
     private void mainLoop() throws Exception{
@@ -60,6 +62,7 @@ public class Engine {
 
         while (running && window.isOpen()){
             handleInput();
+            update();
             renderFrame();
         }
     }
@@ -71,7 +74,6 @@ public class Engine {
     private void shutdown(){
         window.dispose();
         renderer.dispose();
-        scene.dispose();
     }
 
     private void handleInput(){
@@ -96,14 +98,6 @@ public class Engine {
         Vector3f deltaCamPos = new Vector3f();
         float cameraPositionStep = camera.getCameraPositionStep();
 
-        if(Keyboard.isKeyDown(GLFW_KEY_W)){
-            deltaCamPos.setZ(-cameraPositionStep);
-        } else if(Keyboard.isKeyDown(GLFW_KEY_S)){
-            deltaCamPos.setZ(cameraPositionStep);
-        } else{
-            deltaCamPos.setZ(0);
-        }
-
         if(Keyboard.isKeyDown(GLFW_KEY_A)){
             deltaCamPos.setX(-cameraPositionStep);
         } else if(Keyboard.isKeyDown(GLFW_KEY_D)){
@@ -112,12 +106,20 @@ public class Engine {
             deltaCamPos.setX(0);
         }
 
-        if(MouseButtons.isButtonDown(GLFW_MOUSE_BUTTON_LEFT)){
-            deltaCamPos.setY(cameraPositionStep);
-        } else if(MouseButtons.isButtonDown(GLFW_MOUSE_BUTTON_RIGHT)){
+        if(Keyboard.isKeyDown(GLFW_KEY_W)){
             deltaCamPos.setY(-cameraPositionStep);
+        } else if(Keyboard.isKeyDown(GLFW_KEY_S)){
+            deltaCamPos.setY(cameraPositionStep);
         } else{
             deltaCamPos.setY(0);
+        }
+
+        if(MouseButtons.isButtonDown(GLFW_MOUSE_BUTTON_LEFT)){
+            deltaCamPos.setZ(cameraPositionStep);
+        } else if(MouseButtons.isButtonDown(GLFW_MOUSE_BUTTON_RIGHT)){
+            deltaCamPos.setZ(-cameraPositionStep);
+        } else{
+            deltaCamPos.setZ(0);
         }
 
         if(Keyboard.isKeyDown(GLFW_KEY_SPACE)){
@@ -127,13 +129,11 @@ public class Engine {
         camera.changePositionRelativeToOrientation(deltaCamPos);
 
         //Handles camera rotation
-        Vector3f deltaCamRot;
-
         if(Cursor.inCameraMode()) {
             Vector2f deltaCursorPos = Cursor.getDeltaPosition();
             deltaCursorPos.scale(camera.getMouseSensitivity());
-            deltaCamRot = new Vector3f(deltaCursorPos.y, deltaCursorPos.x, 0);
-            camera.changeRotation(deltaCamRot);
+            camera.changeTilt(deltaCursorPos.y);
+            camera.changePan(deltaCursorPos.x);
         }
 
         //Handles frame switching
@@ -149,12 +149,31 @@ public class Engine {
             scene.decrementFrame();
         }
 
+        if(Keyboard.isKeyTapped(GLFW_KEY_F)){
+            scene.togglePlayFrames();
+        }
+
+        if(Keyboard.isKeyTapped(GLFW_KEY_T)){
+            camera.changeTilt(10);
+        }
+
+        if(Keyboard.isKeyDown(GLFW_KEY_P)) {
+            camera.changePan(1);
+        }
+
+
         //Essential static updates
         Keyboard.update();
         MouseButtons.update();
         Cursor.update(window.getPrimaryMonitor());
         MouseWheel.update();
     }
+
+    private void update(){
+        scene.update();
+        trackPlotControl.updateGui();
+    }
+
 
     private void renderFrame() {
         renderer.render(window, camera, scene);

@@ -1,5 +1,6 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item;
 
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.FrustumCuller;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
@@ -33,17 +34,18 @@ public class Entity {
 
     private Matrix4f getGlobalMatrix(){
         Matrix4f result = Matrix4f.identity();
-        result.apply(Matrix4f.translation(position));
-        result.apply(Matrix4f.rotation(rotation));
-        result.apply(Matrix4f.stretch(scale));
+        result.apply(Matrix4f.translation(position.getX(), position.getZ(), position.getY()));
+        result.apply(Matrix4f.rotation(rotation.getX(), rotation.getZ(), rotation.getY()));
+        result.apply(Matrix4f.stretch(scale.getX(), scale.getZ(), scale.getY()));
         return result;
     }
 
-    public void render(ShaderProgram shaderProgram){
-        shaderProgram.setMatrix4fUniform("combinedTransformationMatrix", getGlobalMatrix());
-        shaderProgram.setColourUniform("colour", colour);
-
-        mesh.render();
+    public void render(ShaderProgram shaderProgram, FrustumCuller frustumCuller){
+        if(frustumCuller.isInsideFrustum(this)) {
+            shaderProgram.setMatrix4fUniform("combinedTransformationMatrix", getGlobalMatrix());
+            shaderProgram.setColourUniform("colour", colour);
+            mesh.render();
+        }
     }
 
     public Mesh getMesh() {

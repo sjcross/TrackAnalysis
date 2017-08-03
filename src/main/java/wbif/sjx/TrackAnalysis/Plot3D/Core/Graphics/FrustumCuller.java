@@ -30,12 +30,12 @@ public class FrustumCuller {
     public void update(){
         float[][] E = combinedViewMatrix.elements;
 
-        frustumPlanes[0].set(E[3][0] + E[0][0], E[3][1] + E[0][1], E[3][2] + E[0][2], E[3][3] + E[0][3]);
-        frustumPlanes[1].set(E[3][0] - E[0][0], E[3][1] - E[0][1], E[3][2] - E[0][2], E[3][3] - E[0][3]);
-        frustumPlanes[2].set(E[3][0] + E[1][0], E[3][1] + E[1][1], E[3][2] + E[1][2], E[3][3] + E[1][3]);
-        frustumPlanes[3].set(E[3][0] - E[1][0], E[3][1] - E[1][1], E[3][2] - E[1][2], E[3][3] - E[1][3]);
-        frustumPlanes[4].set(E[3][0] + E[2][0], E[3][1] + E[2][1], E[3][2] + E[2][2], E[3][3] + E[2][3]);
-        frustumPlanes[5].set(E[3][0] - E[2][0], E[3][1] - E[2][1], E[3][2] - E[2][2], E[3][3] - E[2][3]);
+        frustumPlanes[0].set(E[3][0] + E[0][0],  E[3][2] + E[0][2],E[3][1] + E[0][1], E[3][3] + E[0][3]);
+        frustumPlanes[1].set(E[3][0] - E[0][0],  E[3][2] - E[0][2],E[3][1] - E[0][1], E[3][3] - E[0][3]);
+        frustumPlanes[2].set(E[3][0] + E[1][0],  E[3][2] + E[1][2],E[3][1] + E[1][1], E[3][3] + E[1][3]);
+        frustumPlanes[3].set(E[3][0] - E[1][0],  E[3][2] - E[1][2],E[3][1] - E[1][1], E[3][3] - E[1][3]);
+        frustumPlanes[4].set(E[3][0] + E[2][0],  E[3][2] + E[2][2],E[3][1] + E[2][1], E[3][3] + E[2][3]);
+        frustumPlanes[5].set(E[3][0] - E[2][0],  E[3][2] - E[2][2],E[3][1] - E[2][1], E[3][3] - E[2][3]);
 
         for (int i = 0; i < frustumPlanes.length; i++){
             frustumPlanes[i].normalize3();
