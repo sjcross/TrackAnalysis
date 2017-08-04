@@ -26,6 +26,6 @@ public class RNG {
 	}
 
 	public static Color Colour(){
-		return new Color(Int(0, 255), Int(0, 255), Int(0, 255));
+		return new Color(Int(0, 255), Int(0, 255), Int(0, 255), 255);
 	}
 }

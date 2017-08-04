@@ -1,7 +1,5 @@
-package wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item;
+package wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component;
 
-import org.apache.commons.math3.util.FastMath;
-import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 
 /**

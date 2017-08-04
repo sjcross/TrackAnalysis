@@ -24,6 +24,12 @@ public class DataTypeUtils {
 		result.put(array).flip();
 		return result;
 	}
+
+    public static byte[] toByteArray(ByteBuffer byteBuffer){
+        byte[] byteArray = new byte[byteBuffer.remaining()];
+        byteBuffer.get(byteArray);
+        return byteArray;
+    }
 	
 	public static FloatBuffer toFloatBuffer(float[] array){
 		FloatBuffer result = ByteBuffer.allocateDirect(array.length << 2).order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -36,6 +42,12 @@ public class DataTypeUtils {
 		result.put(array).flip();
 		return result;
 	}
+
+	public static int[] toIntArray(IntBuffer intBuffer){
+        int[] intArray = new int[intBuffer.remaining()];
+        intBuffer.get(intArray);
+        return intArray;
+    }
 
 	public static float[] toFloatArray(float[][] array){
 		float[] result = new float[array.length * array[0].length];

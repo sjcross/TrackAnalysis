@@ -1,8 +1,7 @@
-package wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item;
+package wbif.sjx.TrackAnalysis.Plot3D.Core.Item;
 
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.FrustumCuller;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.TrackEntity;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.ShaderProgram;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.FrustumCuller;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataTypeUtils;
 import wbif.sjx.common.Object.TrackCollection;
@@ -29,6 +28,7 @@ public class TrackEntityCollection extends LinkedHashMap<Integer, TrackEntity>{
 
         this.highestFrame = tracks.getHighestFrame();
         this.displayColour = displayColour_DEFAULT;
+        this.displayQuality = displayQuality_DEFAULT;
         this.showTrail = showTrail_DEFAULT;
         this.motilityPlot = motilityPlot_DEFAULT;
         this.trailLength_MAXIMUM = highestFrame < 1 ? 1 : highestFrame;
@@ -135,6 +135,19 @@ public class TrackEntityCollection extends LinkedHashMap<Integer, TrackEntity>{
     public enum displayColourOptions{
         SOLID,
         VELOCITY
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public displayQualityOptions displayQuality;
+
+    public static final TrackEntityCollection.displayQualityOptions displayQuality_DEFAULT = displayQualityOptions.MEDIUM;
+
+    public enum displayQualityOptions{
+        LOWEST,
+        LOW,
+        MEDIUM,
+        HIGH
     }
 
 }

@@ -1,12 +1,10 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
 import org.apache.commons.math3.util.FastMath;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.Entity;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.Entity;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
-
-import java.util.LinkedHashMap;
 
 /**
  * Created by Jordan Fisher on 19/05/2017.
@@ -65,7 +63,7 @@ public class Camera {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public float calcOptimalBoundingBoxViewingDistance(float sideLength){
-        return (float)((sideLength / 2) / FastMath.tan(FOV / 2));
+        return (float)((sideLength / 2) / FastMath.tan(Math.toRadians(FOV / 2)));
     }
 
     public void viewXZplane(Entity boundingBox){
@@ -80,7 +78,7 @@ public class Camera {
 
         float distance = FastMath.max(width, height);
 
-        position.changeY(length / 2 + distance);
+        position.changeY(length + distance);
     }
 
     public void viewYZplane(Entity boundingBox){
@@ -95,7 +93,7 @@ public class Camera {
 
         float distance = FastMath.max(length, height);
 
-        position.changeX(width / 2 + distance);
+        position.changeX(width + distance);
     }
 
     public void viewXYplane(Entity boundingBox){
@@ -110,7 +108,7 @@ public class Camera {
 
         float distance = FastMath.max(width, length);
 
-        position.changeZ(height / 2 + distance);
+        position.changeZ(height + distance);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

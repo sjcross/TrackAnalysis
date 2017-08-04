@@ -23,27 +23,19 @@ public class Engine {
     private Camera camera;
     private Scene scene;
 
-    public Engine(){
+    public Engine(TrackPlotControl trackPlotControl){
+        this.trackPlotControl = trackPlotControl;
     }
 
-    public void init(TrackPlotControl trackPlotControl){
-        try {
-            this.trackPlotControl = trackPlotControl;
+    public void init() throws Exception{
 
-            window = new GLFWWindow("3D Track Plot", 600, 600, true);
-            renderer = new Renderer();
-            camera = new Camera();
-            scene = new Scene(trackPlotControl.getTracks());
+        window = new GLFWWindow("3D Track Plot", 600, 600, true);
+        renderer = new Renderer();
+        camera = new Camera();
+        scene = new Scene(trackPlotControl.getTracks());
 
-            camera.getPosition().set(400,400,100);
-            camera.facePoint(scene.getTracksEntities().getCurrentCentreOfCollection());
-
-            start();
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            dispose();
-        }
+        camera.getPosition().set(400,400,100);
+        camera.facePoint(scene.getTracksEntities().getCurrentCentreOfCollection());
     }
 
     public void start() throws Exception{
@@ -51,11 +43,10 @@ public class Engine {
     }
 
     public void stop() {
-        window.setVisibility(false);
         running = false;
     }
 
-    private void mainLoop() throws Exception{
+    private void mainLoop() {
         window.setVisibility(true);
         running = true;
 
@@ -64,12 +55,15 @@ public class Engine {
             update();
             renderFrame();
         }
+
+        window.setVisibility(false);
+        running = false;
     }
 
-    private void dispose(){
-        window.dispose();
+    public void dispose(){
         renderer.dispose();
         scene.dispose();
+        window.dispose();
     }
 
     private void handleInput(){

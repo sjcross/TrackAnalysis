@@ -1,8 +1,8 @@
-package wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics;
+package wbif.sjx.TrackAnalysis.Plot3D.Graphics;
 
 
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.Entity;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.Mesh;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.Entity;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector4f;

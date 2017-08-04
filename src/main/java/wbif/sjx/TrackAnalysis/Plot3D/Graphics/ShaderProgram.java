@@ -1,4 +1,4 @@
-package wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics;
+package wbif.sjx.TrackAnalysis.Plot3D.Graphics;
 
 
 
@@ -101,6 +101,10 @@ public class ShaderProgram {
     public void dispose() {
         unbind();
         if (programId != 0) {
+            glDetachShader(programId, vertexShaderId);
+            glDetachShader(programId, fragmentShaderId);
+            glDeleteShader(vertexShaderId);
+            glDeleteShader(fragmentShaderId);
             glDeleteProgram(programId);
         }
     }

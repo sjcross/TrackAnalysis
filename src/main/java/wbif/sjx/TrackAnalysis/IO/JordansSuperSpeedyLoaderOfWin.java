@@ -44,12 +44,14 @@ public class JordansSuperSpeedyLoaderOfWin implements PlugIn {
             e.printStackTrace();
         }
 
-                // Getting results from ResultsTable
+        // Getting results from ResultsTable
         ResultsTable rt = ResultsTable.getResultsTable();
         TrackCollection tracks = doImport(rt,null);
 
+        ImagePlus ipl = IJ.openImage("C:\\Users\\sc13967\\Google Drive\\People\\F\\Jordan Fisher\\2017-07-31 Track analysis plots\\Simulated Tracks\\MAX_SimulatedTracks100_halfheight_z.tif");
+
         // Running TrackAnalysis
-        new TrackAnalysis(tracks,null);
+        new TrackAnalysis(tracks,ipl);
 
     }
 

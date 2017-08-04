@@ -1,10 +1,10 @@
-package wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item;
+package wbif.sjx.TrackAnalysis.Plot3D.Core.Item;
 
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.FrustumCuller;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.ShaderProgram;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.FrustumCuller;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
-import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Utils.RNG;
 

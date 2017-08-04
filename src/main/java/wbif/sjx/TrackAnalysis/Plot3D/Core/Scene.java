@@ -1,9 +1,9 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.*;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.Entity;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.Mesh;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.TrackEntityCollection;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.*;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.Entity;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.TrackEntityCollection;
 import wbif.sjx.common.Object.TrackCollection;
 
 import java.awt.*;
@@ -23,7 +23,6 @@ public class Scene {
 
     public Scene(TrackCollection tracks){
         tracksEntities = new TrackEntityCollection(tracks);
-
         initAxes();
         initBoundingBox(tracksEntities);
 
@@ -46,7 +45,7 @@ public class Scene {
 
     public void render(ShaderProgram shaderProgram, FrustumCuller frustumCuller) {
         if(showAxes) {
-            for(Entity axis: axes) {
+            for (Entity axis : axes) {
                 axis.render(shaderProgram, null);
             }
         }

@@ -1,8 +1,8 @@
-package wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics;
+package wbif.sjx.TrackAnalysis.Plot3D.Graphics;
 
 import org.apache.commons.math3.util.FastMath;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.Face;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item.Mesh;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Face;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 
@@ -607,8 +607,8 @@ public class GenerateMesh {
     public static Mesh sphere(float radius, int resolution){
         resolution = resolution < 3 ? 3 : resolution;
         Vector3f[][] vertices = new Vector3f[resolution][resolution];
-        Vector3f northPole = new Vector3f(0,0, radius);
-        Vector3f southPole = new Vector3f(0,0,-radius);
+        Vector3f northPole = new Vector3f(0,radius,0);
+        Vector3f southPole = new Vector3f(0,-radius,0);
 
         double deltaTheta = 2 * FastMath.PI / resolution;
         double deltaAlpha = FastMath.PI / (resolution + 1);
@@ -619,15 +619,15 @@ public class GenerateMesh {
         for(int ring = 0; ring < resolution; ring++){
             theta = 0;
             for(int meridian = 0; meridian < resolution; meridian++){
-                float sinθ = (float) FastMath.sin(theta);
-                float cosθ = (float) FastMath.cos(theta);
-                float sinφ = (float) FastMath.sin(alpha);
-                float cosφ = (float) FastMath.cos(alpha);
+                float sinθ = (float)FastMath.sin(theta);
+                float cosθ = (float)FastMath.cos(theta);
+                float sinφ = (float)FastMath.sin(alpha);
+                float cosφ = (float)FastMath.cos(alpha);
 
                 vertices[ring][meridian] = new Vector3f(
                         radius * sinφ * cosθ,
-                        radius * sinφ * sinθ,
-                        radius * cosφ
+                        radius * cosφ,
+                        radius * sinφ * sinθ
                 );
                 theta -= deltaTheta;
             }

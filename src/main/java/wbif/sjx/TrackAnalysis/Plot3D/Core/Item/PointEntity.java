@@ -1,9 +1,10 @@
-package wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.Item;
+package wbif.sjx.TrackAnalysis.Plot3D.Core.Item;
 
 
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.FrustumCuller;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.GenerateMesh;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Graphics.ShaderProgram;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.FrustumCuller;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.GenerateMesh;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataTypeUtils;
@@ -17,9 +18,24 @@ import java.awt.*;
 public class PointEntity {
     private final static float TRAIL_RADIUS = 0.5f;
     private final static float PARTICLE_RADIUS = 2.5f;
-    private static final Mesh PIPE_MESH = GenerateMesh.pipe(TRAIL_RADIUS, 10, 1);
-    private static final Mesh HINGE_POINT_MESH = GenerateMesh.sphere(TRAIL_RADIUS, 10);
+
     private static final Mesh PARTICLE_MESH = GenerateMesh.sphere(PARTICLE_RADIUS, 20);
+
+    private static final int LOWEST_RESOLUTION = 3;
+    private static final Mesh PIPE_MESH_LOWEST = GenerateMesh.pipe(TRAIL_RADIUS, LOWEST_RESOLUTION, 1);
+    private static final Mesh HINGE_POINT_MESH_LOWEST = GenerateMesh.sphere(TRAIL_RADIUS, LOWEST_RESOLUTION);
+
+    private static final int LOW_RESOLUTION = 6;
+    private static final Mesh PIPE_MESH_LOW = GenerateMesh.pipe(TRAIL_RADIUS, LOW_RESOLUTION, 1);
+    private static final Mesh HINGE_POINT_MESH_LOW = GenerateMesh.sphere(TRAIL_RADIUS, LOW_RESOLUTION);
+
+    private static final int MEDIUM_RESOLUTION = 10;
+    private static final Mesh PIPE_MESH_MEDIUM = GenerateMesh.pipe(TRAIL_RADIUS, MEDIUM_RESOLUTION, 1);
+    private static final Mesh HINGE_POINT_MESH_MEDIUM = GenerateMesh.sphere(TRAIL_RADIUS, MEDIUM_RESOLUTION);
+
+    private static final int HIGH_RESOLUTION = 20;
+    private static final Mesh PIPE_MESH_HIGH = GenerateMesh.pipe(TRAIL_RADIUS, HIGH_RESOLUTION, 1);
+    private static final Mesh HINGE_POINT_MESH_HIGH = GenerateMesh.sphere(TRAIL_RADIUS, HIGH_RESOLUTION);
 
     private TrackEntity trackEntity;
     private Vector3f globalPosition;
@@ -67,18 +83,44 @@ public class PointEntity {
         setDisplayColourUniform(shaderProgram);
         Matrix4f combinedTransformationMatrix = Matrix4f.translation(displayPosition.getX(), displayPosition.getZ(), displayPosition.getY());
 
-        if(frustumCuller.isInsideFrustum(displayPosition, 1, HINGE_POINT_MESH)) {
+        if(frustumCuller.isInsideFrustum(displayPosition, 1, HINGE_POINT_MESH_HIGH)) {
             shaderProgram.setMatrix4fUniform("combinedTransformationMatrix", combinedTransformationMatrix);
 
-            HINGE_POINT_MESH.render();
+            switch (trackEntity.getTrackEntityCollection().displayQuality) {
+                case LOWEST:
+                    HINGE_POINT_MESH_LOWEST.render();
+                    break;
+                case LOW:
+                    HINGE_POINT_MESH_LOW.render();
+                    break;
+                case MEDIUM:
+                    HINGE_POINT_MESH_MEDIUM.render();
+                    break;
+                case HIGH:
+                    HINGE_POINT_MESH_HIGH.render();
+                    break;
+            }
         }
 
-        if(frustumCuller.isInsideFrustum(displayPosition, new Vector3f(1,pipeLength,1), PIPE_MESH)) {
+        if(frustumCuller.isInsideFrustum(displayPosition, new Vector3f(1,pipeLength,1), PIPE_MESH_HIGH)) {
             combinedTransformationMatrix.apply(Matrix4f.rotation(pipeRotation.getX(), pipeRotation.getZ(), pipeRotation.getY()));
             combinedTransformationMatrix.apply(Matrix4f.stretchY(pipeLength));
             shaderProgram.setMatrix4fUniform("combinedTransformationMatrix", combinedTransformationMatrix);
 
-            PIPE_MESH.render();
+            switch (trackEntity.getTrackEntityCollection().displayQuality) {
+                case LOWEST:
+                    PIPE_MESH_LOWEST.render();
+                    break;
+                case LOW:
+                    PIPE_MESH_LOW.render();
+                    break;
+                case MEDIUM:
+                    PIPE_MESH_MEDIUM.render();
+                    break;
+                case HIGH:
+                    PIPE_MESH_HIGH.render();
+                    break;
+            }
         }
     }
 
