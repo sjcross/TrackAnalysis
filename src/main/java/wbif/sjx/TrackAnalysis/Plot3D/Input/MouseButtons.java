@@ -3,9 +3,7 @@ package wbif.sjx.TrackAnalysis.Plot3D.Input;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
-/**
- * Created by Jordan Fisher on 03/06/2017.
- */
+
 public class MouseButtons extends GLFWMouseButtonCallback{
     private static final int BUTTON_TOTAL = 10;
 

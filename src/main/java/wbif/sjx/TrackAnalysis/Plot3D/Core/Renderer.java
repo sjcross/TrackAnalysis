@@ -41,6 +41,8 @@ public class Renderer {
         mainShader.createUniform("combinedTransformationMatrix");
 
         mainShader.createUniform("colour");
+        mainShader.createUniform("hasTexture");
+        mainShader.createUniform("textureSampler");
 
         frustumCuller = new FrustumCuller();
     }

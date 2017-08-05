@@ -3,14 +3,13 @@ package wbif.sjx.TrackAnalysis.Plot3D.Graphics;
 import org.apache.commons.math3.util.FastMath;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Face;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Texture;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.TexturedFace;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 
 import java.util.ArrayList;
 
-/**
- * Created by Jordan Fisher on 20/05/2017.
- */
 public class GenerateMesh {
     private GenerateMesh() {}
 
@@ -634,14 +633,6 @@ public class GenerateMesh {
             alpha -= deltaAlpha;
         }
 
-
-        Vector2f[] textCoords = new Vector2f[]{
-                new Vector2f(0,0),
-                new Vector2f(1,0),
-                new Vector2f(0,1),
-                new Vector2f(1,1)
-        };
-
         ArrayList<Face> faces = new ArrayList<>();
 
 
@@ -707,4 +698,37 @@ public class GenerateMesh {
 
         return new Mesh(faces);
     }
+
+    public static Mesh texturedPlane(float width, float length){
+        Vector3f[] vertices = new Vector3f[]{
+                new Vector3f(width / 2,0,-length / 2),
+                new Vector3f(-width / 2,0,-length / 2),
+                new Vector3f(-width / 2,0,length / 2),
+                new Vector3f(width / 2,0,length / 2)
+        };
+
+        Vector2f[] textureCoords = new Vector2f[]{
+                new Vector2f(0,0),
+                new Vector2f(1,0),
+                new Vector2f(0,1),
+                new Vector2f(1,1)
+        };
+
+        TexturedFace[] faces = new TexturedFace[]{
+                new TexturedFace(
+                        vertices[0], textureCoords[1],
+                        vertices[1], textureCoords[0],
+                        vertices[2], textureCoords[2]
+                ),
+                new TexturedFace(
+                        vertices[2], textureCoords[2],
+                        vertices[3], textureCoords[3],
+                        vertices[0], textureCoords[1]
+                )
+        };
+
+        return new Mesh(faces);
+    }
+
+
 }

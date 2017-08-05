@@ -2,13 +2,9 @@ package wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component;
 
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 
-/**
- * Created by Jordan Fisher on 06/06/2017.
- */
+
 public class Face {
-    private Vector3f vA;
-    private Vector3f vB;
-    private Vector3f vC;
+    private Vector3f vA, vB, vC;
 
     public Face(
             Vector3f vA,

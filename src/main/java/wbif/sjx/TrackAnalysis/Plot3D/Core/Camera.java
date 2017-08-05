@@ -1,14 +1,12 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
 import org.apache.commons.math3.util.FastMath;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.BoundingBox;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.Entity;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 
-/**
- * Created by Jordan Fisher on 19/05/2017.
- */
 public class Camera {
     public final static float VIEW_DISTANCE_NEAR = 0.01f;
     public final static int VIEW_DISTANCE_FAR = 100000;
@@ -66,45 +64,45 @@ public class Camera {
         return (float)((sideLength / 2) / FastMath.tan(Math.toRadians(FOV / 2)));
     }
 
-    public void viewXZplane(Entity boundingBox){
+    public void viewXZplane(BoundingBox boundingBox){
         setTilt(0);
         setPan(0);
 
-        position.set(boundingBox.getPosition());
+        position.set(boundingBox.getCentrePosition());
 
-        float width = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getX());
-        float length = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getY());
-        float height = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getZ());
+        float width = calcOptimalBoundingBoxViewingDistance(boundingBox.getWidth());
+        float length = calcOptimalBoundingBoxViewingDistance(boundingBox.getLength());
+        float height = calcOptimalBoundingBoxViewingDistance(boundingBox.getHeight());
 
         float distance = FastMath.max(width, height);
 
         position.changeY(length + distance);
     }
 
-    public void viewYZplane(Entity boundingBox){
+    public void viewYZplane(BoundingBox boundingBox){
         setTilt(0);
         setPan(-90);
 
-        position.set(boundingBox.getPosition());
+        position.set(boundingBox.getCentrePosition());
 
-        float width = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getX());
-        float length = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getY());
-        float height = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getZ());
+        float width = calcOptimalBoundingBoxViewingDistance(boundingBox.getWidth());
+        float length = calcOptimalBoundingBoxViewingDistance(boundingBox.getLength());
+        float height = calcOptimalBoundingBoxViewingDistance(boundingBox.getHeight());
 
         float distance = FastMath.max(length, height);
 
         position.changeX(width + distance);
     }
 
-    public void viewXYplane(Entity boundingBox){
+    public void viewXYplane(BoundingBox boundingBox){
         setTilt(90);
         setPan(0);
 
-        position.set(boundingBox.getPosition());
+        position.set(boundingBox.getCentrePosition());
 
-        float width = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getX());
-        float length = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getY());
-        float height = calcOptimalBoundingBoxViewingDistance(boundingBox.getScale().getZ());
+        float width = calcOptimalBoundingBoxViewingDistance(boundingBox.getWidth());
+        float length = calcOptimalBoundingBoxViewingDistance(boundingBox.getLength());
+        float height = calcOptimalBoundingBoxViewingDistance(boundingBox.getHeight());
 
         float distance = FastMath.max(width, length);
 

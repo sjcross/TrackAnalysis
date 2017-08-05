@@ -6,9 +6,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2d;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 
-/**
- * Created by Jordan Fisher on 03/06/2017.
- */
+
 public class Cursor extends GLFWCursorPosCallback{
 
     private static Vector2d currentPosition;

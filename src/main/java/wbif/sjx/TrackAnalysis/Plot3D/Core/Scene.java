@@ -1,9 +1,13 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
+import ij.ImagePlus;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.BoundingBox;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.*;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.Entity;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.TrackEntityCollection;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Texture;
+import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.common.Object.TrackCollection;
 
 import java.awt.*;
@@ -14,17 +18,30 @@ import java.awt.*;
  */
 public class Scene {
     private static Entity[] axes;
-    private static Entity boundingBox;
+    private BoundingBox boundingBox;
     private TrackEntityCollection tracksEntities;
     private int frame;
     public static final int frame_DEFAULT = 0;
     public final static boolean playFrames_DEFAULT = false;
     private boolean playFrames;
 
-    public Scene(TrackCollection tracks){
+    private Entity texturedPlane;
+
+    public Scene(TrackCollection tracks, ImagePlus ipl){
         tracksEntities = new TrackEntityCollection(tracks);
+        boundingBox = new BoundingBox(tracks);
+
         initAxes();
-        initBoundingBox(tracksEntities);
+
+        texturedPlane = new Entity(GenerateMesh.texturedPlane(ipl.getHeight(),ipl.getWidth())); //not sure if these parameters are the right way around
+        texturedPlane.getPosition().set(ipl.getHeight()/2,ipl.getWidth()/2,-boundingBox.getHeight()/2); // swap height with width of the other vertical images
+
+        try {
+            ipl.setPosition(1);
+            texturedPlane.setTexture(new Texture(ipl.getBufferedImage()));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         this.frame = frame_DEFAULT;
         this.playFrames = playFrames_DEFAULT;
@@ -50,6 +67,8 @@ public class Scene {
             }
         }
 
+        texturedPlane.render(shaderProgram, frustumCuller);
+
         tracksEntities.render(shaderProgram, frustumCuller, frame);
 
         if(showBoundingBox) {
@@ -73,24 +92,6 @@ public class Scene {
                 yAxis,
                 zAxis
         };
-    }
-
-    private static void initBoundingBox(TrackEntityCollection tracksEntities){
-        double[][] spacialLimits  = tracksEntities.getSpacialLimits();
-        float width = (float)(spacialLimits[0][1] - spacialLimits[0][0]);
-        float length = (float)(spacialLimits[1][1] - spacialLimits[1][0]);
-        float height = (float)(spacialLimits[2][1] - spacialLimits[2][0]);
-        boundingBox = new Entity(GenerateMesh.cube(1), new Color(255,0,0, 60));
-        boundingBox.getPosition().set(
-                (float)spacialLimits[0][0] + width/2,
-                (float)spacialLimits[1][0] + length/2,
-                (float)spacialLimits[2][0] + height/2
-        );
-        boundingBox.getScale().set(
-                width,
-                length,
-                height
-        );
     }
 
     public int getFrame() {
@@ -135,7 +136,7 @@ public class Scene {
         return tracksEntities;
     }
 
-    public static Entity getBoundingBox() {
+    public BoundingBox getBoundingBox(){
         return boundingBox;
     }
 

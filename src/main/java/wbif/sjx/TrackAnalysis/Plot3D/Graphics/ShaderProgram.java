@@ -140,4 +140,8 @@ public class ShaderProgram {
     public void setFloatUniform(String uniformName, float value) {
         glUniform1f(uniforms.get(uniformName), value);
     }
+
+    public void setBooleanUniform(String uniformName, boolean state){
+        glUniform1i(uniforms.get(uniformName), state ? 1 : 0);
+    }
 }

@@ -7,9 +7,7 @@ import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector4f;
 
-/**
- * Created by Jordan Fisher on 02/07/2017.
- */
+
 public class FrustumCuller {
     private Matrix4f combinedViewMatrix;
     private Vector4f[] frustumPlanes;

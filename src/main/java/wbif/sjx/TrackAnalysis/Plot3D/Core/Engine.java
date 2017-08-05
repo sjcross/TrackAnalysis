@@ -32,7 +32,7 @@ public class Engine {
         window = new GLFWWindow("3D Track Plot", 600, 600, true);
         renderer = new Renderer();
         camera = new Camera();
-        scene = new Scene(trackPlotControl.getTracks());
+        scene = new Scene(trackPlotControl.getTracks(), trackPlotControl.getIpl());
 
         camera.getPosition().set(400,400,100);
         camera.facePoint(scene.getTracksEntities().getCurrentCentreOfCollection());

@@ -77,10 +77,12 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
 
     private final Engine engine;
     private TrackCollection tracks;
+    private ImagePlus ipl;
 
     public TrackPlotControl(TrackCollection tracks, ImagePlus ipl, int panelWidth, int elementHeight) {
         super(tracks, ipl, panelWidth, elementHeight);
         this.tracks = tracks;
+        this.ipl = ipl;
         engine = new Engine(this);
     }
 
@@ -344,13 +346,13 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
                 engine.getScene().setPlayFrames(((JToggleButton)e.getSource()).isSelected());
                 break;
             case XZ_PLANE:
-                engine.getCamera().viewXZplane(Scene.getBoundingBox());
+                engine.getCamera().viewXZplane(engine.getScene().getBoundingBox());
                 break;
             case YZ_PLANE:
-                engine.getCamera().viewYZplane(Scene.getBoundingBox());
+                engine.getCamera().viewYZplane(engine.getScene().getBoundingBox());
                 break;
             case XY_PLANE:
-                engine.getCamera().viewXYplane(Scene.getBoundingBox());
+                engine.getCamera().viewXYplane(engine.getScene().getBoundingBox());
                 break;
             case SCREEN_SHOT:
                 engine.getRenderer().takeScreenshot();
@@ -428,5 +430,9 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
 
     public TrackCollection getTracks() {
         return tracks;
+    }
+
+    public ImagePlus getIpl() {
+        return ipl;
     }
 }

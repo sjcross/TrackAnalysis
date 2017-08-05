@@ -2,9 +2,7 @@ package wbif.sjx.TrackAnalysis.Plot3D.Math.vectors;
 
 import org.apache.commons.math3.util.FastMath;
 
-/**
- * Created by Jordan Fisher on 02/07/2017.
- */
+
 public class Vector4f {
     private float x, y, z, w;
 

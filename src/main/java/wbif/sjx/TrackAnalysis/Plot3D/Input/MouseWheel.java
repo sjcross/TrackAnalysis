@@ -2,9 +2,7 @@ package wbif.sjx.TrackAnalysis.Plot3D.Input;
 
 import org.lwjgl.glfw.GLFWScrollCallback;
 
-/**
- * Created by Jordan Fisher on 03/06/2017.
- */
+
 public class MouseWheel extends GLFWScrollCallback{
     private static final int WHEEL_SENSITIVITY = 2;
     private static int deltaScroll;

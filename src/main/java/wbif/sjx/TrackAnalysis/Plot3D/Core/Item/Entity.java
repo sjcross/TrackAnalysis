@@ -1,6 +1,7 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core.Item;
 
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Texture;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.FrustumCuller;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
@@ -15,6 +16,7 @@ import java.awt.*;
  */
 public class Entity {
     private final Mesh mesh;
+    private Texture texture;
     private Color colour;
     private Vector3f position;
     private Vector3f rotation;
@@ -42,15 +44,32 @@ public class Entity {
 
     public void render(ShaderProgram shaderProgram, FrustumCuller frustumCuller){
         if(frustumCuller == null || frustumCuller.isInsideFrustum(this)) {
+            boolean hasTexture = texture != null;
+
             shaderProgram.setMatrix4fUniform("combinedTransformationMatrix", getGlobalMatrix());
             shaderProgram.setColourUniform("colour", colour);
 
-            mesh.render();
+            shaderProgram.setBooleanUniform("hasTexture", hasTexture);
+
+            if(hasTexture){
+                shaderProgram.setIntUniform("textureSampler", 0);
+                mesh.render(texture);
+            }else {
+                mesh.render();
+            }
         }
     }
 
     public Mesh getMesh() {
         return mesh;
+    }
+
+    public Texture getTexture() {
+        return texture;
+    }
+
+    public void setTexture(Texture texture) {
+        this.texture = texture;
     }
 
     public Color getColour() {
