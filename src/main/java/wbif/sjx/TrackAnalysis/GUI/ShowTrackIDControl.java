@@ -1,5 +1,6 @@
 package wbif.sjx.TrackAnalysis.GUI;
 
+import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;
 import ij.gui.Overlay;
@@ -67,8 +68,16 @@ public class ShowTrackIDControl extends ModuleControl {
         int fontSize = (int) Math.round(Double.parseDouble(fontSizeTextField.getText()));
         Prefs.set("TrackAnalysis.ShowTrackID.fontSize",fontSize);
 
-        // Creating a duplicate of the image, so the original isn't altered
-        ipl = new Duplicator().run(ipl);
+        // If there was an input image, creating a duplicate of the image, so the original isn't altered.  If there was
+        // no image, creating a new one.
+        if (ipl == null) {
+            // Getting the limits of the tracks, so the blank image can be created
+            double[][] limits = tracks.getSpatialLimits(true);
+            int maxFrames = tracks.getHighestFrame();
+            ipl = IJ.createHyperStack("Tracks",(int) limits[0][1],(int) limits[1][1],1,(int) limits[2][1],maxFrames,8);
+        } else {
+            ipl = new Duplicator().run(ipl);
+        }
 
         // Creating an overlay for the image
         Overlay ovl = new Overlay();
