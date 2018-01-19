@@ -15,7 +15,7 @@ import javax.swing.*;
 /**
  * Loads tracks from results table.  Tracks are stored in terms of calibrated distances.
  */
-public class TrackAnalysisPlugin implements PlugIn {
+public class ResultsTableLoader implements PlugIn {
     /**
      * Main method for debugging.
      * @param args
@@ -28,7 +28,7 @@ public class TrackAnalysisPlugin implements PlugIn {
 
         IJ.runMacro("waitForUser");
 
-        new TrackAnalysisPlugin().run("");
+        new ResultsTableLoader().run("");
 
     }
 

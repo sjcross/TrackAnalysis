@@ -78,7 +78,7 @@
 
     <properties>
         <package-name>wbif.sjx.TrackAnalysis</package-name>
-        <main-class>wbif.sjx.TrackAnalysis.IO.TrackAnalysisPlugin</main-class>
+        <main-class>wbif.sjx.TrackAnalysis.IO.ResultsTableLoader</main-class>
         <license.licenseName>gpl3</license.licenseName>
         <license.copyrightOwners>Stephen Cross</license.copyrightOwners>
     </properties>
