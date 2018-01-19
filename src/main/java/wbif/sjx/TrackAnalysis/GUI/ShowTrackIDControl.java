@@ -1,5 +1,6 @@
 package wbif.sjx.TrackAnalysis.GUI;
 
+import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;
 import ij.gui.Overlay;
@@ -26,7 +27,7 @@ public class ShowTrackIDControl extends ModuleControl {
 
     @Override
     public String getTitle() {
-        return "Show track IDs";
+        return "Show track paths with IDs";
     }
 
     @Override
@@ -67,7 +68,6 @@ public class ShowTrackIDControl extends ModuleControl {
         int fontSize = (int) Math.round(Double.parseDouble(fontSizeTextField.getText()));
         Prefs.set("TrackAnalysis.ShowTrackID.fontSize",fontSize);
 
-        // Creating a duplicate of the image, so the original isn't altered
         ipl = new Duplicator().run(ipl);
 
         // Creating an overlay for the image

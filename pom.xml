@@ -5,17 +5,16 @@
 		http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.scijava</groupId>
-        <artifactId>pom-scijava</artifactId>
-        <version>14.0.0</version>
-        <relativePath />
-    </parent>
+    <!--<parent>-->
+        <!--<groupId>org.scijava</groupId>-->
+        <!--<artifactId>pom-scijava</artifactId>-->
+        <!--<version>14.0.0</version>-->
+        <!--<relativePath />-->
+    <!--</parent>-->
 
     <groupId>wbif.sjx</groupId>
     <artifactId>TrackAnalysis</artifactId>
-    <version>1.0.2</version>
-
+    <version>1.0.3-SNAPSHOT</version>
     <name>Track Analysis</name>
     <description>A Maven project implementing an ImageJ 1.x plugin.</description>
     <url>https://github.com/SJCross/TrackAnalysis/</url>
@@ -23,6 +22,7 @@
     <organization>
         <name>University of Bristol</name>
     </organization>
+
     <licenses>
         <license>
             <name>GNU General Public License v3.0</name>
@@ -78,11 +78,14 @@
 
     <properties>
         <package-name>wbif.sjx.TrackAnalysis</package-name>
-        <main-class>wbif.sjx.TrackAnalysis.IO.TrackAnalysisPlugin</main-class>
+        <main-class>wbif.sjx.TrackAnalysis.IO.ResultsTableLoader</main-class>
         <license.licenseName>gpl3</license.licenseName>
         <license.copyrightOwners>Stephen Cross</license.copyrightOwners>
         <lwjgl.version>3.1.1</lwjgl.version>
         <native.target>natives-windows</native.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <repositories>
@@ -96,6 +99,7 @@
         <dependency>
             <groupId>net.imagej</groupId>
             <artifactId>ij</artifactId>
+            <version>1.51h</version>
         </dependency>
 
         <dependency>
@@ -150,8 +154,8 @@
         <!--Local repository-->
         <dependency>
             <groupId>wbif.sjx</groupId>
-            <artifactId>common</artifactId>
-            <version>1.2.8-SNAPSHOT</version>
+            <artifactId>Common</artifactId>
+            <version>1.3.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -191,7 +195,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>wbif.sjx</groupId>
-                                    <artifactId>common</artifactId>
+                                    <artifactId>Common</artifactId>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
