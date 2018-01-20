@@ -16,6 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.TreeMap;
 
 /**
  * Created by sc13967 on 24/06/2017.
@@ -149,17 +150,17 @@ public class TrackSummary extends ModuleControl {
             csDirRatio.addMeasure(track.getDirectionalityRatio(pixelDistances));
 
             // Step-by-step statistics
-            double[] steps = track.getStepSizes(pixelDistances);
-            Arrays.stream(steps).forEach(csStep::addMeasure);
-            rt.setValue("Mean step size ("+units+")",i,new CumStat(steps).getMean());
+            TreeMap<Integer,Double> steps = track.getInstantaneousStepSizes(pixelDistances);
+            steps.values().stream().forEach(csStep::addMeasure);
+            rt.setValue("Mean step size ("+units+")",i,new CumStat(steps.values()).getMean());
 
-            double[] velocities = track.getInstantaneousVelocity(pixelDistances);
-            Arrays.stream(velocities).forEach(csVelocity::addMeasure);
-            rt.setValue("Mean inst. vel. ("+units+"/frame)",i,new CumStat(velocities).getMean());
+            TreeMap<Integer,Double> velocities = track.getInstantaneousVelocity(pixelDistances);
+            velocities.values().stream().forEach(csVelocity::addMeasure);
+            rt.setValue("Mean inst. vel. ("+units+"/frame)",i,new CumStat(velocities.values()).getMean());
 
-            double[] dirRatio = track.getRollingDirectionalityRatio(pixelDistances);
-            Arrays.stream(dirRatio).forEach(csInstDirRatio::addMeasure);
-            rt.setValue("Mean inst. dir. ratio",i++,new CumStat(dirRatio).getMean());
+            TreeMap<Integer,Double> dirRatio = track.getRollingDirectionalityRatio(pixelDistances);
+            dirRatio.values().stream().forEach(csInstDirRatio::addMeasure);
+            rt.setValue("Mean inst. dir. ratio",i++,new CumStat(dirRatio.values()).getMean());
 
         }
 
@@ -215,21 +216,21 @@ public class TrackSummary extends ModuleControl {
         CumStat csInstDirRatio = new CumStat();
 
         // Step-by-step statistics
-        double[] steps = track.getStepSizes(pixelDistances);
-        Arrays.stream(steps).forEach(csStep::addMeasure);
+        TreeMap<Integer,Double> steps = track.getInstantaneousStepSizes(pixelDistances);
+        steps.values().stream().forEach(csStep::addMeasure);
 
-        double[] velocities = track.getInstantaneousVelocity(pixelDistances);
-        Arrays.stream(velocities).forEach(csVelocity::addMeasure);
+        TreeMap<Integer,Double> velocities = track.getInstantaneousVelocity(pixelDistances);
+        velocities.values().stream().forEach(csVelocity::addMeasure);
 
-        double[] dirRatio = track.getRollingDirectionalityRatio(pixelDistances);
-        Arrays.stream(dirRatio).forEach(csInstDirRatio::addMeasure);
+        TreeMap<Integer,Double> dirRatio = track.getRollingDirectionalityRatio(pixelDistances);
+        dirRatio.values().stream().forEach(csInstDirRatio::addMeasure);
 
         rt.setValue("Euclidean distance ("+units+")",0,track.getEuclideanDistance(pixelDistances));
         rt.setValue("Total path length ("+units+")",0,track.getTotalPathLength(pixelDistances));
         rt.setValue("Directionality ratio ",0,track.getDirectionalityRatio(pixelDistances));
-        rt.setValue("Mean step size ("+units+")",0,new CumStat(steps).getMean());
-        rt.setValue("Mean inst. vel. ("+units+"/frame)",0,new CumStat(velocities).getMean());
-        rt.setValue("Mean inst. dir. ratio",0,new CumStat(dirRatio).getMean());
+        rt.setValue("Mean step size ("+units+")",0,new CumStat(steps.values()).getMean());
+        rt.setValue("Mean inst. vel. ("+units+"/frame)",0,new CumStat(velocities.values()).getMean());
+        rt.setValue("Mean inst. dir. ratio",0,new CumStat(dirRatio.values()).getMean());
 
         IJ.log("Euclidean distance: "+String.valueOf(df.format(track.getEuclideanDistance(pixelDistances)))+" "+units);
         IJ.log("Total path length: "+String.valueOf(df.format(track.getTotalPathLength(pixelDistances)))+" "+units);

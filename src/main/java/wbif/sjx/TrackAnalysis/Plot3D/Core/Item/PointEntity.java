@@ -9,6 +9,7 @@ import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataTypeUtils;
 import wbif.sjx.common.Object.Point;
+import wbif.sjx.common.Object.Timepoint;
 
 import java.awt.*;
 
@@ -43,11 +44,12 @@ public class PointEntity {
     private Vector3f displayPosition;
     private Color velocityColour;
 
-    public PointEntity(TrackEntity trackEntity, Point point){
+    public PointEntity(TrackEntity trackEntity, Timepoint point){
         this.trackEntity = trackEntity;
         globalPosition = DataTypeUtils.toVector3f(point);
         motilityPosition = Vector3f.Add(globalPosition, trackEntity.getMotilityPlotVector());
         velocityColour = measurementToColour(trackEntity.getInstantaneousVelocity(point.getF()), trackEntity.getTrackEntityCollection().getTracks().getMaximumInstantaneousVelocity());
+
     }
 
     public Color measurementToColour(double measurement, double highestMeasurement){

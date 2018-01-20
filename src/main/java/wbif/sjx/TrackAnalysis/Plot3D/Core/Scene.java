@@ -24,23 +24,29 @@ public class Scene {
     public static final int frame_DEFAULT = 0;
     public final static boolean playFrames_DEFAULT = false;
     private boolean playFrames;
+    private ImagePlus ipl;
 
     private Entity texturedPlane;
 
     public Scene(TrackCollection tracks, ImagePlus ipl){
+        this.ipl = ipl;
+
         tracksEntities = new TrackEntityCollection(tracks);
         boundingBox = new BoundingBox(tracks);
 
         initAxes();
 
-        texturedPlane = new Entity(GenerateMesh.texturedPlane(ipl.getHeight(),ipl.getWidth())); //not sure if these parameters are the right way around
-        texturedPlane.getPosition().set(ipl.getHeight()/2,ipl.getWidth()/2,-boundingBox.getHeight()/2); // swap height with width of the other vertical images
+        // Only show an image if one was provided
+        if (ipl != null) {
+            texturedPlane = new Entity(GenerateMesh.texturedPlane(ipl.getHeight(), ipl.getWidth())); //not sure if these parameters are the right way around
+            texturedPlane.getPosition().set(ipl.getHeight() / 2, ipl.getWidth() / 2, -boundingBox.getHeight() / 2); // swap height with width of the other vertical images
 
-        try {
-            ipl.setPosition(1);
-            texturedPlane.setTexture(new Texture(ipl.getBufferedImage()));
-        }catch (Exception e){
-            e.printStackTrace();
+            try {
+                ipl.setPosition(1);
+                texturedPlane.setTexture(new Texture(ipl.getBufferedImage()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         this.frame = frame_DEFAULT;
@@ -67,7 +73,7 @@ public class Scene {
             }
         }
 
-        texturedPlane.render(shaderProgram, frustumCuller);
+        if (ipl != null) texturedPlane.render(shaderProgram, frustumCuller);
 
         tracksEntities.render(shaderProgram, frustumCuller, frame);
 

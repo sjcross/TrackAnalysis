@@ -28,7 +28,6 @@ public class Engine {
     }
 
     public void init() throws Exception{
-
         window = new GLFWWindow("3D Track Plot", 600, 600, true);
         renderer = new Renderer();
         camera = new Camera();

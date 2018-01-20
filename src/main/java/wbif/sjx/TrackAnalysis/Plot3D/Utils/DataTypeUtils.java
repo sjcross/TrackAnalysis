@@ -1,6 +1,7 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Utils;
 
 
+import org.scijava.vecmath.Vector3d;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3i;
@@ -18,7 +19,7 @@ import java.util.Scanner;
 
 public class DataTypeUtils {
 	private DataTypeUtils(){}
-	
+
 	public static ByteBuffer toByteBuffer(byte[] array){
 		ByteBuffer result = ByteBuffer.allocateDirect(array.length).order(ByteOrder.nativeOrder());
 		result.put(array).flip();
@@ -30,13 +31,13 @@ public class DataTypeUtils {
         byteBuffer.get(byteArray);
         return byteArray;
     }
-	
+
 	public static FloatBuffer toFloatBuffer(float[] array){
 		FloatBuffer result = ByteBuffer.allocateDirect(array.length << 2).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		result.put(array).flip();
 		return result;
 	}
-	
+
 	public static IntBuffer toIntBuffer(int[] array){
 		IntBuffer result = ByteBuffer.allocateDirect(array.length << 2).order(ByteOrder.nativeOrder()).asIntBuffer();
 		result.put(array).flip();
@@ -122,11 +123,19 @@ public class DataTypeUtils {
 
 	public static Vector3f toVector3f(Point point){
 	    if(point != null) {
-            return new Vector3f((float) point.getX(), (float) point.getY(), (float) point.getZ());
+            return new Vector3f((float) point.getX().floatValue(), (float) point.getY().floatValue(), (float) point.getZ().floatValue());
         }else {
 	        return new Vector3f();
         }
 	}
+
+//	public static Vector3d toVector3d(Point point) {
+//		if(point != null) {
+//			return new Vector3d((double) point.getX(), (double) point.getY(), (double) point.getZ());
+//		}else {
+//			return new Vector3d();
+//		}
+//	}
 
 	public static String loadAsString(String fileName) throws Exception {
 		String result;

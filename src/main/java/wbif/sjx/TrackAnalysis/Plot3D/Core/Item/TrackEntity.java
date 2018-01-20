@@ -29,7 +29,7 @@ public class TrackEntity extends HashMap<Integer, PointEntity>{
         this.colour = RNG.Colour();
         motilityPlotVector = Vector3f.Negative(DataTypeUtils.toVector3f(track.get(track.getF()[0])));
         int[] f = track.getF();
-        instantaneousVelocity = DoubleTreeMapConverter.convert(Arrays.copyOfRange(f,1,f.length), track.getInstantaneousVelocity(true));
+        instantaneousVelocity = track.getInstantaneousVelocity(true);
 
         for(int frame: track.keySet()){
             put(frame, new PointEntity(this, track.get(frame)));
