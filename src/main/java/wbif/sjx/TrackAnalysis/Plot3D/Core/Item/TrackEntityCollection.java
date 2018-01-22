@@ -33,10 +33,9 @@ public class TrackEntityCollection extends LinkedHashMap<Integer, TrackEntity>{
         this.trailLength = trailLength_MAXIMUM;
     }
 
-    public void render(ShaderProgram shaderProgram, FrustumCuller frustumCuller, int frame){
-        shaderProgram.setBooleanUniform("hasTexture", false);
+    public void render(ShaderProgram shaderProgram, int frame){
         for(TrackEntity trackEntity: values()){
-            trackEntity.render(shaderProgram, frustumCuller, frame);
+            trackEntity.render(shaderProgram, frame);
         }
     }
 
@@ -98,7 +97,7 @@ public class TrackEntityCollection extends LinkedHashMap<Integer, TrackEntity>{
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final int trailLength_MINIMUM = 1;
+    public static final int trailLength_MINIMUM = 3;
     public final int trailLength_MAXIMUM;
 
     private int trailLength;
@@ -128,7 +127,8 @@ public class TrackEntityCollection extends LinkedHashMap<Integer, TrackEntity>{
     public static final displayColourOptions displayColour_DEFAULT = displayColourOptions.VELOCITY;
 
     public enum displayColourOptions{
-        SOLID,
+        ID,
+        TOTAL_PATH_LENGTH,
         VELOCITY
     }
 

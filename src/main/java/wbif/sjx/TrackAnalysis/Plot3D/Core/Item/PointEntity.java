@@ -5,13 +5,19 @@ import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.FrustumCuller;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.GenerateMesh;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
+import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
+import wbif.sjx.TrackAnalysis.Plot3D.Math.Quaternion;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataTypeUtils;
+import wbif.sjx.TrackAnalysis.Plot3D.Utils.RNG;
 import wbif.sjx.common.Object.Point;
 import wbif.sjx.common.Object.Timepoint;
 
 import java.awt.*;
+
+import static wbif.sjx.TrackAnalysis.Plot3D.Core.Scene.X_AXIS;
+import static wbif.sjx.TrackAnalysis.Plot3D.Core.Scene.Y_AXIS;
 
 /**
  * Created by sc13967 on 02/08/2017.
@@ -43,50 +49,56 @@ public class PointEntity {
     private Vector3f motilityPosition;
     private Vector3f displayPosition;
     private Color velocityColour;
+    private Color totalPathLengthColour;
 
-    public PointEntity(TrackEntity trackEntity, Timepoint point){
+    public PointEntity(TrackEntity trackEntity, Timepoint<Double> point){
         this.trackEntity = trackEntity;
         globalPosition = DataTypeUtils.toVector3f(point);
         motilityPosition = Vector3f.Add(globalPosition, trackEntity.getMotilityPlotVector());
-        velocityColour = measurementToColour(trackEntity.getInstantaneousVelocity(point.getF()), trackEntity.getTrackEntityCollection().getTracks().getMaximumInstantaneousVelocity());
+        velocityColour = measurementToColour((float) trackEntity.getInstantaneousVelocity(point.getF()), (float) trackEntity.getMaximumInstantaneousVelocity());
+        totalPathLengthColour = measurementToColour((float) trackEntity.getTotalPathLength(point.getF()), (float) trackEntity.getMaximumTotalPathLength());
 
     }
 
-    public Color measurementToColour(double measurement, double highestMeasurement){
-        int colourIndex = (int)((measurement / highestMeasurement) * 255);
-        return new Color(255, colourIndex, colourIndex);
+    public Color measurementToColour(float measurement, float highestMeasurement){
+        float colourIndex = Maths.interpolateRangeLinearly(0, highestMeasurement, 0, 255, measurement);
+        return Color.getHSBColor((float) colourIndex/255f,(float)1f,(float)1f);
+//        return new Color(255, colourIndex, colourIndex);
     }
 
     private boolean hasPipe = false;
     private float pipeLength;
-    private Vector3f pipeRotation;
+    private Quaternion pipeRotation;
 
     public void createPipe(Vector3f nextPointGlobalPosition) {
         Vector3f pointToNextPoint = Vector3f.Subtract(nextPointGlobalPosition, globalPosition);
-        pipeRotation = new Vector3f(0, pointToNextPoint.getPhi(),180 - pointToNextPoint.getTheta());
+
+        pipeRotation = new Quaternion(pointToNextPoint.getPhi(), X_AXIS);
+        pipeRotation.multiply(pointToNextPoint.getTheta() + 90, Y_AXIS);
+
         pipeLength = pointToNextPoint.getLength();
         hasPipe = true;
     }
 
-    public void renderParticle(ShaderProgram shaderProgram, FrustumCuller frustumCuller){
+    public void renderParticle(ShaderProgram shaderProgram){
         updateDisplayPosition();
 
-        if(frustumCuller.isInsideFrustum(displayPosition, 1, PARTICLE_MESH)) {
+        if(FrustumCuller.getInstance().isInsideFrustum(displayPosition, PARTICLE_MESH.getBoundingSphereRadius())) {
             setDisplayColourUniform(shaderProgram);
-            Matrix4f combinedTransformationMatrix = Matrix4f.translation(displayPosition.getX(), displayPosition.getZ(), displayPosition.getY());
-            shaderProgram.setMatrix4fUniform("combinedTransformationMatrix", combinedTransformationMatrix);
+            Matrix4f globalMatrix = Matrix4f.Translation(displayPosition);
+            shaderProgram.setMatrix4fUniform("globalMatrix", globalMatrix);
 
             PARTICLE_MESH.render();
         }
     }
 
-    public void renderPipe(ShaderProgram shaderProgram, FrustumCuller frustumCuller){
+    public void renderPipe(ShaderProgram shaderProgram){
         updateDisplayPosition();
         setDisplayColourUniform(shaderProgram);
-        Matrix4f combinedTransformationMatrix = Matrix4f.translation(displayPosition.getX(), displayPosition.getZ(), displayPosition.getY());
+        Matrix4f globalMatrix = Matrix4f.Translation(displayPosition);
 
-        if(frustumCuller.isInsideFrustum(displayPosition, 1, HINGE_POINT_MESH_HIGH)) {
-            shaderProgram.setMatrix4fUniform("combinedTransformationMatrix", combinedTransformationMatrix);
+        if(FrustumCuller.getInstance().isInsideFrustum(displayPosition, HINGE_POINT_MESH_HIGH.getBoundingSphereRadius())) {
+            shaderProgram.setMatrix4fUniform("globalMatrix", globalMatrix);
 
             switch (trackEntity.getTrackEntityCollection().displayQuality) {
                 case LOWEST:
@@ -104,10 +116,10 @@ public class PointEntity {
             }
         }
 
-        if(frustumCuller.isInsideFrustum(displayPosition, new Vector3f(1,pipeLength,1), PIPE_MESH_HIGH)) {
-            combinedTransformationMatrix.apply(Matrix4f.rotation(pipeRotation.getX(), pipeRotation.getZ(), pipeRotation.getY()));
-            combinedTransformationMatrix.apply(Matrix4f.stretchY(pipeLength));
-            shaderProgram.setMatrix4fUniform("combinedTransformationMatrix", combinedTransformationMatrix);
+        if(FrustumCuller.getInstance().isInsideFrustum(displayPosition,pipeLength * PIPE_MESH_HIGH.getBoundingSphereRadius())) {
+            globalMatrix.multiply(Matrix4f.QuaternionRotation(pipeRotation));
+            globalMatrix.multiply(Matrix4f.StretchY(pipeLength));
+            shaderProgram.setMatrix4fUniform("globalMatrix", globalMatrix);
 
             switch (trackEntity.getTrackEntityCollection().displayQuality) {
                 case LOWEST:
@@ -138,11 +150,14 @@ public class PointEntity {
         Color displayColour;
 
         switch (trackEntity.getTrackEntityCollection().displayColour){
-            case SOLID:
+            case ID:
                 displayColour = trackEntity.getColour();
                 break;
             case VELOCITY:
                 displayColour = velocityColour;
+                break;
+            case TOTAL_PATH_LENGTH:
+                displayColour = totalPathLengthColour;
                 break;
             default:
                 displayColour = trackEntity.getColour();
@@ -150,14 +165,6 @@ public class PointEntity {
         }
 
         shaderProgram.setColourUniform("colour", displayColour);
-    }
-
-    private Matrix4f getPositionMatrix(){
-        if(trackEntity.getTrackEntityCollection().ifMotilityPlot()){
-            return Matrix4f.translation(motilityPosition);
-        }else {
-            return Matrix4f.translation(globalPosition);
-        }
     }
 
     public Vector3f getGlobalPosition() {

@@ -12,8 +12,6 @@ public class Cursor extends GLFWCursorPosCallback{
     private static Vector2d currentPosition;
     private static Vector2d previousPosition;
 
-    private static boolean onScreen;
-
     public Cursor(){
         currentPosition = new Vector2d();
         previousPosition = new Vector2d();
@@ -24,25 +22,20 @@ public class Cursor extends GLFWCursorPosCallback{
         currentPosition.y = y;
     }
 
-    public static void update(GLFWVidMode primaryMonitor){
+    public static void update(){
         previousPosition.x = currentPosition.x;
         previousPosition.y = currentPosition.y;
-        onScreen = currentPosition.x > 0 && currentPosition.y > 0 && currentPosition.x < primaryMonitor.width() && currentPosition.y < primaryMonitor.height();
     }
 
     public static Vector2d getCurrentPosition(){
         return currentPosition;
     }
 
-    public static Vector2f getDeltaPosition(){
+    public static Vector2f getDeltaPosition() {
         Vector2d deltaPosition = Vector2d.Subtract(currentPosition, previousPosition);
         return new Vector2f(
-                (float)deltaPosition.x,
-                (float)deltaPosition.y
+                (float) deltaPosition.x,
+                (float) deltaPosition.y
         );
-    }
-
-    public static boolean onScreen(){
-        return onScreen;
     }
 }

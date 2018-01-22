@@ -1,31 +1,61 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component;
 
-import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
-
+import java.util.Arrays;
 
 public class Face {
-    private Vector3f vA, vB, vC;
+    private final int[] indexs;
+
+    public Face(int[] indexs) {
+//        if(indexs.length < 3){
+//            throw new Exception("Face order less than 3"); TODO: Handle this
+//        }
+        this.indexs = indexs;
+    }
 
     public Face(
-            Vector3f vA,
-            Vector3f vB,
-            Vector3f vC
-    ){
-        this.vA = vA;
-        this.vB = vB;
-        this.vC = vC;
+            int iA,
+            int iB,
+            int iC
+    ) {
+        this(
+                new int[]{
+                        iA,
+                        iB,
+                        iC
+                }
+        );
     }
 
-    public Vector3f getvA() {
-        return vA;
+    public Face(
+            int iA,
+            int iB,
+            int iC,
+            int iD
+    ) {
+        this(
+                new int[]{
+                        iA,
+                        iB,
+                        iC,
+                        iD
+                }
+        );
     }
 
-    public Vector3f getvB() {
-        return vB;
+    public int[] getIndexs() {
+        return indexs;
     }
 
-    public Vector3f getvC() {
-        return vC;
+    public int getFaceOrder(){
+        return indexs.length;
     }
 
+    public int getPrimtiveFaceCount(){
+        return getFaceOrder() - 2;
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(indexs);
+    }
 }

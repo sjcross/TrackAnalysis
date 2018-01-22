@@ -1,124 +1,86 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Graphics;
 
+import edu.mines.jtk.opt.Vect;
 import org.apache.commons.math3.util.FastMath;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.*;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Face;
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Texture;
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.TexturedFace;
-import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 
 import java.util.ArrayList;
 
 public class GenerateMesh {
-    private GenerateMesh() {}
+    private GenerateMesh() {
+    }
 
-    public static Mesh cube(float length){
-        return cuboid(length, length, length);
+    public static Mesh cube(float sideLength) {
+        sideLength = FastMath.abs(sideLength);
+        return cuboid(sideLength, sideLength, sideLength);
     }
 
     public static Mesh cuboid(float width, float height, float length) {
-        Vector3f[] vertices = new Vector3f[]{
-                new Vector3f(-width / 2, length / 2,height / 2),   //V0
-                new Vector3f(-width / 2, -length / 2, height / 2),  //V1
-                new Vector3f(width / 2, -length / 2, height / 2),   //V2
-                new Vector3f(width / 2, length / 2, height / 2),    //V3
-                new Vector3f(-width / 2, length / 2, -height / 2),  //V4
-                new Vector3f(-width / 2, -length / 2, -height / 2), //V5
-                new Vector3f(width / 2, -length / 2, -height / 2),  //V6
-                new Vector3f(width / 2, length / 2, -height / 2)    //V7
-        };
+        float halfWidth = FastMath.abs(width / 2);
+        float halfHeight = FastMath.abs(height / 2);
+        float halfLength = FastMath.abs(length / 2);
 
-        Vector2f[] textureCoords = new Vector2f[]{
-                new Vector2f(1f / 4, 0f),     //T0
-                new Vector2f(2f / 4, 0f),     //T1
-                new Vector2f(0f, 1f / 4),     //T2
-                new Vector2f(1f / 4, 1f / 4), //T3
-                new Vector2f(2f / 4, 1f / 4), //T4
-                new Vector2f(3f / 4, 1f / 4), //T5
-                new Vector2f(0f, 2f / 4),     //T6
-                new Vector2f(1f / 4, 2f / 4), //T7
-                new Vector2f(2f / 4, 2f / 4), //T8
-                new Vector2f(3f / 4, 2f / 4), //T9
-                new Vector2f(1f / 4, 3f / 4), //T10
-                new Vector2f(2f / 4, 3f / 4), //T11
-                new Vector2f(1f / 4, 1f),     //T12
-                new Vector2f(2f / 4, 1f)      //T13
+        Vector3f[] vertices = new Vector3f[]{
+                new Vector3f(-halfWidth, halfHeight, halfLength),   //V0
+                new Vector3f(-halfWidth, halfHeight, -halfLength),  //V1
+                new Vector3f(halfWidth, halfHeight, -halfLength),   //V2
+                new Vector3f(halfWidth, halfHeight, halfLength),    //V3
+                new Vector3f(-halfWidth, -halfHeight, halfLength),  //V4
+                new Vector3f(-halfWidth, -halfHeight, -halfLength), //V5
+                new Vector3f(halfWidth, -halfHeight, -halfLength),  //V6
+                new Vector3f(halfWidth, -halfHeight, halfLength)    //V7
         };
 
         Face[] faces = new Face[]{
-                new Face(//Front1
-                        vertices[3],
-                        vertices[0],
-                        vertices[4]
+                new Face(//front
+                        3,
+                        0,
+                        4,
+                        7
                 ),
-                new Face(//Front2
-                        vertices[4],
-                        vertices[7],
-                        vertices[3]
+                new Face(//left
+                        0,
+                        1,
+                        5,
+                        4
                 ),
-                new Face(//Left1
-                        vertices[0],
-                        vertices[1],
-                        vertices[5]
+                new Face(//right
+                        2,
+                        3,
+                        7,
+                        6
                 ),
-                new Face(//Left2
-                        vertices[5],
-                        vertices[4],
-                        vertices[0]
+                new Face(//back
+                        1,
+                        2,
+                        6,
+                        5
                 ),
-                new Face(//Right1
-                        vertices[2],
-                        vertices[3],
-                        vertices[7]
+                new Face(//top
+                        2,
+                        1,
+                        0,
+                        3
                 ),
-                new Face(//Right2
-                        vertices[7],
-                        vertices[6],
-                        vertices[2]
-                ),
-                new Face(//Back1
-                        vertices[1],
-                        vertices[2],
-                        vertices[6]
-                ),
-                new Face(//Back2
-                        vertices[6],
-                        vertices[5],
-                        vertices[1]
-                ),
-                new Face(//Top1
-                        vertices[2],
-                        vertices[1] ,
-                        vertices[0]
-                ),
-                new Face(//Top2
-                        vertices[0],
-                        vertices[3],
-                        vertices[2]
-                ),
-                new Face(//Bottom1
-                        vertices[7],
-                        vertices[4],
-                        vertices[5]
-                ),
-                new Face(//Bottom2
-                        vertices[5],
-                        vertices[6],
-                        vertices[7]
+                new Face(//bottom
+                        7,
+                        4,
+                        5,
+                        6
                 ),
         };
 
-        return new Mesh(faces);
+        return new Mesh(vertices, faces);
     }
 
-    public static Mesh cuboidFrame(float width, float height, float length, float thickness){
+    public static Mesh cuboidFrame(float width, float height, float length, float thickness) {
+        float halfThickness = thickness / 2;
 
-        float halfThickness = thickness/2;
-
-        float xi = width/2;
-        float yi = height/2;
-        float zi = length/2;
+        float xi = width / 2;
+        float yi = height / 2;
+        float zi = length / 2;
 
         float xe = xi + halfThickness;
         float ye = yi + halfThickness;
@@ -127,608 +89,803 @@ public class GenerateMesh {
         //e is for exterior, i is for interior
         //u are the sub vertexes of the vertexes v of the main cube
 
-        Vector3f[][] verticies = new Vector3f[][]{
-                new Vector3f[]{//v0
-                        new Vector3f(-xe, ye, ze),//u0
-                        new Vector3f(-xe, ye, zi),//u1
-                        new Vector3f(-xi, ye, zi),//u2
-                        new Vector3f(-xi, ye, ze),//u3
-                        new Vector3f(-xe, yi, ze),//u0
-                        new Vector3f(-xe, yi, zi),//u1
-                        new Vector3f(-xi, yi, zi),//u2
-                        new Vector3f(-xi, yi, ze),//u3
-                },
-                new Vector3f[]{//v1
-                        new Vector3f(-xe, ye, -ze),//u0
-                        new Vector3f(-xe, ye, -zi),//u1
-                        new Vector3f(-xi, ye, -zi),//u2
-                        new Vector3f(-xi, ye, -ze),//u3
-                        new Vector3f(-xe, yi, -ze),//u0
-                        new Vector3f(-xe, yi, -zi),//u1
-                        new Vector3f(-xi, yi, -zi),//u2
-                        new Vector3f(-xi, yi, -ze),//u3
-                },
-                new Vector3f[]{//v2
-                        new Vector3f(xe, ye, -ze),//u0
-                        new Vector3f(xe, ye, -zi),//u1
-                        new Vector3f(xi, ye, -zi),//u2
-                        new Vector3f(xi, ye, -ze),//u3
-                        new Vector3f(xe, yi, -ze),//u0
-                        new Vector3f(xe, yi, -zi),//u1
-                        new Vector3f(xi, yi, -zi),//u2
-                        new Vector3f(xi, yi, -ze),//u3
-                },
-                new Vector3f[]{//v3
-                        new Vector3f(xe, ye, ze),//u0
-                        new Vector3f(xe, ye, zi),//u1
-                        new Vector3f(xi, ye, zi),//u2
-                        new Vector3f(xi, ye, ze),//u3
-                        new Vector3f(xe, yi, ze),//u0
-                        new Vector3f(xe, yi, zi),//u1
-                        new Vector3f(xi, yi, zi),//u2
-                        new Vector3f(xi, yi, ze),//u3
-                },
-                new Vector3f[]{//v4
-                        new Vector3f(-xe, -ye, ze),//u0
-                        new Vector3f(-xe, -ye, zi),//u1
-                        new Vector3f(-xi, -ye, zi),//u2
-                        new Vector3f(-xi, -ye, ze),//u3
-                        new Vector3f(-xe, -yi, ze),//u0
-                        new Vector3f(-xe, -yi, zi),//u1
-                        new Vector3f(-xi, -yi, zi),//u2
-                        new Vector3f(-xi, -yi, ze),//u3
-                },
-                new Vector3f[]{//v5
-                        new Vector3f(-xe, -ye, -ze),//u0
-                        new Vector3f(-xe, -ye, -zi),//u1
-                        new Vector3f(-xi, -ye, -zi),//u2
-                        new Vector3f(-xi, -ye, -ze),//u3
-                        new Vector3f(-xe, -yi, -ze),//u0
-                        new Vector3f(-xe, -yi, -zi),//u1
-                        new Vector3f(-xi, -yi, -zi),//u2
-                        new Vector3f(-xi, -yi, -ze),//u3
-                },
-                new Vector3f[]{//v6
-                        new Vector3f(xe, -ye, -ze),//u0
-                        new Vector3f(xe, -ye, -zi),//u1
-                        new Vector3f(xi, -ye, -zi),//u2
-                        new Vector3f(xi, -ye, -ze),//u3
-                        new Vector3f(xe, -yi, -ze),//u0
-                        new Vector3f(xe, -yi, -zi),//u1
-                        new Vector3f(xi, -yi, -zi),//u2
-                        new Vector3f(xi, -yi, -ze),//u3
-                },
-                new Vector3f[]{//v7
-                        new Vector3f(xe, -ye, ze),//u0
-                        new Vector3f(xe, -ye, zi),//u1
-                        new Vector3f(xi, -ye, zi),//u2
-                        new Vector3f(xi, -ye, ze),//u3
-                        new Vector3f(xe, -yi, ze),//u0
-                        new Vector3f(xe, -yi, zi),//u1
-                        new Vector3f(xi, -yi, zi),//u2
-                        new Vector3f(xi, -yi, ze),//u3
-                }
+        Vector3f[] vertices = new Vector3f[]{
+                //v0
+                new Vector3f(-xe, ye, ze),//u0
+                new Vector3f(-xe, yi, ze),//u1
+                new Vector3f(-xi, yi, ze),//u2
+                new Vector3f(-xi, ye, ze),//u3
+                new Vector3f(-xe, ye, zi),//u4
+                new Vector3f(-xe, yi, zi),//u5
+                new Vector3f(-xi, yi, zi),//u6
+                new Vector3f(-xi, ye, zi),//u7
+                //v1
+                new Vector3f(-xe, -yi, ze),//u0
+                new Vector3f(-xe, -ye, ze),//u1
+                new Vector3f(-xi, -ye, ze),//u2
+                new Vector3f(-xi, -yi, ze),//u3
+                new Vector3f(-xe, -yi, zi),//u4
+                new Vector3f(-xe, -ye, zi),//u5
+                new Vector3f(-xi, -ye, zi),//u6
+                new Vector3f(-xi, -yi, zi),//u7
+                //v2
+                new Vector3f(xi, -yi, ze),//u0
+                new Vector3f(xi, -ye, ze),//u1
+                new Vector3f(xe, -ye, ze),//u2
+                new Vector3f(xe, -yi, ze),//u3
+                new Vector3f(xi, -yi, zi),//u4
+                new Vector3f(xi, -ye, zi),//u5
+                new Vector3f(xe, -ye, zi),//u6
+                new Vector3f(xe, -yi, zi),//u7
+                //v3
+                new Vector3f(xi, ye, ze),//u0
+                new Vector3f(xi, yi, ze),//u1
+                new Vector3f(xe, yi, ze),//u2
+                new Vector3f(xe, ye, ze),//u3
+                new Vector3f(xi, ye, zi),//u4
+                new Vector3f(xi, yi, zi),//u5
+                new Vector3f(xe, yi, zi),//u6
+                new Vector3f(xe, ye, zi),//u7
+                //v4
+                new Vector3f(-xe, ye, -zi),//u0
+                new Vector3f(-xe, yi, -zi),//u1
+                new Vector3f(-xi, yi, -zi),//u2
+                new Vector3f(-xi, ye, -zi),//u3
+                new Vector3f(-xe, ye, -ze),//u4
+                new Vector3f(-xe, yi, -ze),//u5
+                new Vector3f(-xi, yi, -ze),//u6
+                new Vector3f(-xi, ye, -ze),//u7
+                //v5
+                new Vector3f(-xe, -yi, -zi),//u0
+                new Vector3f(-xe, -ye, -zi),//u1
+                new Vector3f(-xi, -ye, -zi),//u2
+                new Vector3f(-xi, -yi, -zi),//u3
+                new Vector3f(-xe, -yi, -ze),//u4
+                new Vector3f(-xe, -ye, -ze),//u5
+                new Vector3f(-xi, -ye, -ze),//u6
+                new Vector3f(-xi, -yi, -ze),//u7
+                //v6
+                new Vector3f(xi, -yi, -zi),//u0
+                new Vector3f(xi, -ye, -zi),//u1
+                new Vector3f(xe, -ye, -zi),//u2
+                new Vector3f(xe, -yi, -zi),//u3
+                new Vector3f(xi, -yi, -ze),//u4
+                new Vector3f(xi, -ye, -ze),//u5
+                new Vector3f(xe, -ye, -ze),//u6
+                new Vector3f(xe, -yi, -ze),//u7
+                //v7
+                new Vector3f(xi, ye, -zi),//u0
+                new Vector3f(xi, yi, -zi),//u1
+                new Vector3f(xe, yi, -zi),//u2
+                new Vector3f(xe, ye, -zi),//u3
+                new Vector3f(xi, ye, -ze),//u4
+                new Vector3f(xi, yi, -ze),//u5
+                new Vector3f(xe, yi, -ze),//u6
+                new Vector3f(xe, ye, -ze),//u7
         };
-
-        Face[] faces = new Face[]{
-                //v0 to v1
-
-                //interior
-                new Face(
-                        verticies[1][3],
-                        verticies[0][2],
-                        verticies[0][6]
-                ),
-                new Face(
-                        verticies[1][3],
-                        verticies[0][6],
-                        verticies[1][7]
-                ),
-
-                //downward
-                new Face(
-                        verticies[1][7],
-                        verticies[0][6],
-                        verticies[0][5]
-                ),
-                new Face(
-                        verticies[1][7],
-                        verticies[0][5],
-                        verticies[1][4]
-                ),
-
-                //exterior
-                new Face(
-                        verticies[0][1],
-                        verticies[1][0],
-                        verticies[1][4]
-                ),
-                new Face(
-                        verticies[0][1],
-                        verticies[1][4],
-                        verticies[0][5]
-                ),
-
-                //upward
-                new Face(
-                        verticies[1][0],
-                        verticies[0][1],
-                        verticies[0][2]
-                ),
-                new Face(
-                        verticies[1][0],
-                        verticies[0][2],
-                        verticies[1][3]
-                ),
-
-                //v2 to v3
-
-                //interior
-                new Face(
-                        verticies[3][3],
-                        verticies[2][2],
-                        verticies[2][6]
-                ),
-                new Face(
-                        verticies[3][3],
-                        verticies[2][6],
-                        verticies[3][7]
-                ),
-
-                //downward
-                new Face(
-                        verticies[3][7],
-                        verticies[2][6],
-                        verticies[2][5]
-                ),
-                new Face(
-                        verticies[3][7],
-                        verticies[2][5],
-                        verticies[3][4]
-                ),
-
-                //exterior
-                new Face(
-                        verticies[2][1],
-                        verticies[3][0],
-                        verticies[3][4]
-                ),
-                new Face(
-                        verticies[2][1],
-                        verticies[3][4],
-                        verticies[2][5]
-                ),
-
-                //upward
-                new Face(
-                        verticies[3][0],
-                        verticies[2][1],
-                        verticies[2][2]
-                ),
-                new Face(
-                        verticies[3][0],
-                        verticies[2][2],
-                        verticies[3][3]
-                ),
-
-                //v5 to v4
-
-                //interior
-                new Face(
-                        verticies[4][3],
-                        verticies[5][2],
-                        verticies[5][6]
-                ),
-                new Face(
-                        verticies[4][3],
-                        verticies[5][6],
-                        verticies[4][7]
-                ),
-
-                //downward
-                new Face(
-                        verticies[4][7],
-                        verticies[5][6],
-                        verticies[5][5]
-                ),
-                new Face(
-                        verticies[4][7],
-                        verticies[5][5],
-                        verticies[4][4]
-                ),
-
-                //exterior
-                new Face(
-                        verticies[5][1],
-                        verticies[4][0],
-                        verticies[4][4]
-                ),
-                new Face(
-                        verticies[5][1],
-                        verticies[4][4],
-                        verticies[5][5]
-                ),
-
-                //upward
-                new Face(
-                        verticies[4][0],
-                        verticies[5][1],
-                        verticies[5][2]
-                ),
-                new Face(
-                        verticies[4][0],
-                        verticies[5][2],
-                        verticies[4][3]
-                ),
-
-                //v7 to v6
-
-                //interior
-                new Face(
-                        verticies[6][3],
-                        verticies[7][2],
-                        verticies[7][6]
-                ),
-                new Face(
-                        verticies[6][3],
-                        verticies[7][6],
-                        verticies[6][7]
-                ),
-
-                //downward
-                new Face(
-                        verticies[6][7],
-                        verticies[7][6],
-                        verticies[7][5]
-                ),
-                new Face(
-                        verticies[6][7],
-                        verticies[7][5],
-                        verticies[6][4]
-                ),
-
-                //exterior
-                new Face(
-                        verticies[7][1],
-                        verticies[6][0],
-                        verticies[6][4]
-                ),
-                new Face(
-                        verticies[7][1],
-                        verticies[6][4],
-                        verticies[7][5]
-                ),
-
-                //upward
-                new Face(
-                        verticies[6][0],
-                        verticies[7][1],
-                        verticies[7][2]
-                ),
-                new Face(
-                        verticies[6][0],
-                        verticies[7][2],
-                        verticies[6][3]
-                ),
-
-                //v1 to v2
-
-                //interior
-                new Face(
-                        verticies[2][0],
-                        verticies[1][3],
-                        verticies[1][7]
-                ),
-                new Face(
-                        verticies[2][0],
-                        verticies[1][7],
-                        verticies[2][4]
-                ),
-
-                //downward
-                new Face(
-                        verticies[2][4],
-                        verticies[1][7],
-                        verticies[1][6]
-                ),
-                new Face(
-                        verticies[2][4],
-                        verticies[1][6],
-                        verticies[2][5]
-                ),
-
-                //exterior
-                new Face(
-                        verticies[2][5],
-                        verticies[1][6],
-                        verticies[1][2]
-                ),
-                new Face(
-                        verticies[2][5],
-                        verticies[1][2],
-                        verticies[2][1]
-                ),
-
-                //upward
-                new Face(
-                        verticies[2][1],
-                        verticies[1][2],
-                        verticies[1][3]
-                ),
-                new Face(
-                        verticies[2][1],
-                        verticies[1][3],
-                        verticies[2][0]
-                ),
-        };
-
-
-
-
-        return new Mesh(faces);
-
-
-
-    }
-
-    public static Mesh cylinder(float radius, int resolution, float length){
-        resolution = resolution < 3 ? 3 : resolution;
 
         ArrayList<Face> faces = new ArrayList<>();
-        Vector3f[] topVertices = new Vector3f[resolution];
-        Vector3f[] botVertices = new Vector3f[resolution];
-        Vector3f topCentreVertex = new Vector3f(0,length / 2,0);
-        Vector3f botCentreVertex = new Vector3f(0,-length / 2,0);
 
-        double deltaTheta = 2 * FastMath.PI/(resolution);
+        //v1 to v0
+        faces.add(new Face(//top
+                2,
+                1,
+                8,
+                11
+        ));
+        faces.add(new Face(//left
+                1,
+                5,
+                12,
+                8
+        ));
+        faces.add(new Face(//right
+                6,
+                2,
+                11,
+                15
+        ));
+        faces.add(new Face(//bottom
+                5,
+                6,
+                15,
+                12
+        ));
+
+//v2 to v3
+        faces.add(new Face(//top
+                26,
+                25,
+                16,
+                19
+        ));
+        faces.add(new Face(//left
+                25,
+                29,
+                20,
+                16
+        ));
+        faces.add(new Face(//right
+                30,
+                26,
+                19,
+                23
+        ));
+        faces.add(new Face(//bottom
+                29,
+                30,
+                23,
+                20
+        ));
+
+//v5 to v4
+        faces.add(new Face(//top
+                34,
+                33,
+                40,
+                43
+        ));
+        faces.add(new Face(//left
+                33,
+                37,
+                44,
+                40
+        ));
+        faces.add(new Face(//right
+                38,
+                34,
+                43,
+                47
+        ));
+        faces.add(new Face(//bottom
+                37,
+                38,
+                47,
+                44
+        ));
+
+//v5 to v4
+        faces.add(new Face(//top
+                58,
+                57,
+                48,
+                51
+        ));
+        faces.add(new Face(//left
+                57,
+                61,
+                52,
+                48
+        ));
+        faces.add(new Face(//right
+                62,
+                58,
+                51,
+                55
+        ));
+        faces.add(new Face(//bottom
+                61,
+                62,
+                55,
+                52
+        ));
+
+//v2 to v1
+        faces.add(new Face(//top
+                11,
+                10,
+                17,
+                16
+        ));
+        faces.add(new Face(//left
+                10,
+                14,
+                21,
+                17
+        ));
+        faces.add(new Face(//right
+                15,
+                11,
+                16,
+                20
+        ));
+        faces.add(new Face(//bottom
+                14,
+                15,
+                20,
+                21
+        ));
+
+//v3 to v0
+        faces.add(new Face(//top
+                3,
+                2,
+                25,
+                24
+        ));
+        faces.add(new Face(//left
+                2,
+                6,
+                29,
+                25
+        ));
+        faces.add(new Face(//right
+                7,
+                3,
+                24,
+                28
+        ));
+        faces.add(new Face(//bottom
+                6,
+                7,
+                28,
+                29
+        ));
+
+//v6 to v5
+        faces.add(new Face(//top
+                43,
+                42,
+                49,
+                48
+        ));
+        faces.add(new Face(//left
+                42,
+                46,
+                53,
+                49
+        ));
+        faces.add(new Face(//right
+                47,
+                43,
+                48,
+                52
+        ));
+        faces.add(new Face(//bottom
+                46,
+                47,
+                52,
+                53
+        ));
+
+//v7 to v4
+        faces.add(new Face(//top
+                35,
+                34,
+                57,
+                56
+        ));
+        faces.add(new Face(//left
+                34,
+                38,
+                61,
+                57
+        ));
+        faces.add(new Face(//right
+                39,
+                35,
+                56,
+                60
+        ));
+        faces.add(new Face(//bottom
+                38,
+                39,
+                60,
+                61
+        ));
+
+//v5 to v1
+        faces.add(new Face(//top
+                14,
+                13,
+                41,
+                42
+        ));
+        faces.add(new Face(//left
+                13,
+                12,
+                40,
+                41
+        ));
+        faces.add(new Face(//right
+                15,
+                14,
+                42,
+                43
+        ));
+        faces.add(new Face(//bottom
+                12,
+                15,
+                43,
+                40
+        ));
+
+//v6 to v2
+        faces.add(new Face(//top
+                22,
+                21,
+                49,
+                50
+        ));
+        faces.add(new Face(//left
+                21,
+                20,
+                48,
+                49
+        ));
+        faces.add(new Face(//right
+                23,
+                22,
+                50,
+                51
+        ));
+        faces.add(new Face(//bottom
+                20,
+                23,
+                51,
+                48
+        ));
+
+//v4 to v0
+        faces.add(new Face(//top
+                6,
+                5,
+                33,
+                34
+        ));
+        faces.add(new Face(//left
+                5,
+                4,
+                32,
+                33
+        ));
+        faces.add(new Face(//right
+                7,
+                6,
+                34,
+                35
+        ));
+        faces.add(new Face(//bottom
+                4,
+                7,
+                35,
+                32
+        ));
+
+//v7 to v3
+        faces.add(new Face(//top
+                30,
+                29,
+                57,
+                58
+        ));
+        faces.add(new Face(//left
+                29,
+                28,
+                56,
+                57
+        ));
+        faces.add(new Face(//right
+                31,
+                30,
+                58,
+                59
+        ));
+        faces.add(new Face(//bottom
+                28,
+                31,
+                59,
+                56
+        ));
+
+//v0
+        faces.add(new Face(//0
+                4,
+                5,
+                1,
+                0
+        ));
+        faces.add(new Face(//1
+                7,
+                4,
+                0,
+                3
+        ));
+        faces.add(new Face(//2
+                3,
+                0,
+                1,
+                2
+        ));
+
+//v1
+        faces.add(new Face(//0
+                12,
+                13,
+                9,
+                8
+        ));
+        faces.add(new Face(//1
+                13,
+                14,
+                10,
+                9
+        ));
+        faces.add(new Face(//2
+                11,
+                8,
+                9,
+                10
+        ));
+
+//v2
+        faces.add(new Face(//0
+                22,
+                23,
+                19,
+                18
+        ));
+        faces.add(new Face(//1
+                21,
+                22,
+                18,
+                17
+        ));
+        faces.add(new Face(//2
+                19,
+                16,
+                17,
+                18
+        ));
+
+//v3
+        faces.add(new Face(//0
+                30,
+                31,
+                27,
+                26
+        ));
+        faces.add(new Face(//1
+                31,
+                28,
+                24,
+                27
+        ));
+        faces.add(new Face(//2
+                27,
+                24,
+                25,
+                26
+        ));
+
+//v4
+        faces.add(new Face(//0
+                36,
+                37,
+                33,
+                32
+        ));
+        faces.add(new Face(//1
+                39,
+                36,
+                32,
+                35
+        ));
+        faces.add(new Face(//2
+                39,
+                38,
+                37,
+                36
+        ));
+
+//v5
+        faces.add(new Face(//0
+                44,
+                45,
+                41,
+                40
+        ));
+        faces.add(new Face(//1
+                45,
+                46,
+                42,
+                41
+        ));
+        faces.add(new Face(//2
+                47,
+                46,
+                45,
+                44
+        ));
+
+//v6
+        faces.add(new Face(//0
+                54,
+                55,
+                51,
+                50
+        ));
+        faces.add(new Face(//1
+                53,
+                54,
+                50,
+                49
+        ));
+        faces.add(new Face(//2
+                55,
+                54,
+                53,
+                52
+        ));
+
+//v7
+        faces.add(new Face(//0
+                62,
+                63,
+                59,
+                58
+        ));
+        faces.add(new Face(//1
+                63,
+                60,
+                56,
+                59
+        ));
+        faces.add(new Face(//2
+                63,
+                62,
+                61,
+                60
+        ));
+
+        return new Mesh(vertices, faces);
+    }
+
+    public static Mesh roundedPipe(float radius, int resolution, float length) {
+        resolution = resolution < 3 ? 3 : resolution;
+
+        radius = FastMath.abs(radius);
+
+        final int ringCount = resolution / 2;
+        final int sectorCount = resolution;
+
+        ArrayList<Vector3f> vertices = new ArrayList<>();
+        ArrayList<Face> faces = new ArrayList<>();
+
+        double deltaRingTheta = FastMath.PI / (2 * ringCount);
+        double deltaSectorTheta = 2 * FastMath.PI / sectorCount;
+        double ringTheta = 0;
+        double sectorTheta = 0;
+
+        //Pipe
+
+        for(int i = 0; i < sectorCount; i++) {
+            float rSinTheta = radius * (float) FastMath.sin(sectorTheta);
+            float rCosTheta = radius * (float) FastMath.cos(sectorTheta);
+            vertices.add(new Vector3f(rSinTheta, length, rCosTheta));
+            sectorTheta += deltaSectorTheta;
+        }
+
+        for(int i = 0; i < sectorCount - 1; i++) {
+            faces.add(new Face(
+                    i + 1,
+                    i,
+                    sectorCount + i,
+                    sectorCount + i + 1
+            ));
+        }
+
+        faces.add(new Face(
+                0,
+                sectorCount - 1,
+                (sectorCount * 2) - 1,
+                sectorCount
+        ));
+
+        //Semi sphere
+
+        for(int ring = 0; ring < ringCount; ring++){
+            sectorTheta  = 0;
+            for(int sector = 0; sector < sectorCount; sector++){
+                float sinSθ = (float)FastMath.sin(sectorTheta);
+                float cosSθ = (float)FastMath.cos(sectorTheta);
+                float sinRθ = (float)FastMath.sin(ringTheta);
+                float cosRθ = (float)FastMath.cos(ringTheta);
+
+                vertices.add(new Vector3f(
+                        radius * sinSθ * cosRθ,
+                        -radius * sinRθ,
+                        radius * cosRθ * cosSθ
+                ));
+                sectorTheta += deltaSectorTheta;
+            }
+            ringTheta += deltaRingTheta;
+        }
+
+        vertices.add(new Vector3f(0, -radius, 0));
+        final int peakIndex = vertices.size() - 1;
+
+        for (int ring = 0; ring < ringCount - 1; ring++) {
+
+            final int currentRingIndexOffset = (ring + 1) * sectorCount;
+            final int nextRingIndexOffset = (ring + 2) * sectorCount;
+
+            for (int sector = 0; sector < sectorCount - 1; sector++) {
+                //faces
+                faces.add(new Face(
+                        currentRingIndexOffset + sector + 1,
+                        currentRingIndexOffset + sector,
+                        nextRingIndexOffset + sector,
+                        nextRingIndexOffset + sector + 1
+                ));
+            }
+
+            //filler faces
+            faces.add(new Face(
+                    currentRingIndexOffset + 0,
+                    currentRingIndexOffset + sectorCount - 1,
+                    nextRingIndexOffset + sectorCount - 1,
+                    nextRingIndexOffset + 0
+            ));
+        }
+
+        final int frontRingIndexOffset = ringCount * sectorCount;
+
+        for (int sector = frontRingIndexOffset; sector < peakIndex; sector++) {
+            //front faces
+            faces.add(new Face(
+                    sector + 1,
+                    sector,
+                    peakIndex
+            ));
+        }
+
+        //front face filler
+        faces.add(new Face(
+                frontRingIndexOffset,
+                peakIndex - 1,
+                peakIndex
+        ));
+
+        return new Mesh(vertices, faces);
+    }
+
+    public static Mesh pipe(float radius, int resolution, float length) {
+        resolution = resolution < 3 ? 3 : resolution;
+        radius = FastMath.abs(radius);
+        length = FastMath.abs(length);
+
+        Vector3f[] vertices = new Vector3f[resolution * 2];
+
+        double deltaTheta = 2 * FastMath.PI / (resolution);
         double theta = 0;
 
-        for(int i = 0; i < resolution; i++){
-            float rSinθ = radius * (float) FastMath.sin(theta);
-            float rCosθ = radius * (float) FastMath.cos(theta);
-            topVertices[i] = new Vector3f(rCosθ,length / 2, rSinθ);
-            botVertices[i] = new Vector3f(rCosθ,-length / 2, rSinθ);
+        for(int i = 0; i < resolution; i++) {
+            float rSinTheta = radius * (float) FastMath.sin(theta);
+            float rCosTheta = radius * (float) FastMath.cos(theta);
+            vertices[i] = new Vector3f(rCosTheta, length, rSinTheta);
+            vertices[resolution + i] = new Vector3f(rCosTheta, 0, rSinTheta);
             theta -= deltaTheta;
         }
 
-        for(int i = 0; i < resolution -1; i++){
-            //top face fragments
-            faces.add(new Face(
-                    topCentreVertex,
-                    topVertices[i],
-                    topVertices[i + 1]
-            ));
-
-            //bot face fragments
-            faces.add(new Face(
-                    botVertices[i],
-                    botCentreVertex,
-                    botVertices[i + 1]
-            ));
-
-            //side face fragment 1
-            faces.add(new Face(
-                    topVertices[i + 1],
-                    topVertices[i],
-                    botVertices[i]
-            ));
-
-            //side face fragment 2
-            faces.add(new Face(
-                    topVertices[i + 1],
-                    botVertices[i],
-                    botVertices[i + 1]
-            ));
-        }
-
-        //top face filler fragments
-        faces.add(new Face(
-                topCentreVertex,
-                topVertices[resolution - 1],
-                topVertices[0]
-        ));
-
-        //bot face filler fragments
-        faces.add(new Face(
-                botVertices[resolution - 1],
-                botCentreVertex,
-                botVertices[0]
-        ));
-
-        //side face filler fragment 1
-        faces.add(new Face(
-                topVertices[0],
-                topVertices[resolution - 1],
-                botVertices[resolution - 1]
-        ));
-
-        //side face fragment 2
-        faces.add(new Face(
-                topVertices[0],
-                botVertices[resolution - 1],
-                botVertices[0]
-        ));
-
-        return new Mesh(faces);
-    }
-
-    public static Mesh pipe(float radius, int resolution, float length){
-        resolution = resolution < 3 ? 3 : resolution;
-
         ArrayList<Face> faces = new ArrayList<>();
-        Vector3f[] topVertices = new Vector3f[resolution];
-        Vector3f[] botVertices = new Vector3f[resolution];
 
-        double deltaTheta = 2 * FastMath.PI/(resolution);
-        double theta = 0;
-
-        for(int i = 0; i < resolution; i++){
-            float rSinθ = radius * (float) FastMath.sin(theta);
-            float rCosθ = radius * (float) FastMath.cos(theta);
-            topVertices[i] = new Vector3f(rCosθ,length, rSinθ);
-            botVertices[i] = new Vector3f(rCosθ, 0, rSinθ);
-            theta -= deltaTheta;
-        }
-
-        for(int i = 0; i < resolution -1; i++){
-            //side face fragment 1
+        for(int i = 0; i < resolution - 1; i++) {
             faces.add(new Face(
-                    topVertices[i + 1],
-                    topVertices[i],
-                    botVertices[i]
-            ));
-
-            //side face fragment 2
-            faces.add(new Face(
-                    topVertices[i + 1],
-                    botVertices[i],
-                    botVertices[i + 1]
+                    i + 1,
+                    i,
+                    i + resolution,
+                    i + 1 + resolution
             ));
         }
 
-        //side face filler fragment 1
         faces.add(new Face(
-                topVertices[0],
-                topVertices[resolution - 1],
-                botVertices[resolution - 1]
+                0,
+                resolution -1,
+                (resolution *2) -1,
+                resolution
         ));
 
-        //side face fragment 2
-        faces.add(new Face(
-                topVertices[0],
-                botVertices[resolution - 1],
-                botVertices[0]
-        ));
-
-        return new Mesh(faces);
+        return new Mesh(vertices, faces);
     }
 
     public static Mesh sphere(float radius, int resolution){
         resolution = resolution < 3 ? 3 : resolution;
-        Vector3f[][] vertices = new Vector3f[resolution][resolution];
-        Vector3f northPole = new Vector3f(0,radius,0);
-        Vector3f southPole = new Vector3f(0,-radius,0);
+        radius = FastMath.abs(radius);
 
+        final int ringCount = resolution - 1;
+        final int meridianCount = resolution;
+
+        Vector3f[] vertices = new Vector3f[ringCount * meridianCount + 2];
+
+        final int northPoleIndex = vertices.length - 2;
+        final int southPoleIndex = vertices.length - 1;
+
+        vertices[northPoleIndex] = new Vector3f(0,radius,0);
+        vertices[southPoleIndex] = new Vector3f(0,-radius,0);
+
+        double deltaAlpha = FastMath.PI / resolution;
         double deltaTheta = 2 * FastMath.PI / resolution;
-        double deltaAlpha = FastMath.PI / (resolution + 1);
+        double alpha = 0;
         double theta;
-        double alpha;
 
-        alpha = - deltaAlpha;
-        for(int ring = 0; ring < resolution; ring++){
+        for(int ring = 0; ring < ringCount; ring++){
+            alpha -= deltaAlpha;
             theta = 0;
-            for(int meridian = 0; meridian < resolution; meridian++){
-                float sinθ = (float)FastMath.sin(theta);
-                float cosθ = (float)FastMath.cos(theta);
-                float sinφ = (float)FastMath.sin(alpha);
-                float cosφ = (float)FastMath.cos(alpha);
+            for(int meridian = 0; meridian < meridianCount; meridian++){
+                float sinTheta = (float)FastMath.sin(theta);
+                float cosTheta = (float)FastMath.cos(theta);
+                float sinPhi = (float)FastMath.sin(alpha);
+                float cosPhi = (float)FastMath.cos(alpha);
 
-                vertices[ring][meridian] = new Vector3f(
-                        radius * sinφ * cosθ,
-                        radius * cosφ,
-                        radius * sinφ * sinθ
+                vertices[(ring * meridianCount) + meridian] = new Vector3f(
+                        radius * sinPhi * cosTheta,
+                        radius * cosPhi,
+                        radius * sinPhi * sinTheta
                 );
                 theta -= deltaTheta;
             }
-            alpha -= deltaAlpha;
         }
 
         ArrayList<Face> faces = new ArrayList<>();
 
+        for (int ring = 0; ring < ringCount - 1; ring++) {
 
-        for(int ring = 0; ring < resolution - 1; ring++){
-            for(int meridian = 0; meridian < resolution - 1; meridian++){
-                //main faces fragment 1
+            final int currentRingIndexOffset = ring * meridianCount;
+            final int nextRingIndexOffset = (ring + 1) * meridianCount;
+
+            for (int meridian = 0; meridian < meridianCount - 1; meridian++) {
+
+                //faces
                 faces.add(new Face(
-                        vertices[ring][meridian + 1],
-                        vertices[ring][meridian],
-                        vertices[ring + 1][meridian]
-                ));
-                //main faces fragment 2
-                faces.add(new Face(
-                        vertices[ring][meridian + 1],
-                        vertices[ring + 1][meridian],
-                        vertices[ring + 1][meridian + 1]
+                        currentRingIndexOffset + meridian + 1,
+                        currentRingIndexOffset + meridian,
+                        nextRingIndexOffset  + meridian,
+                        nextRingIndexOffset + meridian + 1
                 ));
             }
 
-            //main faces filler fragment 1
+            //filler faces
             faces.add(new Face(
-                    vertices[ring][0],
-                    vertices[ring][resolution - 1],
-                    vertices[ring + 1][resolution - 1]
-            ));
-            //main faces filler fragment 2
-            faces.add(new Face(
-                    vertices[ring][0],
-                    vertices[ring + 1][resolution - 1],
-                    vertices[ring + 1][0]
+                    currentRingIndexOffset + 0,
+                    currentRingIndexOffset + meridianCount - 1,
+                    nextRingIndexOffset + meridianCount - 1,
+                    nextRingIndexOffset + 0
             ));
         }
 
-        for(int meridian = 0; meridian < resolution - 1; meridian++){
+        final int bottomRingIndexOffset = (ringCount - 1) * meridianCount;
+
+        for (int meridian = 0; meridian < resolution - 1; meridian++) {
             //top faces
             faces.add(new Face(
-                    northPole,
-                    vertices[0][meridian],
-                    vertices[0][meridian + 1]
+                    northPoleIndex,
+                    meridian,
+                    meridian + 1
             ));
 
             //bottom faces
             faces.add(new Face(
-                    southPole,
-                    vertices[resolution - 1][meridian + 1],
-                    vertices[resolution - 1][meridian]
+                    southPoleIndex,
+                    bottomRingIndexOffset + meridian + 1,
+                    bottomRingIndexOffset + meridian
             ));
         }
 
         //top faces filler
         faces.add(new Face(
-                northPole,
-                vertices[0][resolution - 1],
-                vertices[0][0]
+                northPoleIndex,
+                meridianCount - 1,
+                0
         ));
 
         //bottom faces filler
         faces.add(new Face(
-                southPole,
-                vertices[resolution - 1][0],
-                vertices[resolution - 1][resolution - 1]
+                southPoleIndex,
+                bottomRingIndexOffset,
+                bottomRingIndexOffset + meridianCount - 1
         ));
 
-        return new Mesh(faces);
+        return new Mesh(vertices, faces);
     }
-
-    public static Mesh texturedPlane(float width, float length){
-        Vector3f[] vertices = new Vector3f[]{
-                new Vector3f(width / 2,0,-length / 2),
-                new Vector3f(-width / 2,0,-length / 2),
-                new Vector3f(-width / 2,0,length / 2),
-                new Vector3f(width / 2,0,length / 2)
-        };
-
-        Vector2f[] textureCoords = new Vector2f[]{
-                new Vector2f(0,0),
-                new Vector2f(1,0),
-                new Vector2f(0,1),
-                new Vector2f(1,1)
-        };
-
-        TexturedFace[] faces = new TexturedFace[]{
-                new TexturedFace(
-                        vertices[0], textureCoords[1],
-                        vertices[1], textureCoords[0],
-                        vertices[2], textureCoords[2]
-                ),
-                new TexturedFace(
-                        vertices[2], textureCoords[2],
-                        vertices[3], textureCoords[3],
-                        vertices[0], textureCoords[1]
-                )
-        };
-
-        return new Mesh(faces);
-    }
-
-
 }

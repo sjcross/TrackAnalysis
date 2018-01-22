@@ -2,48 +2,45 @@ package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
 import org.apache.commons.math3.util.FastMath;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.BoundingBox;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.Entity;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
+import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector4f;
 
 public class Camera {
     public final static float VIEW_DISTANCE_NEAR = 0.01f;
     public final static int VIEW_DISTANCE_FAR = 100000;
-    private static final int MAX_TILT = 90;
-
-    private Vector3f position;
-    private float tilt;
-    private float pan;
 
     public Camera(){
-        this.position = new Vector3f(0,0,0);
+        this.position = new Vector3f();
+        this.movementDirection = new Vector3f();
         this.tilt = 0;
         this.pan = 0;
         this.FOV = FOV_DEFAULT;
-        this.cameraPositionStep = cameraPositionStep_DEFAULT;
+        this.cameraMovementSpeed = cameraMovementSpeed_DEFAULT;
         this.mouseSensitivity = mouseSensitivity_DEFAULT;
         this.faceCentre = faceCentre_DEFAULT;
         this.orbitVelocity = orbitVelocity_DEFAULT;
     }
 
-    public Matrix4f getCameraMatrix(){
-        Matrix4f result = Matrix4f.identity();
-        result.apply(Matrix4f.rotation(tilt, pan, 0));
-        result.apply(Matrix4f.translation(-position.getX(), -position.getZ(), -position.getY()));
+    public Matrix4f getViewMatrix(){
+        Matrix4f result = Matrix4f.EulerRotation(-tilt, pan, 0);
+        result.multiply(Matrix4f.Translation(Vector3f.Negative(position)));
         return result;
     }
 
-    public void update(Scene scene){
-        //Handles camera rotation
+    public void update(float interval, Vector3f centrePosition){
+        changePositionRelativeToOrientation(Vector3f.Multiply(movementDirection, cameraMovementSpeed * interval));
+
+        //Handles camera EulerRotation
         if (faceCentre) {
-            facePoint(scene.getTracksEntities().getCurrentCentreOfCollection());
-            changePositionXRelativeToOrientation(orbitVelocity);
+            facePoint(centrePosition);
+            changePositionXRelativeToOrientation((float)orbitVelocity * interval);
         }
     }
 
     public void returnToOrigin(){
-        position = new Vector3f(0,0,0);
+        position = new Vector3f();
         tilt = 0;
         pan = 0;
     }
@@ -52,20 +49,29 @@ public class Camera {
         facePoint(new Vector3f(x, y, z));
     }
 
-    public void facePoint(Vector3f pointVector){
-        Vector3f vec = Vector3f.Subtract(pointVector, position);
-        tilt = vec.getPhi() - 90;
-        pan = 90 + vec.getTheta();
+    public void facePoint(Vector3f pointPositionVector){
+        faceDirection(Vector3f.Subtract(pointPositionVector, position));
+    }
+
+    public void faceDirection(Vector3f direction){
+        direction.normalize();
+        pan = 90 + direction.getTheta();
+        tilt = 90 - direction.getPhi();
+    }
+
+    @Override
+    public String toString(){
+        return String.format("Position  %s\nTilt: %f   Pan: %f\n", getPosition(), getTilt(), getPan());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public float calcOptimalBoundingBoxViewingDistance(float sideLength){
+    private float calcOptimalBoundingBoxViewingDistance(float sideLength){
         return (float)((sideLength / 2) / FastMath.tan(Math.toRadians(FOV / 2)));
     }
 
     public void viewXZplane(BoundingBox boundingBox){
-        setTilt(0);
+        setTilt(-90);
         setPan(0);
 
         position.set(boundingBox.getCentrePosition());
@@ -74,9 +80,9 @@ public class Camera {
         float length = calcOptimalBoundingBoxViewingDistance(boundingBox.getLength());
         float height = calcOptimalBoundingBoxViewingDistance(boundingBox.getHeight());
 
-        float distance = FastMath.max(width, height);
+        float distance = FastMath.max(width, length);
 
-        position.changeY(length + distance);
+        position.addY(height + distance);
     }
 
     public void viewYZplane(BoundingBox boundingBox){
@@ -91,11 +97,11 @@ public class Camera {
 
         float distance = FastMath.max(length, height);
 
-        position.changeX(width + distance);
+        position.addX(width + distance);
     }
 
     public void viewXYplane(BoundingBox boundingBox){
-        setTilt(90);
+        setTilt(0);
         setPan(0);
 
         position.set(boundingBox.getCentrePosition());
@@ -104,12 +110,14 @@ public class Camera {
         float length = calcOptimalBoundingBoxViewingDistance(boundingBox.getLength());
         float height = calcOptimalBoundingBoxViewingDistance(boundingBox.getHeight());
 
-        float distance = FastMath.max(width, length);
+        float distance = FastMath.max(width, height);
 
-        position.changeZ(height + distance);
+        position.addZ(length + distance);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Vector3f position;
 
     public Vector3f getPosition(){
         return position;
@@ -131,21 +139,26 @@ public class Camera {
         }
     }
 
-    public void changePositionXRelativeToOrientation(float dx) {
-        position.changeX(-dx * (float) FastMath.sin(FastMath.toRadians(pan - 90)));
-        position.changeY(dx * (float) FastMath.cos(FastMath.toRadians(pan - 90)));
+    public void changePositionXRelativeToOrientation(float dx){
+        position.addX(-dx * (float)FastMath.sin(FastMath.toRadians(pan - 90)));
+        position.addZ(dx * (float) FastMath.cos(FastMath.toRadians(pan - 90)));
     }
 
-    public void changePositionYRelativeToOrientation(float dy) {
-        position.changeX(-dy * (float) FastMath.sin(FastMath.toRadians(pan)));
-        position.changeY(dy * (float) FastMath.cos(FastMath.toRadians(pan)));
+    public void changePositionYRelativeToOrientation(float dy){
+        position.addY(dy);
     }
 
-    public void changePositionZRelativeToOrientation(float dz) {
-        position.changeZ(dz);
+    public void changePositionZRelativeToOrientation(float dz){
+        position.addX(-dz * (float)FastMath.sin(FastMath.toRadians(pan)));
+        position.addZ(dz * (float)FastMath.cos(FastMath.toRadians(pan)));
     }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private static final int MAX_TILT = 90;
+
+    private float tilt; //Pitch
 
     public float getTilt(){
         return tilt;
@@ -161,11 +174,13 @@ public class Camera {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     public void changeTilt(float deltaTilt){
         setTilt(getTilt() + deltaTilt);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private float pan; //Yaw
 
     public float getPan(){
         return pan;
@@ -206,27 +221,35 @@ public class Camera {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private float cameraPositionStep;
-    private final static float cameraPositionStep_DEFAULT = 0.5f;
-    private final static float cameraPositionStep_MINIMUM = 0.01f;
-    private final static float cameraPositionStep_MAXIMUM = 10f;
+    private float cameraMovementSpeed;
+    private final static float cameraMovementSpeed_DEFAULT = 100f;
+    private final static float cameraMovementSpeed_MINIMUM = 10f;
+    private final static float cameraMovementSpeed_MAXIMUM = 500f;
 
-    public void setCameraPositionStep(float value){
-        if(value < cameraPositionStep_MINIMUM){
-            cameraPositionStep = cameraPositionStep_MINIMUM;
-        }else if(value > cameraPositionStep_MAXIMUM){
-            cameraPositionStep = cameraPositionStep_MAXIMUM;
+    public void setCameraMovementSpeed(float value){
+        if(value < cameraMovementSpeed_MINIMUM){
+            cameraMovementSpeed = cameraMovementSpeed_MINIMUM;
+        }else if(value > cameraMovementSpeed_MAXIMUM){
+            cameraMovementSpeed = cameraMovementSpeed_MAXIMUM;
         }else {
-            cameraPositionStep = value;
+            cameraMovementSpeed = value;
         }
     }
 
-    public void changeCameraPositionStep(float value){
-        setCameraPositionStep(getCameraPositionStep() + value);
+    public void changeCameraMovementSpeed(float value){
+        setCameraMovementSpeed(getCameraMovementSpeed() + value);
     }
 
-    public float getCameraPositionStep(){
-        return cameraPositionStep;
+    public float getCameraMovementSpeed(){
+        return cameraMovementSpeed;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private Vector3f movementDirection;
+
+    public Vector3f getMovementDirection() {
+        return movementDirection;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -275,7 +298,7 @@ public class Camera {
 
     private int orbitVelocity;
     public final static int orbitVelocity_DEFAULT = 0;
-    public final static int orbitVelocity_MAXIMUM = 20;
+    public final static int orbitVelocity_MAXIMUM = 100;
     public final static int orbitVelocity_MINIMUM = -orbitVelocity_MAXIMUM;
 
     public void setOrbitVelocity(int value){

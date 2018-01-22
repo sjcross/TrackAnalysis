@@ -1,5 +1,6 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core.Item;
 
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Scene;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.FrustumCuller;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
@@ -22,6 +23,9 @@ public class TrackEntity extends HashMap<Integer, PointEntity>{
     private Color colour;
     private final Vector3f motilityPlotVector;
     private TreeMap<Integer,Double> instantaneousVelocity;
+    private double maxInstantaneousVelocity = -1;
+    private TreeMap<Integer,Double> totalPathLength;
+    private double maxTotalPathLength = -1;
 
     public TrackEntity(TrackEntityCollection trackEntityCollection, Track track){
         this.trackEntityCollection = trackEntityCollection;
@@ -30,6 +34,7 @@ public class TrackEntity extends HashMap<Integer, PointEntity>{
         motilityPlotVector = Vector3f.Negative(DataTypeUtils.toVector3f(track.get(track.getF()[0])));
         int[] f = track.getF();
         instantaneousVelocity = track.getInstantaneousVelocity(true);
+        totalPathLength = track.getRollingTotalPathLength(true);
 
         for(int frame: track.keySet()){
             put(frame, new PointEntity(this, track.get(frame)));
@@ -42,19 +47,18 @@ public class TrackEntity extends HashMap<Integer, PointEntity>{
         }
     }
 
-
-    public void render(ShaderProgram shaderProgram, FrustumCuller frustumCuller, int frame){
+    public void render(ShaderProgram shaderProgram, int frame){
         if(trackEntityCollection.isTrailVisibile()){
             for (int f = frame - trackEntityCollection.getTrailLength(); f < frame; f++) {
                 if(track.hasFrame(f) && get(f).hasPipe()){
-                    get(f).renderPipe(shaderProgram, frustumCuller);
+                    get(f).renderPipe(shaderProgram);
                 }
             }
         }
 
         //Renders a larger point at the current frame
         if(track.hasFrame(frame)) {
-            get(frame).renderParticle(shaderProgram, frustumCuller);
+            get(frame).renderParticle(shaderProgram);
         }
     }
 
@@ -84,5 +88,37 @@ public class TrackEntity extends HashMap<Integer, PointEntity>{
         }else {
             return 0;
         }
+    }
+
+    public double getTotalPathLength(int frame) {
+        if(totalPathLength.containsKey(frame)) {
+            return totalPathLength.get(frame);
+        }else {
+            return 0;
+        }
+    }
+
+    public double getMaximumInstantaneousVelocity() {
+        // Only calculate it the first time it's requested
+        if (maxInstantaneousVelocity == -1) {
+            for (double velocity : instantaneousVelocity.values()) {
+                maxInstantaneousVelocity = Math.max(maxInstantaneousVelocity, velocity);
+            }
+        }
+
+        return maxInstantaneousVelocity;
+
+    }
+
+    public double getMaximumTotalPathLength() {
+        // Only calculate it the first time it's requested
+        if (maxTotalPathLength == -1) {
+            for (double pathLength : totalPathLength.values()) {
+                maxTotalPathLength = Math.max(maxTotalPathLength, pathLength);
+            }
+        }
+
+        return maxTotalPathLength;
+
     }
 }

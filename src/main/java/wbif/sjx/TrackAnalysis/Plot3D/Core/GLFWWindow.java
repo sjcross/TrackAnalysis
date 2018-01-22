@@ -24,6 +24,7 @@ public class GLFWWindow {
     private String title;
     private int width;
     private int height;
+    private int refreshRate;
     private final boolean vSync;
     private long windowHandle;
 
@@ -39,12 +40,13 @@ public class GLFWWindow {
         this.title = title;
         this.width = width;
         this.height = height;
+        this.refreshRate = primaryMonitor.refreshRate();
         this.vSync = vSync;
 
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
-        glfwWindowHint(GLFW_REFRESH_RATE, primaryMonitor.refreshRate());
+        glfwWindowHint(GLFW_REFRESH_RATE, refreshRate);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -60,6 +62,12 @@ public class GLFWWindow {
         centreWindow();
         changeWindowPosition(-500,0);
 
+        glfwSetFramebufferSizeCallback(windowHandle, (window, newWidth, newHeight) -> {
+            this.width = newWidth;
+            this.height = newHeight;
+            glViewport(0, 0, newWidth, newHeight);
+        });
+
         glfwSetKeyCallback(windowHandle, new Keyboard());
         glfwSetMouseButtonCallback(windowHandle, new MouseButtons());
         glfwSetCursorPosCallback(windowHandle, new Cursor());
@@ -68,19 +76,14 @@ public class GLFWWindow {
         glfwMakeContextCurrent(windowHandle);
         GL.createCapabilities();
 
-        if (vSync) {
-            glfwSwapInterval(1);
-        }
-
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glFrontFace(GL_CCW);
         glCullFace(GL_BACK);
         glEnable(GL_CULL_FACE);
         glEnable(GL_MULTISAMPLE);
+
+//        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glEnable(GL_DEPTH_TEST);
-        glEnable(GL_ALPHA_TEST);
-        glEnable(GL_BLEND);
-        glEnable(GL_TEXTURE_2D);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     public void setVisibility(boolean state){
@@ -120,18 +123,6 @@ public class GLFWWindow {
         glfwPollEvents();
     }
 
-    public boolean hasResized(){
-        int[] w = new int[1]; int[] h = new int[1];
-        glfwGetFramebufferSize(windowHandle, w, h);
-        if(width != w[0] || height != h[0]) {
-            width = w[0];
-            height = h[0];
-            return true;
-        }else {
-            return false;
-        }
-    }
-
     public boolean isOpen() {
         return !glfwWindowShouldClose(windowHandle);
     }
@@ -142,6 +133,15 @@ public class GLFWWindow {
 
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title){
+        this.title = title;
+        glfwSetWindowTitle(windowHandle, title);
+    }
+
+    public void appendToTitle(String string){
+        glfwSetWindowTitle(windowHandle, String.format("%s (%s)", title, string));
     }
 
     public int getWidth(){
@@ -162,6 +162,10 @@ public class GLFWWindow {
 
     public boolean isVSyncEnabled(){
         return vSync;
+    }
+
+    public int getRefreshRate() {
+        return refreshRate;
     }
 }
 

@@ -1,6 +1,5 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core.Item;
 
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.FrustumCuller;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.GenerateMesh;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
@@ -26,33 +25,34 @@ public class BoundingBox {
     public BoundingBox(TrackCollection tracks){
         double[][] spacialLimits = tracks.getSpatialLimits(true);
 
+        //Convert from XZY to XYZ
         minPosition = new Vector3f(
                 (float)spacialLimits[0][0],
-                (float)spacialLimits[1][0],
-                (float)spacialLimits[2][0]
+                (float)spacialLimits[2][0],
+                (float)spacialLimits[1][0]
         );
         maxPosition = new Vector3f(
                 (float)spacialLimits[0][1],
-                (float)spacialLimits[1][1],
-                (float)spacialLimits[2][1]
+                (float)spacialLimits[2][1],
+                (float)spacialLimits[1][1]
         );
 
         width = maxPosition.getX() - minPosition.getX();
-        length = maxPosition.getY() - minPosition.getY();
-        height = maxPosition.getZ() - minPosition.getZ();
+        height = maxPosition.getY() - minPosition.getY();
+        length = maxPosition.getZ() - minPosition.getZ();
 
         centrePosition = new Vector3f(
                 minPosition.getX() + width / 2,
-                minPosition.getY() + length / 2,
-                minPosition.getZ() + height / 2
+                minPosition.getY() + height / 2,
+                minPosition.getZ() + length / 2
         );
 
-        boundingBox = new Entity(GenerateMesh.cuboid(width, length, height), new Color(255,0,0, 60));
+        boundingBox = new Entity(GenerateMesh.cuboidFrame(width, height, length, 5), Color.white);
         boundingBox.getPosition().set(centrePosition);
     }
 
-    public void render(ShaderProgram shaderProgram, FrustumCuller frustumCuller){
-        boundingBox.render(shaderProgram, frustumCuller);
+    public void render(ShaderProgram shaderProgram){
+        boundingBox.render(shaderProgram);
     }
 
     public Vector3f getCentrePosition() {

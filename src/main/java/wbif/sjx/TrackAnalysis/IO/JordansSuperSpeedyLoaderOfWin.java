@@ -23,10 +23,11 @@ public class JordansSuperSpeedyLoaderOfWin implements PlugIn {
      */
     public static void main(String[] args) {
         new ImageJ();
+
+//        IJ.runMacroFile("C:\\Users\\Jordan Fisher\\Documents\\Programming\\Java\\TrackAnalysis-3DTrackRenders\\src\\main\\resources\\Import_Results_Table.ijm");
         IJ.runMacroFile("C:\\Users\\sc13967\\Local Documents\\ImageJMacros\\Import_Results_Table.ijm");
 //        IJ.runMacroFile("C:\\Users\\sc13967\\Documents\\ImageJ Macros\\Import_Results_Table.ijm");
 //        IJ.runMacroFile("E:\\Stephen\\ImageJ Macros\\ImageJMacros\\Import_Results_Table.ijm");
-
 
         new JordansSuperSpeedyLoaderOfWin().run("");
 
@@ -48,7 +49,7 @@ public class JordansSuperSpeedyLoaderOfWin implements PlugIn {
         ResultsTable rt = ResultsTable.getResultsTable();
         TrackCollection tracks = doImport(rt,null);
 
-        ImagePlus ipl = IJ.openImage("C:\\Users\\sc13967\\Google Drive\\People\\F\\Jordan Fisher\\2017-07-31 Track analysis plots\\Simulated Tracks\\MAX_SimulatedTracks100_halfheight_z.tif");
+        ImagePlus ipl = IJ.openImage("C:\\Users\\Jordan Fisher\\Documents\\Programming\\Java\\TrackAnalysis-3DTrackRenders\\src\\main\\resources\\Tracks\\MAX_SimulatedTracks100_halfheight_z.tif");
 
         // Running TrackAnalysis
         new TrackAnalysis(tracks,ipl);
@@ -65,10 +66,10 @@ public class JordansSuperSpeedyLoaderOfWin implements PlugIn {
 
         // Getting default heading selections
         int trackIDIdx = (int) Prefs.get("TrackAnalysis.trackIDIdx",0);
-        int xPosIdx = (int) Prefs.get("TrackAnalysis.xPosIdx",0);
-        int yPosIdx = (int) Prefs.get("TrackAnalysis.yPosIdx",0);
-        int zPosIdx = (int) Prefs.get("TrackAnalysis.zPosIdx",0);
-        int frameIdx = (int) Prefs.get("TrackAnalysis.frameIdx",0);
+        int xPosIdx = (int) Prefs.get("TrackAnalysis.xPosIdx",2);
+        int yPosIdx = (int) Prefs.get("TrackAnalysis.yPosIdx",3);
+        int zPosIdx = (int) Prefs.get("TrackAnalysis.zPosIdx",4);
+        int frameIdx = (int) Prefs.get("TrackAnalysis.frameIdx",1);
 
 
         // Getting default calibration value
@@ -97,6 +98,15 @@ public class JordansSuperSpeedyLoaderOfWin implements PlugIn {
             tracks.get(ID).addTimepoint(x,y,z,f);
 
         }
+
+//        // Sorting spots in each track to ensure they are in chronological ORDER
+//        for (Track track:tracks.values()) {
+//            track.sort((o1, o2) -> {
+//                double t1 = o1.getF();
+//                double t2 = o2.getF();
+//                return t1 > t2 ? 1 : t1 == t2 ? 0 : -1;
+//            });
+//        }
 
         return tracks;
 

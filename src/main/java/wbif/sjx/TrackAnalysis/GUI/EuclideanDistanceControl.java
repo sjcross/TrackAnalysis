@@ -9,6 +9,7 @@ import wbif.sjx.common.Object.TrackCollection;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.TreeMap;
 
 /**
  * Created by sc13967 on 24/06/2017.
@@ -82,12 +83,13 @@ public class EuclideanDistanceControl extends ModuleControl {
         } else {
             Track track = tracks.get(ID);
             double[] f = track.getFAsDouble();
-            double[] euclideanDistance = track.getRollingEuclideanDistance(pixelDistances);
+            TreeMap<Integer,Double> euclideanDistance = track.getRollingEuclideanDistance(pixelDistances);
+            double[] vals = euclideanDistance.values().stream().mapToDouble(Double::doubleValue).toArray();
 
             String units = track.getUnits(pixelDistances);
             Plot plot = new Plot("Euclidean distance (track "+ID+")",xLabel,"Euclidean distance ("+units+")");
             plot.setColor(Color.BLACK);
-            plot.addPoints(f,euclideanDistance,Plot.LINE);
+            plot.addPoints(f,vals,Plot.LINE);
             plot.show();
 
         }

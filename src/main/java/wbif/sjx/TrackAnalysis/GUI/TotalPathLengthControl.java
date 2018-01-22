@@ -9,6 +9,7 @@ import wbif.sjx.common.Object.TrackCollection;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.TreeMap;
 
 /**
  * Created by sc13967 on 24/06/2017.
@@ -81,10 +82,11 @@ public class TotalPathLengthControl extends ModuleControl {
         } else {
             Track track = tracks.get(ID);
             double[] f = track.getFAsDouble();
-            double[] totalPathLength = track.getRollingTotalPathLength(pixelDistances);
+            TreeMap<Integer,Double> totalPathLength = track.getRollingTotalPathLength(pixelDistances);
+            double[] vals = totalPathLength.values().stream().mapToDouble(Double::doubleValue).toArray();
 
             String units = track.getUnits(pixelDistances);
-            Plot plot = new Plot("Total path length (track "+ID+")",xLabel,"Total path length ("+units+")",f,totalPathLength);
+            Plot plot = new Plot("Total path length (track "+ID+")",xLabel,"Total path length ("+units+")",f,vals);
             plot.show();
 
         }

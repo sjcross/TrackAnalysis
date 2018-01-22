@@ -9,40 +9,100 @@ import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataTypeUtils;
 
 import java.nio.FloatBuffer;
 
-public class Matrix4f {
+public class Matrix4f{
 
-    public static final int order = 4;
+    public static final int ORDER = 4;
     public float[][] elements;
 
     public Matrix4f() {
-        elements = new float[order][order];
+        set(new float[ORDER][ORDER]);
     }
 
-    public void apply(Matrix4f M){
-        elements = multiply(M, this).elements;
+    public Matrix4f(float[][] elements){
+        set(elements);
     }
 
-    public static Matrix4f identity() {
-        Matrix4f I = new Matrix4f();
-        for (int row = 0; row < order; row++) {
-            for (int col = 0; col < order; col++) {
-                if (row == col) {
-                    I.elements[row][col] = 1f;
-                } else {
-                    I.elements[row][col] = 0f;
+    public Matrix4f(Matrix4f matrix4f){
+        set(matrix4f);
+    }
+
+    public void set(Matrix4f matrix4f){
+        set(matrix4f.elements);
+    }
+
+    public void set(float[][] elements){
+        this.elements = elements;
+    }
+
+    public void multiply(Matrix4f multiplier){
+        set(Multiply(this, multiplier));
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+
+        final String spacing = "     ";
+        int longestelement = 1;
+
+        for (int row = 0; row < ORDER; row++) {
+            for (int col = 0; col < ORDER; col++) {
+                if (Float.toString(elements[row][col]).length() > longestelement) {
+                    longestelement = Float.toString(elements[row][col]).length();
                 }
             }
         }
-        return I;
+
+        for (int row = 0; row < ORDER; row++) {
+            result.append("\n|");
+            result.append(spacing);
+
+            for (int col = 0; col < ORDER; col++) {
+                result.append(elements[row][col]);
+                for (int i = Float.toString(elements[row][col]).length(); i < longestelement; i++) {
+                    result.append(" ");
+                }
+
+                result.append(spacing);
+            }
+            result.append("|");
+        }
+
+        return result.toString();
     }
 
-    public static Matrix4f multiply(Matrix4f A, Matrix4f B) {
-        Matrix4f result = new Matrix4f();
-        for (int row = 0; row < order; row++) {
-            for (int col = 0; col < order; col++) {
+    public FloatBuffer toFloatBuffer() {
+        return DataTypeUtils.toFloatBuffer(DataTypeUtils.toFloatArray(elements));
+    }
+
+    ///////////////////////////////////////////////////STATIC///////////////////////////////////////////////////////////
+
+    public static Matrix4f Identity() {
+        return new Matrix4f(
+                new float[][]{
+                        {1, 0, 0, 0},
+                        {0, 1, 0, 0},
+                        {0, 0, 1, 0},
+                        {0, 0, 0, 1}
+                }
+        );
+    }
+
+    public static Matrix4f Multiply(Matrix4f multiplicand, Matrix4f multiplier, Matrix4f... multipliers) {
+        final Matrix4f result = Multiply(multiplicand, multiplier);
+        for(Matrix4f Multiplier : multipliers){
+            result.multiply(Multiplier);
+        }
+        return result;
+    }
+
+    public static Matrix4f Multiply(Matrix4f multiplicand, Matrix4f multiplier) {
+        final Matrix4f result = new Matrix4f();
+        for (int row = 0; row < ORDER; row++) {
+            for (int col = 0; col < ORDER; col++) {
                 float sum = 0;
-                for (int i = 0; i < order; i++) {
-                    sum += (A.elements[i][col] * B.elements[row][i]);
+                for (int i = 0; i < ORDER; i++) {
+                    sum += (multiplier.elements[i][col] * multiplicand.elements[row][i]);
                 }
                 result.elements[row][col] = sum;
             }
@@ -50,218 +110,170 @@ public class Matrix4f {
         return result;
     }
 
-    public static Vector4f multiply(Matrix4f M, Vector4f V) {
-        Vector4f result;
-        Float[] component = new Float[order];
-        for (int row = 0; row < order; row++) {
-            component[row] = M.elements[row][0] * V.getX() +  M.elements[row][1] * V.getY() +  M.elements[row][2] * V.getZ() +  M.elements[row][3] * V.getW();
-        }
-        result = new Vector4f(
-                component[0],
-                component[1],
-                component[2],
-                component[3]
-        );
-        return result;
-    }
-
-    public static Vector4f[] multiply(Matrix4f M, Vector4f[] Vs) {
-        Vector4f[] result = new Vector4f[Vs.length];
-        for(int i = 0; i < result.length; i++){
-            result[i] = multiply(M, Vs[i]);
-        }
-        return result;
-    }
-
-    public static Vector3f multiply(Matrix4f M, Vector3f V) {
-        Vector3f result;
-        Float[] component = new Float[order];
-        for (int row = 0; row < order; row++) {
-            component[row] = M.elements[row][0] * V.getX() +  M.elements[row][1] * V.getY() +  M.elements[row][2] * V.getZ() +  M.elements[row][3] * 1;
-        }
-        result = new Vector3f(
-                component[0],
-                component[1],
-                component[2]
-        );
-        return result;
-    }
-
-    public static Vector3f[] multiply(Matrix4f M, Vector3f[] Vs) {
-        Vector3f[] result = new Vector3f[Vs.length];
-        for(int i = 0; i < result.length; i++){
-            result[i] = multiply(M, Vs[i]);
-        }
-        return result;
-    }
-
-    public static Matrix4f projection(float FOV, float aspectRatio, float zNear, float zFar){
-        Matrix4f result = new Matrix4f();
-        float fov = (float) FastMath.toRadians(FOV);
-        float a = aspectRatio;
-        float zm = zFar - zNear;
-        float zp = zFar + zNear;
-        result.elements[0][0] = (float) ((1/ FastMath.tan(fov/2))/a);
-        result.elements[1][1] = (float) (1/ FastMath.tan(fov/2));
-        result.elements[2][2] = (-zp/zm);
-        result.elements[2][3] = (-(2f*zFar*zNear)/zm);
+    public static Matrix4f Perspective(float FOV, float aspectRatio, float zNear, float zFar){
+        final Matrix4f result = new Matrix4f();
+        final float fov = (float) FastMath.toRadians(FOV);
+        final float zm = zFar - zNear;
+        final float zp = zFar + zNear;
+        result.elements[0][0] = (float) ((1/FastMath.tan(fov/2))/aspectRatio);
+        result.elements[1][1] = (float) (1/FastMath.tan(fov/2));
+        result.elements[2][2] = -zp / zm;
+        result.elements[2][3] = -(2f * zFar * zNear) / zm;
         result.elements[3][2] = -1f;
         return result;
     }
 
-    public static Matrix4f orthographic(int left, int right, int top, int bottom){
-        Matrix4f result = identity();
-        result.elements[0][0] = 2f/(right - left);
-        result.elements[0][3] = right == left ? 0 : (-(right + left)) / (right - left);
-        result.elements[1][1] = 2f/(top - bottom);
-        result.elements[1][3] = top == bottom ? 0 : (-(top + bottom)) / (top - bottom);
+    public static Matrix4f Orthographic(float left, float right, float top, float bottom, float zNear, float zFar){
+        final Matrix4f result = Identity();
+        result.elements[0][0] = 2f / (right - left);
+        result.elements[1][1] = 2f / (top - bottom);
+        result.elements[2][2] = 2f / (zFar - zNear);
+        result.elements[0][3] = (right + left) / (left - right);
+        result.elements[1][3] = (top + bottom) / (bottom - top);
+        result.elements[2][3] = (zFar + zNear) / (zNear - zFar);
+        return result;
+    }
+
+    public static Matrix4f Orthographic2D(int left, int right, int top, int bottom){
+        final Matrix4f result = Identity();
+        result.elements[0][0] = 2f / (right - left);
+        result.elements[0][3] = -(right + left) / (right - left);
+        result.elements[1][1] = 2f / (top - bottom);
+        result.elements[1][3] = -(top + bottom) / (top - bottom);
         result.elements[2][2] = -1f;
         return result;
     }
 
-    public static Matrix4f translation(Vector3f translation) {
-        return translation(translation.getX(), translation.getY(), translation.getZ());
+    public static Matrix4f Translation(Vector3f translation) {
+        return Translation(translation.getX(), translation.getY(), translation.getZ());
     }
 
-    public static Matrix4f translation(float x, float y, float z) {
-        Matrix4f result = identity();
-        result.elements[0][order - 1] = x;
-        result.elements[1][order - 1] = y;
-        result.elements[2][order - 1] = z;
+    public static Matrix4f Translation(float dX, float dY, float dZ) {
+        Matrix4f result = Identity();
+        result.elements[0][ORDER - 1] = dX;
+        result.elements[1][ORDER - 1] = dY;
+        result.elements[2][ORDER - 1] = dZ;
         return result;
     }
 
-    public static Matrix4f rotation(Vector3f rotation){
-        return rotation(rotation.getX(), rotation.getY(), rotation.getZ());
+    public static Matrix4f EulerRotation(Vector3f eulerRotation){
+        return EulerRotation(eulerRotation.getX(), eulerRotation.getY(), eulerRotation.getZ());
     }
 
-    public static Matrix4f rotation(float x, float y, float z){
-        Matrix4f result = identity();
-        if(x != 0) {
-            result.apply(xRotation(x));
+    public static Matrix4f EulerRotation(float eulerX, float eulerY, float eulerZ){
+        final Matrix4f result = Identity();
+        if(eulerX != 0) {
+            result.multiply(EulerRotationX(eulerX));
         }
-        if(y != 0) {
-            result.apply(yRotation(y));
+        if(eulerY != 0) {
+            result.multiply(EulerRotationY(eulerY));
         }
-        if(z != 0) {
-            result.apply(zRotation(z));
+        if(eulerZ != 0) {
+            result.multiply(EulerRotationZ(eulerZ));
         }
         return result;
     }
 
-    public static Matrix4f xRotation(float angleX) {
-        Matrix4f result = identity();
-        double theta = FastMath.toRadians(angleX);
-        result.elements[1][1] = (float) FastMath.cos(theta);
-        result.elements[1][2] = (float) -FastMath.sin(theta);
-        result.elements[2][1] = (float) FastMath.sin(theta);
-        result.elements[2][2] = (float) FastMath.cos(theta);
+    public static Matrix4f EulerRotationX(float eulerX) {
+        final Matrix4f result = Identity();
+        final double theta = FastMath.toRadians(eulerX);
+        final float sinθ = (float) FastMath.sin(theta);
+        final float cosθ = (float) FastMath.cos(theta);
+
+        result.elements[1][1] =  cosθ;
+        result.elements[1][2] = -sinθ;
+        result.elements[2][1] =  sinθ;
+        result.elements[2][2] =  cosθ;
         return result;
     }
 
-    public static Matrix4f yRotation(float angleY) {
-        Matrix4f result = identity();
-        double theta = FastMath.toRadians(angleY);
-        result.elements[0][0] = (float) FastMath.cos(theta);
-        result.elements[0][2] = (float) FastMath.sin(theta);
-        result.elements[2][0] = (float) -FastMath.sin(theta);
-        result.elements[2][2] = (float) FastMath.cos(theta);
+    public static Matrix4f EulerRotationY(float eulerY) {
+        final Matrix4f result = Identity();
+        final double theta = FastMath.toRadians(eulerY);
+        final float sinθ = (float) FastMath.sin(theta);
+        final float cosθ = (float) FastMath.cos(theta);
+
+        result.elements[0][0] = cosθ;
+        result.elements[0][2] = sinθ;
+        result.elements[2][0] = -sinθ;
+        result.elements[2][2] = cosθ;
         return result;
     }
 
-    public static Matrix4f zRotation(float angleZ) {
-        Matrix4f result = identity();
-        double theta = FastMath.toRadians(angleZ);
-        result.elements[0][0] = (float) FastMath.cos(theta);
-        result.elements[0][1] = (float) -FastMath.sin(theta);
-        result.elements[1][0] = (float) FastMath.sin(theta);
-        result.elements[1][1] = (float) FastMath.cos(theta);
+    public static Matrix4f EulerRotationZ(float eulerZ) {
+        final Matrix4f result = Identity();
+        final double theta = FastMath.toRadians(eulerZ);
+        final float sinθ = (float) FastMath.sin(theta);
+        final float cosθ = (float) FastMath.cos(theta);
+
+        result.elements[0][0] = cosθ;
+        result.elements[0][1] = -sinθ;
+        result.elements[1][0] = sinθ;
+        result.elements[1][1] = cosθ;
         return result;
     }
 
-    public static Matrix4f enlargement(float sf) {
-        Matrix4f result = identity();
+    public static Matrix4f QuaternionRotation(final Quaternion quaternion) {
+        final Matrix4f result = Identity();
+        final float x = quaternion.getX(), y = quaternion.getY(), z = quaternion.getZ(), w = quaternion.getW();
+        result.elements[0][0] = 1 - 2 * y * y - 2 * z * z;
+        result.elements[1][0] = 2 * x * y - 2 * z * w;
+        result.elements[2][0] = 2 * x * z + 2 * y * w;
+
+        result.elements[0][1] = 2 * x * y + 2 * z * w;
+        result.elements[1][1] = 1 - 2 * x * x - 2 * z * z;
+        result.elements[2][1] = 2 * y * z - 2 * x * w;
+
+        result.elements[0][2] = 2 * x * z - 2 * y * w;
+        result.elements[1][2] = 2 * y * z + 2 * x * w;
+        result.elements[2][2] = 1 - 2 * x * x - 2 * y * y;
+
+        result.elements[3][3] = 1;
+
+        return result;
+    }
+
+    public static Matrix4f Stretch(Vector3f vec) {
+        return Stretch(vec.getX(), vec.getY(), vec.getZ());
+    }
+
+    public static Matrix4f Stretch(float sfX, float sfY, float sfZ) {
+        final Matrix4f result = Identity();
+        if(sfX != 0) {
+            result.multiply(StretchX(sfX));
+        }
+        if(sfY != 0) {
+            result.multiply(StretchY(sfY));
+        }
+        if(sfZ != 0) {
+            result.multiply(StretchZ(sfZ));
+        }
+        return result;
+    }
+
+    public static Matrix4f StretchX(float sfX) {
+        final Matrix4f result = Identity();
+        result.elements[0][0] = sfX;
+        return result;
+    }
+
+    public static Matrix4f StretchY(float sfY) {
+        final Matrix4f result = Identity();
+        result.elements[1][1] = sfY;
+        return result;
+    }
+
+    public static Matrix4f StretchZ(float sfZ) {
+        final Matrix4f result = Identity();
+        result.elements[2][2] = sfZ;
+        return result;
+    }
+
+    public static Matrix4f Enlargement(float sf) {
+        final Matrix4f result = Identity();
         for (int i = 0; i < 3; i++) {
             result.elements[i][i] = sf;
         }
         return result;
-    }
-
-    public static Matrix4f stretchX(float sf) {
-        Matrix4f result = identity();
-        result.elements[0][0] = sf;
-        return result;
-    }
-
-    public static Matrix4f stretchY(float sf) {
-        Matrix4f result = identity();
-        result.elements[1][1] = sf;
-        return result;
-    }
-
-    public static Matrix4f stretchZ(float sf) {
-        Matrix4f result = identity();
-        result.elements[2][2] = sf;
-        return result;
-    }
-
-    public static Matrix4f stretch(float xSf, float ySf, float zSf) {
-        Matrix4f result = identity();
-        result.apply(stretchX(xSf));
-        result.apply(stretchY(ySf));
-        result.apply(stretchZ(zSf));
-        return result;
-    }
-
-    public static Matrix4f stretch(Vector3f vec) {
-        return stretch(vec.getX(), vec.getY(), vec.getZ());
-    }
-
-
-
-
-
-    @Override
-    public String toString() {
-
-        String result = "";
-
-        final int spacing = 5;
-        int longestelement = 1;
-
-        for (int row = 0; row < order; row++) {
-            for (int col = 0; col < order; col++) {
-                if (Float.toString(elements[row][col]).length() > longestelement) {
-                    longestelement = Float.toString(elements[row][col]).length();
-                }
-            }
-        }
-
-        for (int row = 0; row < order; row++) {
-            result += "\n|";
-            for (int i = 0; i < spacing; i++) {
-                result += " ";
-            }
-
-            for (int col = 0; col < order; col++) {
-                result += elements[row][col];
-                for (int i = Float.toString(elements[row][col]).length(); i < longestelement; i++) {
-                    result += " ";
-                }
-
-                for (int i = 0; i < spacing; i++) {
-                    result += " ";
-                }
-            }
-            result += "|";
-        }
-
-        result += "\n";
-
-        return result;
-    }
-
-    public FloatBuffer toFloatBuffer() {
-        return DataTypeUtils.toFloatBuffer(DataTypeUtils.toFloatArray(elements));
     }
 }

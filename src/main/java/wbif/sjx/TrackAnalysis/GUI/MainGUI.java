@@ -56,7 +56,6 @@ public class MainGUI implements ActionListener {
             EUCLIDEAN_DISTANCE,
             MEAN_SQUARED_DISPLACEMENT,
             MOTILITY_PLOT,
-//            SHOW_TRACK_ID,
             TOTAL_PATH_LENGTH
 
 

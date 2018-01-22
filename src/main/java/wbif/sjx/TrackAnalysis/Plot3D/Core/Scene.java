@@ -6,99 +6,110 @@ import wbif.sjx.TrackAnalysis.Plot3D.Graphics.*;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.Entity;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.TrackEntityCollection;
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Texture;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.common.Object.TrackCollection;
 
 import java.awt.*;
 
-
 /**
  * Created by sc13967 on 31/07/2017.
  */
 public class Scene {
+    public static final Vector3f X_AXIS = new Vector3f(1,0,0);
+    public static final Vector3f Y_AXIS = new Vector3f(0,1,0);
+    public static final Vector3f Z_AXIS = new Vector3f(0,0,1);
+    public static final Vector3f WORLD_FORWARD_VECTOR = Z_AXIS;
+
     private static Entity[] axes;
     private BoundingBox boundingBox;
     private TrackEntityCollection tracksEntities;
-    private int frame;
-    public static final int frame_DEFAULT = 0;
-    public final static boolean playFrames_DEFAULT = false;
     private boolean playFrames;
-    private ImagePlus ipl;
-
-    private Entity texturedPlane;
+    private float cumulativetime = 0;
 
     public Scene(TrackCollection tracks, ImagePlus ipl){
-        this.ipl = ipl;
-
         tracksEntities = new TrackEntityCollection(tracks);
         boundingBox = new BoundingBox(tracks);
 
         initAxes();
-
-        // Only show an image if one was provided
-        if (ipl != null) {
-            texturedPlane = new Entity(GenerateMesh.texturedPlane(ipl.getHeight(), ipl.getWidth())); //not sure if these parameters are the right way around
-            texturedPlane.getPosition().set(ipl.getHeight() / 2, ipl.getWidth() / 2, -boundingBox.getHeight() / 2); // swap height with width of the other vertical images
-
-            try {
-                ipl.setPosition(1);
-                texturedPlane.setTexture(new Texture(ipl.getBufferedImage()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 
         this.frame = frame_DEFAULT;
         this.playFrames = playFrames_DEFAULT;
 
         showAxes = showAxes_DEFAULT;
         showBoundingBox = showBoundingBox_DEFAULT;
+        framePlaybackRate = framePlaybackRate_DEFAULT;
+        updateSecondsPerFramePlayback();
     }
 
-    public void update(){
+    public void update(float interval){
         if(playFrames){
-            if(frame == tracksEntities.getHighestFrame()){
-                frame = 0;
-            }else {
-                incrementFrame();
+            cumulativetime += interval;    //TODO: allow varying playback speed
+
+            if(cumulativetime >= secondsPerFramePlayback){
+                cumulativetime -= secondsPerFramePlayback;
+
+                if (frame == tracksEntities.getHighestFrame()) {
+                    frame = 0;
+                } else {
+                    incrementFrame();
+                }
+
             }
         }
     }
 
-    public void render(ShaderProgram shaderProgram, FrustumCuller frustumCuller) {
+    public void render(ShaderProgram shaderProgram) {
         if(showAxes) {
             for (Entity axis : axes) {
-                axis.render(shaderProgram, null);
+                axis.render(shaderProgram);
             }
         }
 
-        if (ipl != null) texturedPlane.render(shaderProgram, frustumCuller);
+        tracksEntities.render(shaderProgram, frame);
 
-        tracksEntities.render(shaderProgram, frustumCuller, frame);
-
-        if(showBoundingBox) {
-            boundingBox.render(shaderProgram, frustumCuller);
+        if(showBoundingBox && !tracksEntities.ifMotilityPlot()) {
+            boundingBox.render(shaderProgram);
         }
+    }
+
+    public TrackEntityCollection getTracksEntities() {
+        return tracksEntities;
+    }
+
+    public BoundingBox getBoundingBox(){
+        return boundingBox;
     }
 
     public void dispose(){
         tracksEntities = null;
     }
 
-    public static void initAxes(){
-        Mesh axesMesh = GenerateMesh.cylinder(1f, 20, 100000);
+    public static void initAxes(){ //Axis are presented in Z-up form
+        Mesh axesMesh = GenerateMesh.pipe(1f, 20, 10000);
+
+        Entity origin = new Entity(GenerateMesh.cube(2), Color.WHITE);
+
         Entity xAxis = new Entity(axesMesh, Color.RED);
+        xAxis.getRotation().setZ(-90);
+
         Entity yAxis = new Entity(axesMesh, Color.GREEN);
+        yAxis.getRotation().setX(90);
+
         Entity zAxis = new Entity(axesMesh, Color.BLUE);
-        xAxis.getRotation().setY(90f);
-        yAxis.getRotation().setX(90f);
+        zAxis.getRotation().setX(0);
+
         axes = new Entity[]{
+                origin,
                 xAxis,
                 yAxis,
                 zAxis
         };
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final int frame_DEFAULT = 0;
+    private int frame;
 
     public int getFrame() {
         return frame;
@@ -126,6 +137,8 @@ public class Scene {
         setFrame(getFrame() - 1);
     }
 
+    public final static boolean playFrames_DEFAULT = false;
+
     public boolean isPlayingFrames(){
         return playFrames;
     }
@@ -138,17 +151,9 @@ public class Scene {
         playFrames = !playFrames;
     }
 
-    public TrackEntityCollection getTracksEntities() {
-        return tracksEntities;
-    }
-
-    public BoundingBox getBoundingBox(){
-        return boundingBox;
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final boolean showAxes_DEFAULT = false;
+    public static final boolean showAxes_DEFAULT = true;
 
     private static boolean showAxes;
 
@@ -182,4 +187,36 @@ public class Scene {
         showBoundingBox = !showBoundingBox;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static final int framePlaybackRate_DEFAULT = 5;
+    public static int framePlaybackRate_MINIMUM = 1;
+    public static int framePlaybackRate_MAXIMUM = 10;
+
+    private int framePlaybackRate;
+    private float secondsPerFramePlayback;
+
+    public int getFramePlaybackRate() {
+        return framePlaybackRate;
+    }
+
+    public void setFramePlaybackRate(int value) {
+        if (value < framePlaybackRate_MINIMUM) {
+            framePlaybackRate = framePlaybackRate_MINIMUM;
+        } else if (value > framePlaybackRate_MAXIMUM) {
+            framePlaybackRate = framePlaybackRate_MAXIMUM;
+        } else {
+            framePlaybackRate = value;
+        }
+
+        updateSecondsPerFramePlayback();
+    }
+
+    public void changeFramePlaybackRate(int deltaValue){
+        setFramePlaybackRate(getFramePlaybackRate() + deltaValue);
+    }
+
+    private void updateSecondsPerFramePlayback(){
+        secondsPerFramePlayback  = 1f / (float)(framePlaybackRate * framePlaybackRate);
+    }
 }

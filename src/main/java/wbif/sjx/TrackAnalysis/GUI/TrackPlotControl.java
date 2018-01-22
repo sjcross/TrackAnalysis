@@ -1,7 +1,6 @@
 package wbif.sjx.TrackAnalysis.GUI;
 
 import ij.ImagePlus;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Camera;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Engine;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.TrackEntityCollection;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Scene;
@@ -19,43 +18,50 @@ import java.awt.event.ActionEvent;
 public class TrackPlotControl extends ModuleControl implements ChangeListener {
 
     private JButton plotAllButton;
-    private final static String PLOT = "Plot tracks";
+    private final static String PLOT = "Show tracks";
 
-    private JCheckBox showTrailCheckbox;
-    private final static String SHOW_TRAILS = "Show trails";
+    public interface PlotTypes{
+        String NORMAL = "Normal";
+        String MOTILITY = "Motility";
 
-    private JCheckBox showAxesCheckbox;
-    private final static String SHOW_AXES = "Show axes";
+        String[] ALL = new String[]{NORMAL,MOTILITY};
+    }
+    private JTextField plotTypeTextField;
+    private JComboBox<String> plotTypeComboBox;
+    private final static String PLOT_TYPE = "Plot type";
 
-    private JCheckBox showBoundingBoxCheckbox;
-    private final static String SHOW_BOUNDING_BOX = "Show bounding box";
+    public interface AxesTypes {
+        String NONE = "None";
+        String AXES = "Axes only";
+        String BOX = "Box only";
+        String BOTH = "Both";
 
-    private JCheckBox motilityPlotCheckbox;
-    private final static String MOTILITY_PLOT = "Motility plot";
+        String[] ALL = new String[]{NONE,AXES,BOX,BOTH};
+    }
+    private JTextField axesTypeTextField;
+    private JComboBox<String> axesTypeComboBox;
+    private final static String AXES_TYPE = "Axes type";
 
-    private JCheckBox faceCentreCheckbox;
-    private final static String FACE_CENTRE = "Face centre";
+    private JToggleButton orbitButton;
+    private JTextField orbitSpeedLabelTextField;
+    private JTextField orbitSpeedTextEdit;
+    private final static String ORBIT = "Orbit";
+    private final static String ORBIT_SPEED = "-100 -> 100";
 
-    private JSlider orbitVelocitySlider;
-    private final static String ORBIT_VELOCITY = "Orbit velocity";
+    private JToggleButton showTrailsButton;
+    private JTextField trailLengthLabelTextField;
+    private JTextField trailLengthTextEdit;
+    private final static String SHOW_TRAILS = "Trails";
+    private final static String TRAILS_LENGTH = "frames";
 
-    private JSlider FOVSlider;
-    private final static String FOV_SLIDER = "FOV";
-
-    private JSlider trailLengthSlider;
-    private final static String TRAIL_LENGTH_SLIDER = "Trail length";
+    private JToggleButton playFramesButton;
+    private JTextField frameRateLabelTextField;
+    private JTextField frameRateTextEdit;
+    private final static String PLAY_FRAMES = "Play";
+    private final static String FRAME_RATE = "0-10";
 
     private JSlider frameSlider;
     private final static String FRAME_SLIDER = "Frame Slider";
-
-    private JButton incrementFrameButton;
-    private final static String ADD_FRAME = "Frame ++";
-
-    private JButton decrementFrameButton;
-    private final static String SUB_FRAME = "Frame --";
-
-    private JToggleButton playFramesButton;
-    private final static String PLAY_FRAMES = "Play";
 
     private JButton viewXZplaneButton;
     private final static String XZ_PLANE = "XZ plane";
@@ -69,9 +75,11 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
     private JButton screenShotButton;
     private final static String SCREEN_SHOT = "Screen shot";
 
+    private JTextField displayQualityTextField;
     private JComboBox<TrackEntityCollection.displayQualityOptions> displayQualityComboBox;
     private final static String DISPLAY_QUALITY = "Display quality";
 
+    private JTextField displayColourTextField;
     private JComboBox<TrackEntityCollection.displayColourOptions> displayColourComboBox;
     private final static String DISPLAY_COLOUR = "Display colour";
 
@@ -121,129 +129,185 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         c.gridwidth = 3;
         c.insets = new Insets(0,5,5,5);
 
-        showTrailCheckbox = new JCheckBox(SHOW_TRAILS);
-        showTrailCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
-        showTrailCheckbox.setSelected(TrackEntityCollection.showTrail_DEFAULT);
-        showTrailCheckbox.setEnabled(false);
-        showTrailCheckbox.addActionListener(this);
-        showTrailCheckbox.setName(SHOW_TRAILS);
-        c.gridy++;
-        panel.add(showTrailCheckbox,c);
+// USE THE FOLLOWING STYLE FOR SECTION HEADERS
+//        c.gridy++;
+//        panel.add(new JLabel(DISPLAY_QUALITY),c);
 
-        showAxesCheckbox = new JCheckBox(SHOW_AXES);
-        showAxesCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
-        showAxesCheckbox.setSelected(Scene.showAxes_DEFAULT);
-        showAxesCheckbox.setEnabled(false);
-        showAxesCheckbox.setName(SHOW_AXES);
-        showAxesCheckbox.addActionListener(this);
+        plotTypeTextField = new JTextField(PLOT_TYPE);
+        plotTypeTextField.setEditable(false);
+        plotTypeTextField.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
+        plotTypeTextField.setBorder(null);
+        plotTypeTextField.setEnabled(false);
+        c.gridwidth = 1;
         c.gridy++;
-        panel.add(showAxesCheckbox,c);
+        panel.add(plotTypeTextField,c);
+        plotTypeComboBox = new JComboBox<>(PlotTypes.ALL);
+        plotTypeComboBox.setPreferredSize(new Dimension(panelWidth*2/3-5,elementHeight));
+        plotTypeComboBox.setSelectedItem(PlotTypes.NORMAL);
+        plotTypeComboBox.setName(PLOT_TYPE);
+        plotTypeComboBox.setEnabled(false);
+        plotTypeComboBox.addActionListener(this);
+        c.gridx++;
+        c.gridwidth = 2;
+        panel.add(plotTypeComboBox,c);
 
-        showBoundingBoxCheckbox = new JCheckBox(SHOW_BOUNDING_BOX);
-        showBoundingBoxCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
-        showBoundingBoxCheckbox.setSelected(Scene.showBoundingBox_DEFAULT);
-        showBoundingBoxCheckbox.setEnabled(false);
-        showBoundingBoxCheckbox.setName(SHOW_BOUNDING_BOX);
-        showBoundingBoxCheckbox.addActionListener(this);
+        axesTypeTextField = new JTextField(AXES_TYPE);
+        axesTypeTextField.setEditable(false);
+        axesTypeTextField.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
+        axesTypeTextField.setBorder(null);
+        axesTypeTextField.setEnabled(false);
+        c.gridx = 0;
+        c.gridwidth = 1;
         c.gridy++;
-        panel.add(showBoundingBoxCheckbox,c);
+        panel.add(axesTypeTextField,c);
+        axesTypeComboBox = new JComboBox<>(AxesTypes.ALL);
+        axesTypeComboBox.setPreferredSize(new Dimension(panelWidth*2/3-5,elementHeight));
+        axesTypeComboBox.setSelectedItem(PlotTypes.NORMAL);
+        axesTypeComboBox.setName(AXES_TYPE);
+        axesTypeComboBox.setEnabled(false);
+        axesTypeComboBox.addActionListener(this);
+        c.gridx++;
+        c.gridwidth = 2;
+        panel.add(axesTypeComboBox,c);
 
-        motilityPlotCheckbox = new JCheckBox(MOTILITY_PLOT);
-        motilityPlotCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
-        motilityPlotCheckbox.setSelected(TrackEntityCollection.motilityPlot_DEFAULT);
-        motilityPlotCheckbox.setEnabled(false);
-        motilityPlotCheckbox.setName(MOTILITY_PLOT);
-        motilityPlotCheckbox.addActionListener(this);
+        displayQualityTextField = new JTextField(DISPLAY_QUALITY);
+        displayQualityTextField.setEditable(false);
+        displayQualityTextField.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
+        displayQualityTextField.setBorder(null);
+        displayQualityTextField.setEnabled(false);
+        c.gridx = 0;
+        c.gridwidth = 1;
         c.gridy++;
-        panel.add(motilityPlotCheckbox,c);
+        panel.add(displayQualityTextField,c);
+        displayQualityComboBox = new JComboBox<>(TrackEntityCollection.displayQualityOptions.values());
+        displayQualityComboBox.setPreferredSize(new Dimension(panelWidth*2/3-5,elementHeight));
+        displayQualityComboBox.setSelectedItem(TrackEntityCollection.displayQuality_DEFAULT);
+        displayQualityComboBox.setName(DISPLAY_QUALITY);
+        displayQualityComboBox.setEnabled(false);
+        displayQualityComboBox.addActionListener(this);
+        c.gridx++;
+        c.gridwidth = 2;
+        panel.add(displayQualityComboBox,c);
 
-        faceCentreCheckbox = new JCheckBox(FACE_CENTRE);
-        faceCentreCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
-        faceCentreCheckbox.setSelected(Camera.faceCentre_DEFAULT);
-        faceCentreCheckbox.setEnabled(false);
-        faceCentreCheckbox.setName(FACE_CENTRE);
-        faceCentreCheckbox.addActionListener(this);
+        displayColourTextField = new JTextField(DISPLAY_COLOUR);
+        displayColourTextField.setEditable(false);
+        displayColourTextField.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
+        displayColourTextField.setBorder(null);
+        displayColourTextField.setEnabled(false);
+        c.gridx = 0;
+        c.gridwidth = 1;
         c.gridy++;
-        panel.add(faceCentreCheckbox,c);
+        panel.add(displayColourTextField,c);
+        displayColourComboBox = new JComboBox<>(TrackEntityCollection.displayColourOptions.values());
+        displayColourComboBox.setPreferredSize(new Dimension(panelWidth*2/3-5,elementHeight));
+        displayColourComboBox.setSelectedItem(TrackEntityCollection.displayColour_DEFAULT);
+        displayColourComboBox.setName(DISPLAY_COLOUR);
+        displayColourComboBox.setEnabled(false);
+        displayColourComboBox.addActionListener(this);
+        c.gridx++;
+        c.gridwidth = 2;
+        panel.add(displayColourComboBox,c);
 
-        orbitVelocitySlider = new JSlider(JSlider.HORIZONTAL, Camera.orbitVelocity_MINIMUM, Camera.orbitVelocity_MAXIMUM, Camera.orbitVelocity_DEFAULT);
-        orbitVelocitySlider.setPreferredSize(new Dimension(panelWidth,elementHeight));
-        orbitVelocitySlider.setEnabled(false);
-        orbitVelocitySlider.addChangeListener(this);
-        orbitVelocitySlider.setName(ORBIT_VELOCITY);
+        showTrailsButton = new JToggleButton(SHOW_TRAILS);
+        showTrailsButton.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
+        showTrailsButton.setSelected(Scene.playFrames_DEFAULT);
+        showTrailsButton.setEnabled(false);
+        showTrailsButton.addActionListener(this);
+        showTrailsButton.setName(SHOW_TRAILS);
+        c.gridwidth = 1;
+        c.gridx=0;
         c.gridy++;
-        panel.add(new JLabel(ORBIT_VELOCITY),c);
-        c.gridy++;
-        panel.add(orbitVelocitySlider,c);
-
-        FOVSlider = new JSlider(JSlider.HORIZONTAL, Camera.FOV_MINIMUM, Camera.FOV_MAXIMUM, Camera.FOV_DEFAULT);
-        FOVSlider.setPreferredSize(new Dimension(panelWidth,elementHeight));
-        FOVSlider.setEnabled(false);
-        FOVSlider.addChangeListener(this);
-        FOVSlider.setName(FOV_SLIDER);
-        c.gridy++;
-        panel.add(new JLabel(FOV_SLIDER),c);
-        c.gridy++;
-        panel.add(FOVSlider,c);
-
+        panel.add(showTrailsButton,c);
         final int highestFrame = tracks.getHighestFrame();
         final int trailLength_MAXIMUM = highestFrame < 1 ? 1 : highestFrame;
-        trailLengthSlider = new JSlider(JSlider.HORIZONTAL, TrackEntityCollection.trailLength_MINIMUM, trailLength_MAXIMUM, trailLength_MAXIMUM);
-        trailLengthSlider.setPreferredSize(new Dimension(panelWidth,elementHeight));
-        trailLengthSlider.setEnabled(false);
-        trailLengthSlider.addChangeListener(this);
-        trailLengthSlider.setName(TRAIL_LENGTH_SLIDER);
+        trailLengthTextEdit = new JTextField(String.valueOf(trailLength_MAXIMUM));
+        trailLengthTextEdit.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
+        trailLengthTextEdit.setEnabled(false);
+        trailLengthTextEdit.addActionListener(this);
+        trailLengthTextEdit.setName(TRAILS_LENGTH);
+        trailLengthTextEdit.setEditable(true);
+        c.gridx++;
+        panel.add(trailLengthTextEdit,c);
+        trailLengthLabelTextField = new JTextField(TRAILS_LENGTH);
+        trailLengthLabelTextField.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
+        trailLengthLabelTextField.setEnabled(false);
+        trailLengthLabelTextField.setEditable(false);
+        trailLengthLabelTextField.setBorder(null);
+        c.gridx++;
+        panel.add(trailLengthLabelTextField,c);
+
+        orbitButton = new JToggleButton(ORBIT);
+        orbitButton.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
+        orbitButton.setEnabled(false);
+        orbitButton.addActionListener(this);
+        orbitButton.setName(ORBIT);
+        c.gridx=0;
+        c.gridwidth = 1;
         c.gridy++;
-        panel.add(new JLabel(TRAIL_LENGTH_SLIDER),c);
+        panel.add(orbitButton,c);
+        orbitSpeedTextEdit = new JTextField("3");
+        orbitSpeedTextEdit.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
+        orbitSpeedTextEdit.setEnabled(false);
+        orbitSpeedTextEdit.addActionListener(this);
+        orbitSpeedTextEdit.setName(ORBIT_SPEED);
+        orbitSpeedTextEdit.setEditable(true);
+        c.gridx++;
+        panel.add(orbitSpeedTextEdit,c);
+        orbitSpeedLabelTextField = new JTextField(ORBIT_SPEED);
+        orbitSpeedLabelTextField.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
+        orbitSpeedLabelTextField.setEnabled(false);
+        orbitSpeedLabelTextField.setEditable(false);
+        orbitSpeedLabelTextField.setBorder(null);
+        c.gridx++;
+        panel.add(orbitSpeedLabelTextField,c);
+
+        playFramesButton = new JToggleButton(PLAY_FRAMES);
+        playFramesButton.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
+        playFramesButton.setSelected(Scene.playFrames_DEFAULT);
+        playFramesButton.setEnabled(false);
+        playFramesButton.addActionListener(this);
+        playFramesButton.setName(PLAY_FRAMES);
+        c.gridx=0;
         c.gridy++;
-        panel.add(trailLengthSlider,c);
+        panel.add(playFramesButton,c);
+        frameRateTextEdit = new JTextField("10");
+        frameRateTextEdit.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
+        frameRateTextEdit.setEnabled(false);
+        frameRateTextEdit.addActionListener(this);
+        frameRateTextEdit.setName(FRAME_RATE);
+        frameRateTextEdit.setEditable(true);
+        c.gridx++;
+        panel.add(frameRateTextEdit,c);
+        frameRateLabelTextField = new JTextField(FRAME_RATE);
+        frameRateLabelTextField.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
+        frameRateLabelTextField.setEnabled(false);
+        frameRateLabelTextField.setEditable(false);
+        frameRateLabelTextField.setBorder(null);
+        c.gridx++;
+        panel.add(frameRateLabelTextField,c);
 
         frameSlider = new JSlider(JSlider.HORIZONTAL, 0, tracks.getHighestFrame(), Scene.frame_DEFAULT);
         frameSlider.setPreferredSize(new Dimension(panelWidth,elementHeight));
         frameSlider.setEnabled(false);
         frameSlider.addChangeListener(this);
         frameSlider.setName(FRAME_SLIDER);
-        c.gridy++;
-        panel.add(new JLabel(FRAME_SLIDER),c);
+        c.gridx = 0;
+        c.gridwidth=3;
         c.gridy++;
         panel.add(frameSlider,c);
 
-        incrementFrameButton = new JButton(ADD_FRAME);
-        incrementFrameButton.setPreferredSize(new Dimension(panelWidth/3,elementHeight));
-        incrementFrameButton.setEnabled(false);
-        incrementFrameButton.addActionListener(this);
-        incrementFrameButton.setName(ADD_FRAME);
-        decrementFrameButton = new JButton(SUB_FRAME);
-        decrementFrameButton.setPreferredSize(new Dimension(panelWidth/3,elementHeight));
-        decrementFrameButton.setEnabled(false);
-        decrementFrameButton.addActionListener(this);
-        decrementFrameButton.setName(SUB_FRAME);
-        playFramesButton = new JToggleButton(PLAY_FRAMES);
-        playFramesButton.setPreferredSize(new Dimension(panelWidth/3,elementHeight));
-        playFramesButton.setSelected(Scene.playFrames_DEFAULT);
-        playFramesButton.setEnabled(false);
-        playFramesButton.addActionListener(this);
-        playFramesButton.setName(PLAY_FRAMES);
-        c.gridwidth = 1;
-        c.gridy++;
-        panel.add(incrementFrameButton,c);
-        c.gridx++;
-        panel.add(decrementFrameButton,c);
-        c.gridx++;
-        panel.add(playFramesButton,c);
-
         viewXZplaneButton = new JButton(XZ_PLANE);
-        viewXZplaneButton.setPreferredSize(new Dimension(panelWidth/3,elementHeight));
+        viewXZplaneButton.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
         viewXZplaneButton.setEnabled(false);
         viewXZplaneButton.addActionListener(this);
         viewXZplaneButton.setName(XZ_PLANE);
         viewYZplaneButton = new JButton(YZ_PLANE);
-        viewYZplaneButton.setPreferredSize(new Dimension(panelWidth/3,elementHeight));
+        viewYZplaneButton.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
         viewYZplaneButton.setEnabled(false);
         viewYZplaneButton.addActionListener(this);
         viewYZplaneButton.setName(YZ_PLANE);
         viewXYplaneButton = new JButton(XY_PLANE);
-        viewXYplaneButton.setPreferredSize(new Dimension(panelWidth/3,elementHeight));
+        viewXYplaneButton.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
         viewXYplaneButton.setEnabled(false);
         viewXYplaneButton.addActionListener(this);
         viewXYplaneButton.setName(XY_PLANE);
@@ -266,29 +330,6 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         c.gridy++;
         panel.add(screenShotButton,c);
 
-        displayQualityComboBox = new JComboBox<>(TrackEntityCollection.displayQualityOptions.values());
-        displayQualityComboBox.setPreferredSize(new Dimension(panelWidth,elementHeight));
-        displayQualityComboBox.setSelectedItem(TrackEntityCollection.displayQuality_DEFAULT);
-        displayQualityComboBox.setName(DISPLAY_QUALITY);
-        displayQualityComboBox.setEnabled(false);
-        displayQualityComboBox.addActionListener(this);
-        c.gridy++;
-        panel.add(new JLabel(DISPLAY_QUALITY),c);
-        c.gridy++;
-        panel.add(displayQualityComboBox,c);
-
-        displayColourComboBox = new JComboBox<>(TrackEntityCollection.displayColourOptions.values());
-        displayColourComboBox.setPreferredSize(new Dimension(panelWidth,elementHeight));
-        displayColourComboBox.setSelectedItem(TrackEntityCollection.displayColour_DEFAULT);
-        displayColourComboBox.setName(DISPLAY_COLOUR);
-        displayColourComboBox.setEnabled(false);
-        displayColourComboBox.addActionListener(this);
-        c.gridy++;
-        panel.add(new JLabel(DISPLAY_COLOUR),c);
-        c.gridy++;
-        c.insets = new Insets(0,5,20,5);
-        panel.add(displayColourComboBox,c);
-
         return panel;
 
     }
@@ -298,6 +339,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         new Thread(() -> {
             try{
                 engine.init();
+                System.out.println("Engine initialised");
                 plotAllButton.setText(PLOT);
                 setControlMode(true);
                 engine.start();
@@ -321,38 +363,71 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
                 plotAllButton.setText("Initialising window...");
                 run(-1);
                 break;
-            case SHOW_TRAILS:
-                engine.getScene().getTracksEntities().setTrailVisibility(((JCheckBox)e.getSource()).isSelected());
+            case PLOT_TYPE:
+                switch ((String) ((JComboBox) e.getSource()).getSelectedItem()) {
+                    case PlotTypes.NORMAL:
+                        engine.getScene().getTracksEntities().setMotilityPlot(false);
+                        break;
+                    case PlotTypes.MOTILITY:
+                        engine.getScene().getTracksEntities().setMotilityPlot(true);
+                        break;
+                }
                 break;
-            case SHOW_AXES:
-                Scene.setAxesVisibility(((JCheckBox)e.getSource()).isSelected());
-                break;
-            case SHOW_BOUNDING_BOX:
-                Scene.setBoundingBoxVisibility(((JCheckBox)e.getSource()).isSelected());
-                break;
-            case MOTILITY_PLOT:
-                engine.getScene().getTracksEntities().setMotilityPlot(((JCheckBox)e.getSource()).isSelected());
-                break;
-            case FACE_CENTRE:
-                engine.getCamera().setFaceCentre(((JCheckBox)e.getSource()).isSelected());
-                break;
-            case ADD_FRAME:
-                engine.getScene().incrementFrame();
-                break;
-            case SUB_FRAME:
-                engine.getScene().decrementFrame();
+            case AXES_TYPE:
+                switch ((String) ((JComboBox) e.getSource()).getSelectedItem()) {
+                    case AxesTypes.NONE:
+                        Scene.setAxesVisibility(false);
+                        Scene.setBoundingBoxVisibility(false);
+                        break;
+                    case AxesTypes.AXES:
+                        Scene.setAxesVisibility(true);
+                        Scene.setBoundingBoxVisibility(false);
+                        break;
+                    case AxesTypes.BOX:
+                        Scene.setAxesVisibility(false);
+                        Scene.setBoundingBoxVisibility(true);
+                        break;
+                    case AxesTypes.BOTH:
+                        Scene.setAxesVisibility(true);
+                        Scene.setBoundingBoxVisibility(true);
+                        break;
+                }
                 break;
             case PLAY_FRAMES:
                 engine.getScene().setPlayFrames(((JToggleButton)e.getSource()).isSelected());
+                int frameRate = Integer.parseInt(frameRateTextEdit.getText());
+                engine.getScene().setFramePlaybackRate(frameRate);
+                break;
+            case FRAME_RATE:
+                frameRate = Integer.parseInt(frameRateTextEdit.getText());
+                engine.getScene().setFramePlaybackRate(frameRate);
+                break;
+            case ORBIT:
+                engine.getCamera().setFaceCentre(((JToggleButton)e.getSource()).isSelected());
+                int orbitVelocity = Integer.parseInt(orbitSpeedTextEdit.getText());
+                engine.getCamera().setOrbitVelocity(orbitVelocity);
+                break;
+            case ORBIT_SPEED:
+                orbitVelocity = Integer.parseInt(orbitSpeedTextEdit.getText());
+                engine.getCamera().setOrbitVelocity(orbitVelocity);
+                break;
+            case SHOW_TRAILS:
+                engine.getScene().getTracksEntities().setTrailVisibility(((JCheckBox)e.getSource()).isSelected());
+                int trailLength = Integer.parseInt(trailLengthTextEdit.getText());
+                engine.getScene().getTracksEntities().setTrailLength(trailLength);
+                break;
+            case TRAILS_LENGTH:
+                trailLength = Integer.parseInt(trailLengthTextEdit.getText());
+                engine.getScene().getTracksEntities().setTrailLength(trailLength);
                 break;
             case XZ_PLANE:
-                engine.getCamera().viewXZplane(engine.getScene().getBoundingBox());
+                engine.getCamera().viewXYplane(engine.getScene().getBoundingBox()); //The view##Plane method uses the Y-up axis orientation
                 break;
             case YZ_PLANE:
                 engine.getCamera().viewYZplane(engine.getScene().getBoundingBox());
                 break;
             case XY_PLANE:
-                engine.getCamera().viewXYplane(engine.getScene().getBoundingBox());
+                engine.getCamera().viewXZplane(engine.getScene().getBoundingBox());
                 break;
             case SCREEN_SHOT:
                 engine.getRenderer().takeScreenshot();
@@ -378,15 +453,6 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         String action = ((Component) e.getSource()).getName();
 
         switch (action){
-            case ORBIT_VELOCITY:
-                engine.getCamera().setOrbitVelocity(((JSlider)e.getSource()).getValue());
-                break;
-            case FOV_SLIDER:
-                engine.getCamera().setFOV(((JSlider)e.getSource()).getValue());
-                break;
-            case TRAIL_LENGTH_SLIDER:
-                engine.getScene().getTracksEntities().setTrailLength(((JSlider)e.getSource()).getValue());
-                break;
             case FRAME_SLIDER:
                 engine.getScene().setFrame(((JSlider)e.getSource()).getValue());
                 break;
@@ -398,28 +464,25 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
     public void updateGui(){
         frameSlider.setValue(engine.getScene().getFrame());
         playFramesButton.setSelected(engine.getScene().isPlayingFrames());
-        faceCentreCheckbox.setSelected(engine.getCamera().isFacingCentre());
-        orbitVelocitySlider.setEnabled(faceCentreCheckbox.isSelected());
-        viewXZplaneButton.setEnabled(!faceCentreCheckbox.isSelected());
-        viewYZplaneButton.setEnabled(!faceCentreCheckbox.isSelected());
-        viewXYplaneButton.setEnabled(!faceCentreCheckbox.isSelected());
+        boolean isMotility = plotTypeComboBox.getSelectedItem().equals(PlotTypes.MOTILITY);
     }
 
     public void setControlMode(boolean state){
         plotAllButton.setEnabled(!state);
-
-        showTrailCheckbox.setEnabled(state);
-        showAxesCheckbox.setEnabled(state);
-        showBoundingBoxCheckbox.setEnabled(state);
-        motilityPlotCheckbox.setEnabled(state);
-        faceCentreCheckbox.setEnabled(state);
-        orbitVelocitySlider.setEnabled(state);
-        FOVSlider.setEnabled(state);
-        trailLengthSlider.setEnabled(state);
+        plotTypeTextField.setEnabled(state);
+        plotTypeComboBox.setEnabled(state);
+        axesTypeTextField.setEditable(state);
+        axesTypeComboBox.setEnabled(state);
+        orbitButton.setEnabled(state);
+        orbitSpeedTextEdit.setEnabled(state);
+        orbitSpeedLabelTextField.setEnabled(state);
+        showTrailsButton.setEnabled(state);
+        trailLengthTextEdit.setEnabled(state);
+        trailLengthLabelTextField.setEnabled(state);
         frameSlider.setEnabled(state);
-        incrementFrameButton.setEnabled(state);
-        decrementFrameButton.setEnabled(state);
         playFramesButton.setEnabled(state);
+        frameRateTextEdit.setEnabled(state);
+        frameRateLabelTextField.setEnabled(state);
         viewXZplaneButton.setEnabled(state);
         viewYZplaneButton.setEnabled(state);
         viewXYplaneButton.setEnabled(state);
