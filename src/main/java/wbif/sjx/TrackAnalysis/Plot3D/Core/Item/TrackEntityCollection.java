@@ -124,7 +124,7 @@ public class TrackEntityCollection extends LinkedHashMap<Integer, TrackEntity>{
 
     public displayColourOptions displayColour;
 
-    public static final displayColourOptions displayColour_DEFAULT = displayColourOptions.VELOCITY;
+    public static final displayColourOptions displayColour_DEFAULT = displayColourOptions.ID;
 
     public enum displayColourOptions{
         ID,

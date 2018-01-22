@@ -4,8 +4,7 @@ import java.awt.*;
 import java.util.Random;
 
 public class RNG {
-	
-	static Random RNG = new Random();
+	private static Random RNG = new Random();
 	
 	private RNG(){}
 	
@@ -26,6 +25,6 @@ public class RNG {
 	}
 
 	public static Color Colour(){
-		return new Color(Int(0, 255), Int(0, 255), Int(0, 255), 255);
+		return Color.getHSBColor(Float(0, 1), 1f, 1f);
 	}
 }

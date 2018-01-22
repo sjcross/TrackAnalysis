@@ -45,6 +45,9 @@ public class Engine {
 
         camera.getPosition().set(-200,100,-200);
         camera.facePoint(scene.getTracksEntities().getCurrentCentreOfCollection());
+
+        if (trackPlotControl.is2D()) camera.viewXZplane(scene.getBoundingBox());
+
     }
 
     public void start() throws Exception{
@@ -219,4 +222,5 @@ public class Engine {
     public GLFWWindow getWindow() {
         return window;
     }
+
 }

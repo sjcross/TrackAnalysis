@@ -1,6 +1,7 @@
 package wbif.sjx.TrackAnalysis.GUI;
 
 import ij.ImagePlus;
+import org.lwjgl.system.CallbackI;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Engine;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.TrackEntityCollection;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Scene;
@@ -339,7 +340,6 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         new Thread(() -> {
             try{
                 engine.init();
-                System.out.println("Engine initialised");
                 plotAllButton.setText(PLOT);
                 setControlMode(true);
                 engine.start();
@@ -360,7 +360,6 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         switch (action){
             case PLOT:
                 plotAllButton.setEnabled(false);
-                plotAllButton.setText("Initialising window...");
                 run(-1);
                 break;
             case PLOT_TYPE:
@@ -412,7 +411,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
                 engine.getCamera().setOrbitVelocity(orbitVelocity);
                 break;
             case SHOW_TRAILS:
-                engine.getScene().getTracksEntities().setTrailVisibility(((JCheckBox)e.getSource()).isSelected());
+                engine.getScene().getTracksEntities().setTrailVisibility(((JToggleButton)e.getSource()).isSelected());
                 int trailLength = Integer.parseInt(trailLengthTextEdit.getText());
                 engine.getScene().getTracksEntities().setTrailLength(trailLength);
                 break;
@@ -471,7 +470,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         plotAllButton.setEnabled(!state);
         plotTypeTextField.setEnabled(state);
         plotTypeComboBox.setEnabled(state);
-        axesTypeTextField.setEditable(state);
+        axesTypeTextField.setEnabled(state);
         axesTypeComboBox.setEnabled(state);
         orbitButton.setEnabled(state);
         orbitSpeedTextEdit.setEnabled(state);
@@ -487,7 +486,9 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         viewYZplaneButton.setEnabled(state);
         viewXYplaneButton.setEnabled(state);
         screenShotButton.setEnabled(state);
+        displayQualityTextField.setEnabled(state);
         displayQualityComboBox.setEnabled(state);
+        displayColourTextField.setEnabled(state);
         displayColourComboBox.setEnabled(state);
     }
 
@@ -497,5 +498,12 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
 
     public ImagePlus getIpl() {
         return ipl;
+    }
+
+    public boolean is2D() {
+        double[][] limits = tracks.getSpatialLimits(true);
+
+        return Math.abs(limits[2][0] - limits[2][1]) < 0.5;
+
     }
 }

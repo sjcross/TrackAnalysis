@@ -6,8 +6,10 @@ import ij.Prefs;
 import ij.measure.ResultsTable;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
+import org.lwjgl.system.CallbackI;
 import wbif.sjx.common.Analysis.MSDCalculator;
 import wbif.sjx.common.MathFunc.CumStat;
+import wbif.sjx.common.Object.Timepoint;
 import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
 
@@ -15,13 +17,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by sc13967 on 24/06/2017.
  */
 public class TrackSummary extends ModuleControl {
+    private JCheckBox frameByFrameCheckbox;
     private JCheckBox numberOfObjectsCheckbox;
     private JCheckBox trackDurationCheckbox;
     private JCheckBox spatialStatisticsCheckbox;
@@ -71,6 +73,47 @@ public class TrackSummary extends ModuleControl {
         rt.setValue("Stdev y-pos ("+units+")", 0, df.format(meanPos[1][1])); //Distances reported in image units
         rt.setValue("Stdev z-pos ("+units+")", 0, df.format(meanPos[1][2])); //Distances reported in image units
 
+    }
+
+    private void showFullTrackResults(int ID, ResultsTable rt) {
+        boolean pixelDistances = calibrationCheckbox.isSelected();
+        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
+        String units = tracks.values().iterator().next().getUnits(pixelDistances);
+
+        Set<Integer> IDs = new TreeSet<>();
+        if (ID == -1) {
+            IDs = tracks.keySet();
+        } else {
+            IDs.add(ID);
+        }
+
+        int i = 0;
+        for (int currentID:IDs) {
+            Track track = tracks.get(currentID);
+
+            TreeMap<Integer,double[]> nnDistances = track.getNearestNeighbourDistance(tracks,pixelDistances);
+            TreeMap<Integer,Double> rollingTotalPath = track.getRollingTotalPathLength(pixelDistances);
+            TreeMap<Integer,Double> rollingEuclideanDistance = track.getRollingEuclideanDistance(pixelDistances);
+            TreeMap<Integer,Double> rollingDirectionalityRatio= track.getRollingDirectionalityRatio(pixelDistances);
+            TreeMap<Integer,Double> instantaneousVelocity = track.getInstantaneousVelocity(pixelDistances);
+
+            for (int f:track.getF()){
+                rt.setValue("ID", i, currentID);
+                rt.setValue("X (" + units + ")", i, track.getX(f,pixelDistances));
+                rt.setValue("Y (" + units + ")", i, track.getY(f,pixelDistances));
+                rt.setValue("Z (" + units + ")", i, track.getZ(f,pixelDistances));
+                rt.setValue("NN ID", i, nnDistances.get(f)[0]);
+                rt.setValue("NN distance (" + units + ")", i, nnDistances.get(f)[1]);
+                rt.setValue("Rolling path length (" + units + ")", i, rollingTotalPath.get(f));
+                rt.setValue("Rolling Euclidean distance (" + units + ")", i, rollingEuclideanDistance.get(f));
+                rt.setValue("Rolling directionality ratio", i, rollingDirectionalityRatio.get(f));
+                rt.setValue("Instantaneous velocity ("+units+"/frame)", i, instantaneousVelocity.get(f));
+
+
+                i++;
+
+            }
+        }
     }
 
     private void showNumberOfObjects() {
@@ -321,6 +364,15 @@ public class TrackSummary extends ModuleControl {
         c.gridwidth = 2;
         c.insets = new Insets(0,5,0,5);
 
+
+        // Full track details
+        boolean fullTrackDetails = Prefs.get("TrackAnalysis.TrackSummary.fullTrackDetails",true);
+        frameByFrameCheckbox = new JCheckBox("Full track details (frame-by-frame)");
+        frameByFrameCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
+        frameByFrameCheckbox.setSelected(fullTrackDetails);
+        c.gridy++;
+        panel.add(frameByFrameCheckbox,c);
+
         // Checkbox for number of objects
         boolean numberOfObjects = Prefs.get("TrackAnalysis.TrackSummary.numberOfObjects",true);
         numberOfObjectsCheckbox = new JCheckBox("Output number of objects");
@@ -376,6 +428,9 @@ public class TrackSummary extends ModuleControl {
 
     @Override
     public void run(int ID) {
+        boolean fullTrackDetails = frameByFrameCheckbox.isSelected();
+        Prefs.set("TrackAnalysis.fullTrackDetails",fullTrackDetails);
+
         boolean numberOfObjects = numberOfObjectsCheckbox.isSelected();
         Prefs.set("TrackAnalysis.numberOfObjects",numberOfObjects);
 
@@ -405,6 +460,10 @@ public class TrackSummary extends ModuleControl {
             if (spatialStatistics) showAllTracksSpatialStatistics(rt);
             if (diffusionCoefficient) showDiffusionCoefficient(rt);
 
+            ResultsTable fullRT = new ResultsTable();
+            if (fullTrackDetails) showFullTrackResults(ID, fullRT);
+            fullRT.show("Full track details");
+
         } else {
             IJ.log("++SUMMARY OF TRACK "+ID+"++");
             IJ.log(" ");
@@ -415,6 +474,10 @@ public class TrackSummary extends ModuleControl {
             if (trackDuration) showTrackDuration(ID,rt);
             if (spatialStatistics) showTrackSpatialStatistics(ID,rt);
             if (diffusionCoefficient) showDiffusionCoefficient(ID,rt);
+
+            ResultsTable fullRT = new ResultsTable();
+            if (fullTrackDetails) showFullTrackResults(ID,fullRT);
+            fullRT.show("Full track details");
 
         }
 

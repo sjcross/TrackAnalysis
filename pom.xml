@@ -160,7 +160,7 @@
         <!--Local repository-->
         <dependency>
             <groupId>wbif.sjx</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>Common</artifactId>
             <version>1.3.2-SNAPSHOT</version>
         </dependency>
 
