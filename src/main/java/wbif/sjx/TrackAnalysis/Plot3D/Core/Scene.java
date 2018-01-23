@@ -53,7 +53,6 @@ public class Scene {
                 } else {
                     incrementFrame();
                 }
-
             }
         }
     }

@@ -228,7 +228,7 @@ public class Camera {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private float cameraMovementSpeed;
-    private final static float cameraMovementSpeed_DEFAULT = 100f;
+    private final static float cameraMovementSpeed_DEFAULT = 500f;
     private final static float cameraMovementSpeed_MINIMUM = 10f;
     private final static float cameraMovementSpeed_MAXIMUM = 500f;
 

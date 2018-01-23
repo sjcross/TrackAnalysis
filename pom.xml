@@ -43,6 +43,13 @@
                 <role>maintainer</role>
             </roles>
         </developer>
+        <developer>
+            <id>jfisher</id>
+            <name>Jordan Fisher</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
     </developers>
 
     <contributors>

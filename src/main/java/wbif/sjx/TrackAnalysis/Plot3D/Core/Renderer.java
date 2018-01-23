@@ -1,6 +1,7 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
 
+import Jama.Matrix;
 import com.jogamp.opengl.util.awt.ImageUtil;
 import ij.ImagePlus;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
@@ -24,6 +25,7 @@ public class Renderer {
     private ShaderProgram mainShader;
 
     private boolean takeScreenshotOnNextRender;
+    private boolean usePerspective = false;
 
     private Matrix4f projectedViewMatrix;
 
@@ -51,9 +53,13 @@ public class Renderer {
             glfwSwapInterval(0);
         }
 
-        Matrix4f perspective = Matrix4f.Perspective(camera.getFOV(), window.getAspectRatio(), Camera.VIEW_DISTANCE_NEAR, Camera.VIEW_DISTANCE_FAR);
-
-        projectedViewMatrix = Matrix4f.Multiply(perspective, camera.getViewMatrix());
+        if (usePerspective) {
+            Matrix4f perspective = Matrix4f.Perspective(camera.getFOV(), window.getAspectRatio(), Camera.VIEW_DISTANCE_NEAR, Camera.VIEW_DISTANCE_FAR);
+            projectedViewMatrix = Matrix4f.Multiply(perspective, camera.getViewMatrix());
+        } else {
+            Matrix4f orthographic = Matrix4f.Orthographic(-2000,2000,2000,-2000,Integer.MAX_VALUE,Integer.MIN_VALUE);
+            projectedViewMatrix = Matrix4f.Multiply(orthographic,camera.getViewMatrix());
+        }
     }
 
     public void render(GLFWWindow window, Camera camera, Scene scene){
@@ -98,5 +104,13 @@ public class Renderer {
 
     public void dispose(){
         mainShader.dispose();
+    }
+
+    public boolean isUsePerspective() {
+        return usePerspective;
+    }
+
+    public void setUsePerspective(boolean usePerspective) {
+        this.usePerspective = usePerspective;
     }
 }
