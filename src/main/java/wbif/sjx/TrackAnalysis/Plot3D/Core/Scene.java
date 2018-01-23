@@ -190,8 +190,6 @@ public class Scene {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static final int framePlaybackRate_DEFAULT = 5;
-    public static int framePlaybackRate_MINIMUM = 1;
-    public static int framePlaybackRate_MAXIMUM = 10;
 
     private int framePlaybackRate;
     private float secondsPerFramePlayback;
@@ -201,22 +199,17 @@ public class Scene {
     }
 
     public void setFramePlaybackRate(int value) {
-        if (value < framePlaybackRate_MINIMUM) {
-            framePlaybackRate = framePlaybackRate_MINIMUM;
-        } else if (value > framePlaybackRate_MAXIMUM) {
-            framePlaybackRate = framePlaybackRate_MAXIMUM;
+        if (value < 0) {
+            framePlaybackRate = 0;
         } else {
             framePlaybackRate = value;
         }
 
         updateSecondsPerFramePlayback();
-    }
 
-    public void changeFramePlaybackRate(int deltaValue){
-        setFramePlaybackRate(getFramePlaybackRate() + deltaValue);
     }
 
     private void updateSecondsPerFramePlayback(){
-        secondsPerFramePlayback  = 1f / (float)(framePlaybackRate * framePlaybackRate);
+        secondsPerFramePlayback  = 1f / (float)(framePlaybackRate);
     }
 }

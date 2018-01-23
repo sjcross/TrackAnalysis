@@ -71,7 +71,8 @@ public class TrackMateLoader extends AbstractTMAction {
         }
 
         // Running TrackAnalysis
-        new TrackAnalysis(tracks, ipl);
+//        new TrackAnalysis(tracks, ipl);
+        new TrackAnalysis(tracks, null);
 
     }
 
