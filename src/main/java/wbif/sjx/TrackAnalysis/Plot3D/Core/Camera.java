@@ -5,11 +5,12 @@ import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.BoundingBox;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
-import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector4f;
 
 public class Camera {
     public final static float VIEW_DISTANCE_NEAR = 0.01f;
     public final static int VIEW_DISTANCE_FAR = 100000;
+    private double angularVelocityDegreesPerSec = 45 ; // 360 per sec for a revolution per sec
+
 
     public Camera(){
         this.position = new Vector3f();
@@ -20,7 +21,7 @@ public class Camera {
         this.cameraMovementSpeed = cameraMovementSpeed_DEFAULT;
         this.mouseSensitivity = mouseSensitivity_DEFAULT;
         this.faceCentre = faceCentre_DEFAULT;
-        this.orbitVelocity = orbitVelocity_DEFAULT;
+//        this.orbitVelocity = orbitVelocity_DEFAULT;
     }
 
     public Matrix4f getViewMatrix(){
@@ -34,8 +35,13 @@ public class Camera {
 
         //Handles camera EulerRotation
         if (faceCentre) {
-            facePoint(centrePosition);
-            changePositionXRelativeToOrientation((float)orbitVelocity * interval);
+            Vector3f cameraToCentrePosition = Vector3f.Subtract(centrePosition, position);
+            float cameraToCentrePositionDistance = cameraToCentrePosition.getLength();
+
+            faceDirection(cameraToCentrePosition);
+            double angularVelocityRadiansPerSec = FastMath.toRadians(angularVelocityDegreesPerSec);
+            changePositionXRelativeToOrientation((float) angularVelocityRadiansPerSec * cameraToCentrePositionDistance * interval);
+
         }
     }
 
@@ -296,26 +302,36 @@ public class Camera {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private int orbitVelocity;
-    public final static int orbitVelocity_DEFAULT = 0;
-    public final static int orbitVelocity_MAXIMUM = 100;
-    public final static int orbitVelocity_MINIMUM = -orbitVelocity_MAXIMUM;
+//    private int orbitVelocity;
+//    public final static int orbitVelocity_DEFAULT = 0;
+//    public final static int orbitVelocity_MAXIMUM = 100;
+//    public final static int orbitVelocity_MINIMUM = -orbitVelocity_MAXIMUM;
+//
+//    public void setOrbitVelocity(int value){
+//        if(value < orbitVelocity_MINIMUM){
+//            orbitVelocity = orbitVelocity_MINIMUM;
+//        }else if(value > orbitVelocity_MAXIMUM){
+//            orbitVelocity = orbitVelocity_MAXIMUM;
+//        }else {
+//            orbitVelocity = value;
+//        }
+//    }
+//
+//    public void changeOrbitVelocity(int value){
+//        setOrbitVelocity(getOrbitVelocity() + value);
+//    }
+//
+//    public int getOrbitVelocity(){
+//        return orbitVelocity;
+//    }
 
-    public void setOrbitVelocity(int value){
-        if(value < orbitVelocity_MINIMUM){
-            orbitVelocity = orbitVelocity_MINIMUM;
-        }else if(value > orbitVelocity_MAXIMUM){
-            orbitVelocity = orbitVelocity_MAXIMUM;
-        }else {
-            orbitVelocity = value;
-        }
+    public final static int angularVelocityDegreesPerSec_DEFAULT = 90;
+
+    public double getAngularVelocityDegreesPerSec() {
+        return angularVelocityDegreesPerSec;
     }
 
-    public void changeOrbitVelocity(int value){
-        setOrbitVelocity(getOrbitVelocity() + value);
-    }
-
-    public int getOrbitVelocity(){
-        return orbitVelocity;
+    public void setAngularVelocityDegreesPerSec(double angularVelocityDegreesPerSec) {
+        this.angularVelocityDegreesPerSec = angularVelocityDegreesPerSec;
     }
 }

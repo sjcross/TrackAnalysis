@@ -109,7 +109,6 @@ public class TrackSummary extends ModuleControl {
                 rt.setValue("Rolling directionality ratio", i, rollingDirectionalityRatio.get(f));
                 rt.setValue("Instantaneous velocity ("+units+"/frame)", i, instantaneousVelocity.get(f));
 
-
                 i++;
 
             }

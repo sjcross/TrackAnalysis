@@ -2,6 +2,7 @@ package wbif.sjx.TrackAnalysis.GUI;
 
 import ij.ImagePlus;
 import org.lwjgl.system.CallbackI;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Camera;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Engine;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.TrackEntityCollection;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Scene;
@@ -47,7 +48,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
     private JTextField orbitSpeedLabelTextField;
     private JTextField orbitSpeedTextEdit;
     private final static String ORBIT = "Orbit";
-    private final static String ORBIT_SPEED = "-100 -> 100";
+    private final static String ORBIT_SPEED = "degrees/frame";
 
     private JToggleButton showTrailsButton;
     private JTextField trailLengthLabelTextField;
@@ -163,7 +164,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         panel.add(axesTypeTextField,c);
         axesTypeComboBox = new JComboBox<>(AxesTypes.ALL);
         axesTypeComboBox.setPreferredSize(new Dimension(panelWidth*2/3-5,elementHeight));
-        axesTypeComboBox.setSelectedItem(PlotTypes.NORMAL);
+        axesTypeComboBox.setSelectedItem(AxesTypes.BOX);
         axesTypeComboBox.setName(AXES_TYPE);
         axesTypeComboBox.setEnabled(false);
         axesTypeComboBox.addActionListener(this);
@@ -246,7 +247,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         c.gridwidth = 1;
         c.gridy++;
         panel.add(orbitButton,c);
-        orbitSpeedTextEdit = new JTextField("3");
+        orbitSpeedTextEdit = new JTextField(String.valueOf(Camera.angularVelocityDegreesPerSec_DEFAULT));
         orbitSpeedTextEdit.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
         orbitSpeedTextEdit.setEnabled(false);
         orbitSpeedTextEdit.addActionListener(this);
@@ -339,6 +340,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
     public void run(int ID) {
         new Thread(() -> {
             try{
+                System.out.println("Initialising");
                 engine.init();
                 plotAllButton.setText(PLOT);
                 setControlMode(true);
@@ -403,12 +405,12 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
                 break;
             case ORBIT:
                 engine.getCamera().setFaceCentre(((JToggleButton)e.getSource()).isSelected());
-                int orbitVelocity = Integer.parseInt(orbitSpeedTextEdit.getText());
-                engine.getCamera().setOrbitVelocity(orbitVelocity);
+                int angularVelocity = Integer.parseInt(orbitSpeedTextEdit.getText());
+                engine.getCamera().setAngularVelocityDegreesPerSec(angularVelocity);
                 break;
             case ORBIT_SPEED:
-                orbitVelocity = Integer.parseInt(orbitSpeedTextEdit.getText());
-                engine.getCamera().setOrbitVelocity(orbitVelocity);
+                angularVelocity = Integer.parseInt(orbitSpeedTextEdit.getText());
+                engine.getCamera().setAngularVelocityDegreesPerSec(angularVelocity);
                 break;
             case SHOW_TRAILS:
                 engine.getScene().getTracksEntities().setTrailVisibility(((JToggleButton)e.getSource()).isSelected());

@@ -153,7 +153,7 @@ public class Scene {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final boolean showAxes_DEFAULT = true;
+    public static final boolean showAxes_DEFAULT = false;
 
     private static boolean showAxes;
 
@@ -171,7 +171,7 @@ public class Scene {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public static final boolean showBoundingBox_DEFAULT = false;
+    public static final boolean showBoundingBox_DEFAULT = true;
 
     private static boolean showBoundingBox;
 

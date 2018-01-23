@@ -47,7 +47,7 @@ public class BoundingBox {
                 minPosition.getZ() + length / 2
         );
 
-        boundingBox = new Entity(GenerateMesh.cuboidFrame(width, height, length, 5), Color.white);
+        boundingBox = new Entity(GenerateMesh.cuboidFrame(width, height, length, 2), Color.white);
         boundingBox.getPosition().set(centrePosition);
     }
 
