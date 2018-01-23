@@ -36,7 +36,6 @@ public class MainGUI implements ActionListener {
     private static final String MODULE_CHANGED = "Module changed";
 
     String[] moduleListWithIpl = new String[]{
-            TRACK_PLOT,
             TRACK_SUMMARY,
 //            DIRECTIONAL_PERSISTENCE,
             DIRECTIONALITY_RATIO,
@@ -46,12 +45,12 @@ public class MainGUI implements ActionListener {
             NEAREST_NEIGHBOUR_DISTANCE,
             SHOW_TRACK_ID,
             TOTAL_PATH_LENGTH,
-            TRACK_INTENSITY
+            TRACK_INTENSITY,
+            TRACK_PLOT
 
     };
 
     String[] moduleListWithoutIpl = new String[]{
-            TRACK_PLOT,
             TRACK_SUMMARY,
 //            DIRECTIONAL_PERSISTENCE,
             DIRECTIONALITY_RATIO,
@@ -59,8 +58,8 @@ public class MainGUI implements ActionListener {
             MEAN_SQUARED_DISPLACEMENT,
             MOTILITY_PLOT,
             NEAREST_NEIGHBOUR_DISTANCE,
-            TOTAL_PATH_LENGTH
-
+            TOTAL_PATH_LENGTH,
+            TRACK_PLOT
 
     };
 

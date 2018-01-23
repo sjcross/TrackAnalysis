@@ -30,8 +30,8 @@ public class Renderer {
     public Renderer() throws Exception{
         mainShader = new ShaderProgram("main");
 
-        mainShader.createVertexShader(DataTypeUtils.loadAsString("shaders/main/vertex.vs"));
-        mainShader.createFragmentShader(DataTypeUtils.loadAsString("shaders/main/fragment.fs"));
+        mainShader.createVertexShader(DataTypeUtils.loadAsString("Shaders/main/vertex.vs"));
+        mainShader.createFragmentShader(DataTypeUtils.loadAsString("Shaders/main/fragment.fs"));
         mainShader.link();
 
         mainShader.createUniform("projectedViewMatrix");

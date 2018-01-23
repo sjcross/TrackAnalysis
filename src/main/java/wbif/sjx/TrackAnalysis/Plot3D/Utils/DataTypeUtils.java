@@ -138,6 +138,7 @@ public class DataTypeUtils {
 			Scanner scanner = new Scanner(in, "UTF-8");
 			result = scanner.useDelimiter("\\A").next();
 		}catch (Exception e){
+			System.err.println(e.getMessage());
 			return null;
 		}
 		return result;

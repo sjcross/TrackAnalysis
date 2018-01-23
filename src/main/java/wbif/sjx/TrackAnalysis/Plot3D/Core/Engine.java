@@ -36,22 +36,16 @@ public class Engine {
     }
 
     public void init() throws Exception{
-        System.out.println("Going to init");
         window = new GLFWWindow("3D Track Plot", 600, 600, false);
-        System.out.println("Window");
         renderer = new Renderer();
-        System.out.println("Renderer");
         camera = new Camera();
-        System.out.println("Camera init");
         scene = new Scene(trackPlotControl.getTracks(), trackPlotControl.getIpl());
-        System.out.println("Scene init");
         fpsTimer = new StopWatch();
         loopTimer = new StopWatch();
 
         camera.getPosition().set(-200,100,-200);
         camera.facePoint(scene.getTracksEntities().getCurrentCentreOfCollection());
 
-        System.out.println("watch and pos init");
         if (trackPlotControl.is2D()) camera.viewXZplane(scene.getBoundingBox());
 
     }

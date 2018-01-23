@@ -340,7 +340,6 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
     public void run(int ID) {
         new Thread(() -> {
             try{
-                System.out.println("Initialising");
                 engine.init();
                 plotAllButton.setText(PLOT);
                 setControlMode(true);

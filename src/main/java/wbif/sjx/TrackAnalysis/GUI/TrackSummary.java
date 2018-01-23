@@ -396,7 +396,7 @@ public class TrackSummary extends ModuleControl {
         panel.add(spatialStatisticsCheckbox,c);
 
         // Diffusion coefficient
-        boolean diffusionCoefficient = Prefs.get("TrackAnalysis.TrackSummary.diffusionCoefficient",true);
+        boolean diffusionCoefficient = Prefs.get("TrackAnalysis.TrackSummary.diffusionCoefficient",false);
         diffusionCoefficientCheckbox = new JCheckBox("Output diffusion coefficient");
         diffusionCoefficientCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
         diffusionCoefficientCheckbox.setSelected(diffusionCoefficient);
