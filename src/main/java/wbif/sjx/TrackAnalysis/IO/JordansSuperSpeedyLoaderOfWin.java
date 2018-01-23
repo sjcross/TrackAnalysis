@@ -25,8 +25,8 @@ public class JordansSuperSpeedyLoaderOfWin implements PlugIn {
         new ImageJ();
 
 //        IJ.runMacroFile("C:\\Users\\Jordan Fisher\\Documents\\Programming\\Java\\TrackAnalysis-3DTrackRenders\\src\\main\\resources\\Import_Results_Table.ijm");
-        IJ.runMacroFile("C:\\Users\\sc13967\\Local Documents\\ImageJMacros\\Import_Results_Table.ijm");
-//        IJ.runMacroFile("C:\\Users\\sc13967\\Documents\\ImageJ Macros\\Import_Results_Table.ijm");
+//        IJ.runMacroFile("C:\\Users\\sc13967\\Local Documents\\ImageJMacros\\Import_Results_Table.ijm");
+        IJ.runMacroFile("C:\\Users\\sc13967\\Documents\\ImageJ Macros\\Import_Results_Table.ijm");
 //        IJ.runMacroFile("E:\\Stephen\\ImageJ Macros\\ImageJMacros\\Import_Results_Table.ijm");
 
         new JordansSuperSpeedyLoaderOfWin().run("");
@@ -70,7 +70,6 @@ public class JordansSuperSpeedyLoaderOfWin implements PlugIn {
         int yPosIdx = (int) Prefs.get("TrackAnalysis.yPosIdx",3);
         int zPosIdx = (int) Prefs.get("TrackAnalysis.zPosIdx",4);
         int frameIdx = (int) Prefs.get("TrackAnalysis.frameIdx",1);
-
 
         // Getting default calibration value
         double distXY = 1;

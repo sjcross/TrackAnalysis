@@ -48,7 +48,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
     private JTextField orbitSpeedLabelTextField;
     private JTextField orbitSpeedTextEdit;
     private final static String ORBIT = "Orbit";
-    private final static String ORBIT_SPEED = "degrees/frame";
+    private final static String ORBIT_SPEED = "degrees/second";
 
     private JToggleButton showTrailsButton;
     private JTextField trailLengthLabelTextField;
@@ -60,7 +60,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
     private JTextField frameRateLabelTextField;
     private JTextField frameRateTextEdit;
     private final static String PLAY_FRAMES = "Play";
-    private final static String FRAME_RATE = "0-10";
+    private final static String FRAME_RATE = "frames/second";
 
     private JSlider frameSlider;
     private final static String FRAME_SLIDER = "Frame Slider";
@@ -214,6 +214,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         showTrailsButton.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
         showTrailsButton.setSelected(Scene.playFrames_DEFAULT);
         showTrailsButton.setEnabled(false);
+        showTrailsButton.setSelected(true);
         showTrailsButton.addActionListener(this);
         showTrailsButton.setName(SHOW_TRAILS);
         c.gridwidth = 1;
