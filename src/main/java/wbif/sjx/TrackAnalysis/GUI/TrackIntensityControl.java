@@ -60,7 +60,6 @@ public class TrackIntensityControl extends ModuleControl {
             IJ.showMessage("Feature coming soon (12-07-2017)");
 
         } else {
-            System.out.println(ipl.getNChannels()+"_"+ipl.getNSlices()+"_"+ipl.getNFrames());
             Track track = tracks.get(ID);
             double[] f = track.getFAsDouble();
             double[] trackIntensity = track.getRollingIntensity(ipl,2);

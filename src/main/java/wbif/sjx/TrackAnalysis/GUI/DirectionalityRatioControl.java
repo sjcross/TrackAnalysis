@@ -9,6 +9,8 @@ import wbif.sjx.common.Object.TrackCollection;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  * Created by sc13967 on 25/06/2017.
@@ -80,9 +82,10 @@ public class DirectionalityRatioControl extends ModuleControl {
         } else {
             Track track = tracks.get(ID);
             double[] f = track.getFAsDouble();
-            double[] directionalityRatio = track.getRollingDirectionalityRatio(pixelDistances);
+            TreeMap<Integer,Double> directionalityRatio = track.getRollingDirectionalityRatio(pixelDistances);
 
-            Plot plot = new Plot("Directionality ratio (track "+ID+")",xLabel,"Directionality ratio",f,directionalityRatio);
+            double[] vals = directionalityRatio.values().stream().mapToDouble(Double::doubleValue).toArray();
+            Plot plot = new Plot("Directionality ratio (track "+ID+")",xLabel,"Directionality ratio",f,vals);
             plot.show();
 
         }

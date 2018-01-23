@@ -26,7 +26,7 @@ public class ShowTrackIDControl extends ModuleControl {
 
     @Override
     public String getTitle() {
-        return "Show track IDs";
+        return "Show track paths with IDs";
     }
 
     @Override
