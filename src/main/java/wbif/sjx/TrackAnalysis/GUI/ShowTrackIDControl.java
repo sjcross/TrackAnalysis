@@ -12,6 +12,7 @@ import wbif.sjx.common.Object.TrackCollection;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
 
 /**
  * Created by sc13967 on 04/07/2017.
@@ -25,7 +26,7 @@ public class ShowTrackIDControl extends ModuleControl {
 
     @Override
     public String getTitle() {
-        return "Show track IDs";
+        return "Show track paths with IDs";
     }
 
     @Override
@@ -66,6 +67,9 @@ public class ShowTrackIDControl extends ModuleControl {
         int fontSize = (int) Math.round(Double.parseDouble(fontSizeTextField.getText()));
         Prefs.set("TrackAnalysis.ShowTrackID.fontSize",fontSize);
 
+        // Creating a duplicate of the image, so the original isn't altered
+        ipl = new Duplicator().run(ipl);
+
         // Creating an overlay for the image
         Overlay ovl = new Overlay();
         ipl.setOverlay(ovl);
@@ -78,17 +82,20 @@ public class ShowTrackIDControl extends ModuleControl {
 
                 double[] x = track.getX(true);
                 double[] y = track.getY(true);
+                double[] z = track.getZ(true);
                 int[] f = track.getF();
 
                 for (int i=0;i<f.length;i++) {
                     PointRoi roi = new PointRoi(x[i]+0.5,y[i]+0.5);
                     roi.setPointType(3);
-                    roi.setPosition(f[i]+1);
+                    if (ipl.isHyperStack()) roi.setPosition(1,(int) (z[i]+1),f[i]+1);
+                    else roi.setPosition(f[i]+1);
                     roi.setStrokeColor(col);
                     ovl.addElement(roi);
 
                     TextRoi text = new TextRoi(x[i],y[i],String.valueOf(key));
-                    text.setPosition(f[i]+1);
+                    if (ipl.isHyperStack()) text.setPosition(1,(int) (z[i]+1),f[i]+1);
+                    else text.setPosition(f[i]+1);
                     text.setCurrentFont(new Font(Font.SANS_SERIF,Font.PLAIN,fontSize));
                     text.setStrokeColor(col);
                     ovl.addElement(text);
@@ -121,7 +128,7 @@ public class ShowTrackIDControl extends ModuleControl {
             }
         }
 
-        new Duplicator().run(ipl).show();
+        ipl.show();
 
     }
 

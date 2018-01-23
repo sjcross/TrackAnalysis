@@ -9,6 +9,7 @@ import wbif.sjx.common.Object.TrackCollection;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.TreeMap;
 
 /**
  * Created by sc13967 on 25/06/2017.
@@ -56,10 +57,12 @@ public class DirectionalPersistenceControl extends ModuleControl {
         } else {
             Track track = tracks.get(ID);
             double[] f = track.getFAsDouble();
-            double[] euclideanDistance = track.getRollingEuclideanDistance(pixelDistances);
+            TreeMap<Integer,Double> euclideanDistance = track.getRollingEuclideanDistance(pixelDistances);
+            double[] vals = euclideanDistance.values().stream().mapToDouble(Double::doubleValue).toArray();
 
             String units = track.getUnits(pixelDistances);
-            Plot plot = new Plot("Euclidean distance (track "+ID+")","Time relative to start of track (frames)","Euclidean distance ("+units+")",f,euclideanDistance);
+            Plot plot = new Plot("Euclidean distance (track "+ID+")","Time relative to start of track (frames)",
+                    "Euclidean distance ("+units+")",f,vals);
             plot.show();
 
         }

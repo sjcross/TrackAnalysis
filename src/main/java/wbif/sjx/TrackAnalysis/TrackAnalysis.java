@@ -19,7 +19,6 @@ public class TrackAnalysis {
 
         MainGUI gui = new MainGUI(tracks,ipl);
         gui.create();
-
     }
 
 //    private void displayMotionHeatmap() {

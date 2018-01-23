@@ -11,6 +11,7 @@ import wbif.sjx.common.Object.Point;
 import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -32,6 +33,13 @@ public class TrackMateLoader extends AbstractTMAction {
 
     @Override
     public void execute(TrackMate trackMate) {
+        try {
+            UIManager.setLookAndFeel(
+                    UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+
         ImagePlus ipl = trackMate.getSettings().imp;
         Calibration calibration = ipl.getCalibration();
 
@@ -57,18 +65,9 @@ public class TrackMateLoader extends AbstractTMAction {
                 int f = (int) Math.round(spot.getFeature(Spot.FRAME));
 
                 tracks.putIfAbsent(trackID, new Track(distXY,distZ,units));
-                tracks.get(trackID).add(new Point(x,y,z,f));
+                tracks.get(trackID).addTimepoint(x,y,z,f);
 
             }
-        }
-
-        // Sorting spots in each track to ensure they are in chronological order
-        for (Track track:tracks.values()) {
-            track.sort((o1, o2) -> {
-                double t1 = o1.getF();
-                double t2 = o2.getF();
-                return t1 > t2 ? 1 : t1 == t2 ? 0 : -1;
-            });
         }
 
         // Running TrackAnalysis

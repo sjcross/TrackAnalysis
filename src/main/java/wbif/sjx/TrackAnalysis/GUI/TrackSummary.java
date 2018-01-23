@@ -6,8 +6,10 @@ import ij.Prefs;
 import ij.measure.ResultsTable;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
+import org.lwjgl.system.CallbackI;
 import wbif.sjx.common.Analysis.MSDCalculator;
 import wbif.sjx.common.MathFunc.CumStat;
+import wbif.sjx.common.Object.Timepoint;
 import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
 
@@ -15,12 +17,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.text.DecimalFormat;
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Created by sc13967 on 24/06/2017.
  */
 public class TrackSummary extends ModuleControl {
+    private JCheckBox frameByFrameCheckbox;
     private JCheckBox numberOfObjectsCheckbox;
     private JCheckBox trackDurationCheckbox;
     private JCheckBox spatialStatisticsCheckbox;
@@ -70,6 +73,46 @@ public class TrackSummary extends ModuleControl {
         rt.setValue("Stdev y-pos ("+units+")", 0, df.format(meanPos[1][1])); //Distances reported in image units
         rt.setValue("Stdev z-pos ("+units+")", 0, df.format(meanPos[1][2])); //Distances reported in image units
 
+    }
+
+    private void showFullTrackResults(int ID, ResultsTable rt) {
+        boolean pixelDistances = calibrationCheckbox.isSelected();
+        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
+        String units = tracks.values().iterator().next().getUnits(pixelDistances);
+
+        Set<Integer> IDs = new TreeSet<>();
+        if (ID == -1) {
+            IDs = tracks.keySet();
+        } else {
+            IDs.add(ID);
+        }
+
+        int i = 0;
+        for (int currentID:IDs) {
+            Track track = tracks.get(currentID);
+
+            TreeMap<Integer,double[]> nnDistances = track.getNearestNeighbourDistance(tracks,pixelDistances);
+            TreeMap<Integer,Double> rollingTotalPath = track.getRollingTotalPathLength(pixelDistances);
+            TreeMap<Integer,Double> rollingEuclideanDistance = track.getRollingEuclideanDistance(pixelDistances);
+            TreeMap<Integer,Double> rollingDirectionalityRatio= track.getRollingDirectionalityRatio(pixelDistances);
+            TreeMap<Integer,Double> instantaneousVelocity = track.getInstantaneousVelocity(pixelDistances);
+
+            for (int f:track.getF()){
+                rt.setValue("ID", i, currentID);
+                rt.setValue("X (" + units + ")", i, track.getX(f,pixelDistances));
+                rt.setValue("Y (" + units + ")", i, track.getY(f,pixelDistances));
+                rt.setValue("Z (" + units + ")", i, track.getZ(f,pixelDistances));
+                rt.setValue("NN ID", i, nnDistances.get(f)[0]);
+                rt.setValue("NN distance (" + units + ")", i, nnDistances.get(f)[1]);
+                rt.setValue("Rolling path length (" + units + ")", i, rollingTotalPath.get(f));
+                rt.setValue("Rolling Euclidean distance (" + units + ")", i, rollingEuclideanDistance.get(f));
+                rt.setValue("Rolling directionality ratio", i, rollingDirectionalityRatio.get(f));
+                rt.setValue("Instantaneous velocity ("+units+"/frame)", i, instantaneousVelocity.get(f));
+
+                i++;
+
+            }
+        }
     }
 
     private void showNumberOfObjects() {
@@ -149,17 +192,17 @@ public class TrackSummary extends ModuleControl {
             csDirRatio.addMeasure(track.getDirectionalityRatio(pixelDistances));
 
             // Step-by-step statistics
-            double[] steps = track.getStepSizes(pixelDistances);
-            Arrays.stream(steps).forEach(csStep::addMeasure);
-            rt.setValue("Mean step size ("+units+")",i,new CumStat(steps).getMean());
+            TreeMap<Integer,Double> steps = track.getInstantaneousStepSizes(pixelDistances);
+            steps.values().stream().forEach(csStep::addMeasure);
+            rt.setValue("Mean step size ("+units+")",i,new CumStat(steps.values()).getMean());
 
-            double[] velocities = track.getInstantaneousVelocity(pixelDistances);
-            Arrays.stream(velocities).forEach(csVelocity::addMeasure);
-            rt.setValue("Mean inst. vel. ("+units+"/frame)",i,new CumStat(velocities).getMean());
+            TreeMap<Integer,Double> velocities = track.getInstantaneousVelocity(pixelDistances);
+            velocities.values().stream().forEach(csVelocity::addMeasure);
+            rt.setValue("Mean inst. vel. ("+units+"/frame)",i,new CumStat(velocities.values()).getMean());
 
-            double[] dirRatio = track.getRollingDirectionalityRatio(pixelDistances);
-            Arrays.stream(dirRatio).forEach(csInstDirRatio::addMeasure);
-            rt.setValue("Mean inst. dir. ratio",i++,new CumStat(dirRatio).getMean());
+            TreeMap<Integer,Double> dirRatio = track.getRollingDirectionalityRatio(pixelDistances);
+            dirRatio.values().stream().forEach(csInstDirRatio::addMeasure);
+            rt.setValue("Mean inst. dir. ratio",i++,new CumStat(dirRatio.values()).getMean());
 
         }
 
@@ -215,21 +258,21 @@ public class TrackSummary extends ModuleControl {
         CumStat csInstDirRatio = new CumStat();
 
         // Step-by-step statistics
-        double[] steps = track.getStepSizes(pixelDistances);
-        Arrays.stream(steps).forEach(csStep::addMeasure);
+        TreeMap<Integer,Double> steps = track.getInstantaneousStepSizes(pixelDistances);
+        steps.values().stream().forEach(csStep::addMeasure);
 
-        double[] velocities = track.getInstantaneousVelocity(pixelDistances);
-        Arrays.stream(velocities).forEach(csVelocity::addMeasure);
+        TreeMap<Integer,Double> velocities = track.getInstantaneousVelocity(pixelDistances);
+        velocities.values().stream().forEach(csVelocity::addMeasure);
 
-        double[] dirRatio = track.getRollingDirectionalityRatio(pixelDistances);
-        Arrays.stream(dirRatio).forEach(csInstDirRatio::addMeasure);
+        TreeMap<Integer,Double> dirRatio = track.getRollingDirectionalityRatio(pixelDistances);
+        dirRatio.values().stream().forEach(csInstDirRatio::addMeasure);
 
         rt.setValue("Euclidean distance ("+units+")",0,track.getEuclideanDistance(pixelDistances));
         rt.setValue("Total path length ("+units+")",0,track.getTotalPathLength(pixelDistances));
         rt.setValue("Directionality ratio ",0,track.getDirectionalityRatio(pixelDistances));
-        rt.setValue("Mean step size ("+units+")",0,new CumStat(steps).getMean());
-        rt.setValue("Mean inst. vel. ("+units+"/frame)",0,new CumStat(velocities).getMean());
-        rt.setValue("Mean inst. dir. ratio",0,new CumStat(dirRatio).getMean());
+        rt.setValue("Mean step size ("+units+")",0,new CumStat(steps.values()).getMean());
+        rt.setValue("Mean inst. vel. ("+units+"/frame)",0,new CumStat(velocities.values()).getMean());
+        rt.setValue("Mean inst. dir. ratio",0,new CumStat(dirRatio.values()).getMean());
 
         IJ.log("Euclidean distance: "+String.valueOf(df.format(track.getEuclideanDistance(pixelDistances)))+" "+units);
         IJ.log("Total path length: "+String.valueOf(df.format(track.getTotalPathLength(pixelDistances)))+" "+units);
@@ -320,6 +363,15 @@ public class TrackSummary extends ModuleControl {
         c.gridwidth = 2;
         c.insets = new Insets(0,5,0,5);
 
+
+        // Full track details
+        boolean fullTrackDetails = Prefs.get("TrackAnalysis.TrackSummary.fullTrackDetails",true);
+        frameByFrameCheckbox = new JCheckBox("Full track details (frame-by-frame)");
+        frameByFrameCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
+        frameByFrameCheckbox.setSelected(fullTrackDetails);
+        c.gridy++;
+        panel.add(frameByFrameCheckbox,c);
+
         // Checkbox for number of objects
         boolean numberOfObjects = Prefs.get("TrackAnalysis.TrackSummary.numberOfObjects",true);
         numberOfObjectsCheckbox = new JCheckBox("Output number of objects");
@@ -344,7 +396,7 @@ public class TrackSummary extends ModuleControl {
         panel.add(spatialStatisticsCheckbox,c);
 
         // Diffusion coefficient
-        boolean diffusionCoefficient = Prefs.get("TrackAnalysis.TrackSummary.diffusionCoefficient",true);
+        boolean diffusionCoefficient = Prefs.get("TrackAnalysis.TrackSummary.diffusionCoefficient",false);
         diffusionCoefficientCheckbox = new JCheckBox("Output diffusion coefficient");
         diffusionCoefficientCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
         diffusionCoefficientCheckbox.setSelected(diffusionCoefficient);
@@ -375,6 +427,9 @@ public class TrackSummary extends ModuleControl {
 
     @Override
     public void run(int ID) {
+        boolean fullTrackDetails = frameByFrameCheckbox.isSelected();
+        Prefs.set("TrackAnalysis.fullTrackDetails",fullTrackDetails);
+
         boolean numberOfObjects = numberOfObjectsCheckbox.isSelected();
         Prefs.set("TrackAnalysis.numberOfObjects",numberOfObjects);
 
@@ -404,6 +459,10 @@ public class TrackSummary extends ModuleControl {
             if (spatialStatistics) showAllTracksSpatialStatistics(rt);
             if (diffusionCoefficient) showDiffusionCoefficient(rt);
 
+            ResultsTable fullRT = new ResultsTable();
+            if (fullTrackDetails) showFullTrackResults(ID, fullRT);
+            fullRT.show("Full track details");
+
         } else {
             IJ.log("++SUMMARY OF TRACK "+ID+"++");
             IJ.log(" ");
@@ -414,6 +473,10 @@ public class TrackSummary extends ModuleControl {
             if (trackDuration) showTrackDuration(ID,rt);
             if (spatialStatistics) showTrackSpatialStatistics(ID,rt);
             if (diffusionCoefficient) showDiffusionCoefficient(ID,rt);
+
+            ResultsTable fullRT = new ResultsTable();
+            if (fullTrackDetails) showFullTrackResults(ID,fullRT);
+            fullRT.show("Full track details");
 
         }
 
