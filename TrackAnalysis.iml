@@ -11,15 +11,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: net.imagej:ij:1.51h" level="project" />
-    <orderEntry type="module-library">
-      <library name="Maven: com.sun:tools:1.4.2">
-        <CLASSES>
-          <root url="jar://C:/Program Files/Java/jdk1.8.0_161/lib/tools.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="library" name="Maven: sc.fiji:TrackMate_:3.5.1" level="project" />
     <orderEntry type="library" name="Maven: sc.fiji:3D_Viewer:4.0.1" level="project" />
     <orderEntry type="library" name="Maven: sc.fiji:VIB-lib:2.1.0" level="project" />
