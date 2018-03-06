@@ -91,7 +91,7 @@ public class TrackSummary extends ModuleControl {
         for (int currentID:IDs) {
             Track track = tracks.get(currentID);
 
-            TreeMap<Integer,double[]> nnDistances = track.getNearestNeighbourDistance(tracks,pixelDistances);
+//            TreeMap<Integer,double[]> nnDistances = track.getNearestNeighbourDistance(tracks,pixelDistances);
             TreeMap<Integer,Double> rollingTotalPath = track.getRollingTotalPathLength(pixelDistances);
             TreeMap<Integer,Double> rollingEuclideanDistance = track.getRollingEuclideanDistance(pixelDistances);
             TreeMap<Integer,Double> rollingDirectionalityRatio= track.getRollingDirectionalityRatio(pixelDistances);
@@ -102,8 +102,8 @@ public class TrackSummary extends ModuleControl {
                 rt.setValue("X (" + units + ")", i, track.getX(f,pixelDistances));
                 rt.setValue("Y (" + units + ")", i, track.getY(f,pixelDistances));
                 rt.setValue("Z (" + units + ")", i, track.getZ(f,pixelDistances));
-                rt.setValue("NN ID", i, nnDistances.get(f)[0]);
-                rt.setValue("NN distance (" + units + ")", i, nnDistances.get(f)[1]);
+//                rt.setValue("NN ID", i, nnDistances.get(f)[0]);
+//                rt.setValue("NN distance (" + units + ")", i, nnDistances.get(f)[1]);
                 rt.setValue("Rolling path length (" + units + ")", i, rollingTotalPath.get(f));
                 rt.setValue("Rolling Euclidean distance (" + units + ")", i, rollingEuclideanDistance.get(f));
                 rt.setValue("Rolling directionality ratio", i, rollingDirectionalityRatio.get(f));

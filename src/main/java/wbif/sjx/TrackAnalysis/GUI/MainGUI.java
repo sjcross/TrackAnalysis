@@ -26,7 +26,7 @@ public class MainGUI implements ActionListener {
     private static final String DIRECTIONALITY_RATIO = new DirectionalityRatioControl(null,null,0,0).getTitle();
     private static final String EUCLIDEAN_DISTANCE = new EuclideanDistanceControl(null,null,0,0).getTitle();
     private static final String MEAN_SQUARED_DISPLACEMENT = new MSDControl(null,null,0,0).getTitle();
-    private static final String NEAREST_NEIGHBOUR_DISTANCE = new NearestNeighbourCalculator(null,null,0,0).getTitle();
+//    private static final String NEAREST_NEIGHBOUR_DISTANCE = new NearestNeighbourCalculator(null,null,0,0).getTitle();
     private static final String MOTILITY_PLOT = new MotilityPlotControl(null,null,0,0).getTitle();
     private static final String SHOW_TRACK_ID = new ShowTrackIDControl(null,null,0,0).getTitle();
     private static final String TOTAL_PATH_LENGTH = new TotalPathLengthControl(null,null,0,0).getTitle();
@@ -42,7 +42,7 @@ public class MainGUI implements ActionListener {
             EUCLIDEAN_DISTANCE,
             MEAN_SQUARED_DISPLACEMENT,
             MOTILITY_PLOT,
-            NEAREST_NEIGHBOUR_DISTANCE,
+//            NEAREST_NEIGHBOUR_DISTANCE,
             SHOW_TRACK_ID,
             TOTAL_PATH_LENGTH,
             TRACK_INTENSITY,
@@ -57,7 +57,7 @@ public class MainGUI implements ActionListener {
             EUCLIDEAN_DISTANCE,
             MEAN_SQUARED_DISPLACEMENT,
             MOTILITY_PLOT,
-            NEAREST_NEIGHBOUR_DISTANCE,
+//            NEAREST_NEIGHBOUR_DISTANCE,
             TOTAL_PATH_LENGTH,
             TRACK_PLOT
 
@@ -120,8 +120,8 @@ public class MainGUI implements ActionListener {
         } else if (module.equals(MOTILITY_PLOT)) {
             control = new MotilityPlotControl(tracks, ipl, frameWidth, elementHeight);
 
-        } else if (module.equals(NEAREST_NEIGHBOUR_DISTANCE)) {
-            control = new NearestNeighbourCalculator(tracks, ipl, frameWidth, elementHeight);
+//        } else if (module.equals(NEAREST_NEIGHBOUR_DISTANCE)) {
+//            control = new NearestNeighbourCalculator(tracks, ipl, frameWidth, elementHeight);
 
         } else if (module.equals(SHOW_TRACK_ID)) {
             control = new ShowTrackIDControl(tracks, ipl, frameWidth, elementHeight);
