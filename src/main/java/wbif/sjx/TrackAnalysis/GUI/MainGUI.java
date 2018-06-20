@@ -46,7 +46,7 @@ public class MainGUI implements ActionListener {
             SHOW_TRACK_ID,
             TOTAL_PATH_LENGTH,
             TRACK_INTENSITY,
-            TRACK_PLOT
+//            TRACK_PLOT
 
     };
 
@@ -59,7 +59,7 @@ public class MainGUI implements ActionListener {
             MOTILITY_PLOT,
 //            NEAREST_NEIGHBOUR_DISTANCE,
             TOTAL_PATH_LENGTH,
-            TRACK_PLOT
+//            TRACK_PLOT
 
     };
 
