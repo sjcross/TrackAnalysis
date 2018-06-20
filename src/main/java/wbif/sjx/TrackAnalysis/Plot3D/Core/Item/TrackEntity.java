@@ -33,7 +33,7 @@ public class TrackEntity extends HashMap<Integer, PointEntity>{
         this.colour = RNG.Colour();
         motilityPlotVector = Vector3f.Negative(DataTypeUtils.toVector3f(track.get(track.getF()[0])));
         int[] f = track.getF();
-        instantaneousVelocity = track.getInstantaneousVelocity(true);
+        instantaneousVelocity = track.getInstantaneousSpeed(true);
         totalPathLength = track.getRollingTotalPathLength(true);
 
         for(int frame: track.keySet()){
