@@ -11,6 +11,8 @@ import wbif.sjx.common.Object.TrackCollection;
 import wbif.sjx.common.Process.SwitchTAndZ;
 
 import javax.swing.*;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 /**
  * Loads tracks from results table.  Tracks are stored in terms of calibrated distances.
@@ -21,15 +23,15 @@ public class ResultsTableLoader implements PlugIn {
      * @param args
      */
     public static void main(String[] args) {
-        new ImageJ();
-        IJ.runMacroFile("C:\\Users\\sc13967\\Local Documents\\ImageJMacros\\Import_Results_Table.ijm");
-//        IJ.runMacroFile("C:\\Users\\sc13967\\Documents\\ImageJ Macros\\Import_Results_Table.ijm");
-//        IJ.runMacroFile("E:\\Stephen\\ImageJ Macros\\ImageJMacros\\Import_Results_Table.ijm");
+        try {
+            new ImageJ();
+            String pathToMacro = URLDecoder.decode(TrackAnalysis.class.getResource("/Import_Results_Table.ijm").getPath(),"UTF-8");
+            IJ.runMacro("waitForUser");
+            new ResultsTableLoader().run("");
 
-        IJ.runMacro("waitForUser");
-
-        new ResultsTableLoader().run("");
-
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

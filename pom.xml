@@ -147,7 +147,6 @@
             <groupId>wbif.sjx</groupId>
             <artifactId>Common</artifactId>
             <version>1.4.1</version>
-            <scope>${myscope}</scope>
         </dependency>
 
         <!-- Natives -->
