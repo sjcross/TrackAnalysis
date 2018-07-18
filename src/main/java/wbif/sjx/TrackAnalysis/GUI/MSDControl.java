@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
+import java.util.TreeMap;
 
 /**
  * Created by sc13967 on 25/06/2017.
@@ -76,38 +77,37 @@ public class MSDControl extends ModuleControl {
         boolean fitLine = fitLineCheckbox.isSelected();
         Prefs.set("TrackAnalysis.MSD.fitLine",fitLine);
 
-        int nPoints = (int) Math.round(Double.parseDouble(nPointsTextField.getText()));
-        Prefs.set("TrackAnalysis.MSD.nPoints",nPoints);
-
         if (ID == -1) {
-            double[][] msd = tracks.getAverageMSD(pixelDistances);
-            double[] errMin = new double[msd[0].length];
-            double[] errMax = new double[msd[0].length];
+            TreeMap<Integer,CumStat> msd = tracks.getAverageMSD(pixelDistances);
+            double[] errMin = new double[msd.size()];
+            double[] errMax = new double[msd.size()];
+
+            double[] df = msd.keySet().stream().mapToDouble(v->v).toArray();
+            double[] msdMean = msd.values().stream().mapToDouble(CumStat::getMean).toArray();
+            double[] msdStd = msd.values().stream().mapToDouble(CumStat::getStd).toArray();
 
             for (int i=0;i<errMin.length;i++) {
-                errMin[i] = msd[1][i] - msd[2][i];
-                errMax[i] = msd[1][i] + msd[2][i];
+                errMin[i] = msdMean[i] - msdStd[i];
+                errMax[i] = msdMean[i] + msdStd[i];
             }
 
             String units = tracks.values().iterator().next().getUnits(pixelDistances);
             Plot plot = new Plot("Mean squared displacement (all tracks)","Interval (frames)","Mean squared displacement ("+units+"^2)");
             plot.setColor(Color.BLACK);
-            plot.addPoints(msd[0],msd[1],Plot.LINE);
+            plot.addPoints(df,msdMean,Plot.LINE);
             plot.setColor(Color.RED);
-            plot.addPoints(msd[0],errMin,Plot.LINE);
-            plot.addPoints(msd[0],errMax,Plot.LINE);
+            plot.addPoints(df,errMin,Plot.LINE);
+            plot.addPoints(df,errMax,Plot.LINE);
 
             if (fitLine) {
-                double[] fit = MSDCalculator.getLinearFit(msd[0], msd[1], nPoints);
-                double[] x = new double[nPoints];
-                double[] y = new double[nPoints];
+                double[] fit = MSDCalculator.getLinearFit(msd, df.length);
+                double[] y = new double[df.length];
 
-                for (int i = 0; i < x.length; i++) {
-                    x[i] = msd[0][i];
-                    y[i] = fit[0] * msd[0][i] + fit[1];
+                for (int i = 0; i < df.length; i++) {
+                    y[i] = fit[0] * df[i] + fit[1];
                 }
                 plot.setColor(Color.CYAN);
-                plot.addPoints(x, y, Plot.LINE);
+                plot.addPoints(df, y, Plot.LINE);
 
             }
 
@@ -116,27 +116,25 @@ public class MSDControl extends ModuleControl {
 
         } else {
             Track track = tracks.get(ID);
-            double[] f = track.getFAsDouble();
-            CumStat[] cs = track.getMSD(pixelDistances);
-            double[] msd = Arrays.stream(cs).mapToDouble(CumStat::getMean).toArray();
+            TreeMap<Integer,CumStat> msd = track.getMSD(pixelDistances);
+            double[] df = msd.keySet().stream().mapToDouble(v->v).toArray();
+            double[] msdVals = msd.values().stream().mapToDouble(CumStat::getMean).toArray();
 
             String units = track.getUnits(pixelDistances);
             Plot plot = new Plot("Mean squared displacement (track "+ID+")","Interval (frames)","Mean squared displacement ("+units+")");
             plot.setColor(Color.BLACK);
-            plot.addPoints(f,msd,Plot.LINE);
+            plot.addPoints(df,msdVals,Plot.LINE);
 
             if (fitLine) {
-                double[] fit = MSDCalculator.getLinearFit(f, msd, nPoints);
-                double[] x = new double[(int) fit[2]];
+                double[] fit = MSDCalculator.getLinearFit(msd, df.length);
                 double[] y = new double[(int) fit[2]];
 
-                for (int i = 0; i < x.length; i++) {
-                    x[i] = f[i];
-                    y[i] = fit[0] * f[i] + fit[1];
+                for (int i = 0; i < df.length; i++) {
+                    y[i] = fit[0] * df[i] + fit[1];
                 }
 
                 plot.setColor(Color.CYAN);
-                plot.addPoints(x, y, Plot.LINE);
+                plot.addPoints(df, y, Plot.LINE);
 
             }
 

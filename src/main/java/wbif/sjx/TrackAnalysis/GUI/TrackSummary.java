@@ -309,8 +309,8 @@ public class TrackSummary extends ModuleControl {
 
         int nPoints = (int) Math.round(Double.parseDouble(nPointsTextField.getText()));
 
-        double[][] dfAndMSD = tracks.getAverageMSD(pixelDistances);
-        double[] linearFit = MSDCalculator.getLinearFit(dfAndMSD[0],dfAndMSD[1],nPoints);
+        TreeMap<Integer,CumStat> msd = tracks.getAverageMSD(pixelDistances);
+        double[] linearFit = MSDCalculator.getLinearFit(msd,nPoints);
 
         IJ.log("Diffusion coefficient (single average MSD): "+String.valueOf(df.format(linearFit[0]/4))+" "+units+"^2/frame");
         IJ.log("Least squares gradient (single average MSD): "+String.valueOf(df.format(linearFit[0]))+" "+units+"^2/frame");
