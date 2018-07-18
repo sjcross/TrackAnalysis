@@ -138,14 +138,6 @@
       <scope>provided</scope>
       <exclusions>
         <exclusion>
-          <artifactId>3D_Viewer</artifactId>
-          <groupId>sc.fiji</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>fiji-lib</artifactId>
-          <groupId>sc.fiji</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>imagej-deprecated</artifactId>
           <groupId>net.imagej</groupId>
         </exclusion>
@@ -174,24 +166,8 @@
           <groupId>org.scijava</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>j3dcore</artifactId>
-          <groupId>org.scijava</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>j3dutils</artifactId>
-          <groupId>org.scijava</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>vecmath</artifactId>
-          <groupId>org.scijava</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>itextpdf</artifactId>
           <groupId>com.itextpdf</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jama</artifactId>
-          <groupId>gov.nist.math</groupId>
         </exclusion>
         <exclusion>
           <artifactId>jgrapht</artifactId>
@@ -228,38 +204,6 @@
       <artifactId>commons-math3</artifactId>
       <version>3.6.1</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>wbif.sjx</groupId>
-      <artifactId>Common</artifactId>
-      <version>1.4.1</version>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>bio-formats_plugins</artifactId>
-          <groupId>ome</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>commons-io</artifactId>
-          <groupId>commons-io</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>Fiji_Plugins</artifactId>
-          <groupId>sc.fiji</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>MorphoLibJ_</artifactId>
-          <groupId>fr.inra.ijpb</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>boneJ-legacy-plugins</artifactId>
-          <groupId>org.bonej</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>quickhull3d</artifactId>
-          <groupId>com.github.quickhull3d</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
   </dependencies>
   <reporting>

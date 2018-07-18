@@ -73,7 +73,7 @@
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-glfw:3.1.1" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-opengl:3.1.1" level="project" />
     <orderEntry type="library" name="Maven: org.l33tlabs.twl:pngdecoder:1.0" level="project" />
-    <orderEntry type="library" name="Maven: wbif.sjx:Common:1.4.1" level="project" />
+    <orderEntry type="library" name="Maven: wbif.sjx:Common:1.4.7" level="project" />
     <orderEntry type="library" name="Maven: ome:bio-formats_plugins:5.4.1" level="project" />
     <orderEntry type="library" name="Maven: ome:formats-api:5.4.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: xalan:serializer:2.7.2" level="project" />
@@ -118,7 +118,6 @@
     <orderEntry type="library" name="Maven: sc.fiji:LocalThickness_:4.0.0" level="project" />
     <orderEntry type="library" name="Maven: sc.fiji:Skeletonize3D_:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: sc.fiji:VIB_:3.0.0" level="project" />
-    <orderEntry type="library" name="Maven: com.github.quickhull3d:quickhull3d:1.0.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.lwjgl:lwjgl:natives-windows:3.1.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.lwjgl:lwjgl-glfw:natives-windows:3.1.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.lwjgl:lwjgl-opengl:natives-windows:3.1.1" level="project" />
