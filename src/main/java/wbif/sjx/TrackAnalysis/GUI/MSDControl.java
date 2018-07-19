@@ -77,6 +77,9 @@ public class MSDControl extends ModuleControl {
         boolean fitLine = fitLineCheckbox.isSelected();
         Prefs.set("TrackAnalysis.MSD.fitLine",fitLine);
 
+        int nPoints = (int) Math.round(Double.parseDouble(nPointsTextField.getText()));
+        Prefs.set("TrackAnalysis.MSD.nPoints",fitLine);
+
         if (ID == -1) {
             TreeMap<Integer,CumStat> msd = tracks.getAverageMSD(pixelDistances);
             double[] errMin = new double[msd.size()];
@@ -100,7 +103,7 @@ public class MSDControl extends ModuleControl {
             plot.addPoints(df,errMax,Plot.LINE);
 
             if (fitLine) {
-                double[] fit = MSDCalculator.getLinearFit(msd, df.length);
+                double[] fit = MSDCalculator.getLinearFit(msd, nPoints);
                 double[] y = new double[df.length];
 
                 for (int i = 0; i < df.length; i++) {
@@ -126,7 +129,7 @@ public class MSDControl extends ModuleControl {
             plot.addPoints(df,msdVals,Plot.LINE);
 
             if (fitLine) {
-                double[] fit = MSDCalculator.getLinearFit(msd, df.length);
+                double[] fit = MSDCalculator.getLinearFit(msd, nPoints);
                 double[] y = new double[(int) fit[2]];
 
                 for (int i = 0; i < df.length; i++) {
