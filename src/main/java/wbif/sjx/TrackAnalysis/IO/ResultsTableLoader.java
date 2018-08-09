@@ -1,3 +1,5 @@
+// TODO: The coordinates going into the TrackCollection should be calibrated.  Need to ask the user to define the spatial calibration and whether it's applied
+
 package wbif.sjx.TrackAnalysis.IO;
 
 import ij.*;
@@ -125,26 +127,12 @@ public class ResultsTableLoader implements PlugIn {
         zPosIdx = zPosIdx < headings.length ? zPosIdx : 0;
         frameIdx = frameIdx < headings.length ? frameIdx : 0;
 
-        // Getting default calibration value
-        double distXY = 1;
-        double distZ = 1;
-        String units = "px";
-        if (ipl != null) {
-            distXY = ipl.getCalibration().getX(1);
-            distZ = ipl.getCalibration().getZ(1);
-            units = ipl.getCalibration().getXUnit();
-
-        }
-
         GenericDialog gd = new GenericDialog("Import tracks from results table");
         gd.addChoice("Track ID column",headings,headings[trackIDIdx]);
         gd.addChoice("X-position column",headings,headings[xPosIdx]);
         gd.addChoice("Y-position column",headings,headings[yPosIdx]);
         gd.addChoice("Z-position column",headings,headings[zPosIdx]);
         gd.addChoice("Frame number column",headings,headings[frameIdx]);
-        gd.addNumericField("Applied XY calibration (dist/px)",distXY,3);
-        gd.addNumericField("Applied Z calibration (dist/slice)",distZ,3);
-        gd.addStringField("Units",units);
         gd.showDialog();
 
         // Getting column indices
@@ -153,11 +141,6 @@ public class ResultsTableLoader implements PlugIn {
         yPosIdx = gd.getNextChoiceIndex();
         zPosIdx = gd.getNextChoiceIndex();
         frameIdx = gd.getNextChoiceIndex();
-
-        // Getting calibration
-        distXY = gd.getNextNumber();
-        distZ = gd.getNextNumber();
-        units = gd.getNextString();
 
         // Storing indices as preferences
         Prefs.set("TrackAnalysis.trackIDIdx",trackIDIdx);
@@ -183,7 +166,7 @@ public class ResultsTableLoader implements PlugIn {
             double z = Double.parseDouble(rt.getStringValue(zCol,row));
             int f = Integer.parseInt(rt.getStringValue(fCol,row));
 
-            tracks.putIfAbsent(ID, new Track(distXY,distZ,units));
+            tracks.putIfAbsent(ID, new Track());
             tracks.get(ID).addTimepoint(x,y,z,f);
 
         }

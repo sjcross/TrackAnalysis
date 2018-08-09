@@ -1,3 +1,7 @@
+// TODO: New approach will have coordinates stored simply in calibrated format.  All results will therefore come out in
+// this format.  The coordinates will transformed to pixel-space only by modules which need it (i.e. ones that involve
+// plotting) and these ones will determine the calibration from the supplied image.
+
 package wbif.sjx.TrackAnalysis;
 
 import ij.ImagePlus;
@@ -10,8 +14,8 @@ import wbif.sjx.common.Object.TrackCollection;
  * Created by sc13967 on 12/06/2017.
  */
 public class TrackAnalysis {
-    private TrackCollection tracks;
-    private ImagePlus ipl;
+    private final TrackCollection tracks;
+    private final ImagePlus ipl;
 
     public TrackAnalysis(TrackCollection tracks, ImagePlus ipl) {
         this.tracks = tracks;
@@ -19,6 +23,7 @@ public class TrackAnalysis {
 
         MainGUI gui = new MainGUI(tracks,ipl);
         gui.create();
+
     }
 
 //    private void displayMotionHeatmap() {

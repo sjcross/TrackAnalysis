@@ -32,11 +32,8 @@ public class DirectionalPersistenceControl extends ModuleControl {
 
     @Override
     public void run(int ID) {
-        boolean pixelDistances = calibrationCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
-
         if (ID == -1) {
-            double[][] directionalPersistence = tracks.getAverageDirectionalPersistence(pixelDistances);
+            double[][] directionalPersistence = tracks.getAverageDirectionalPersistence();
             double[] errMin = new double[directionalPersistence[0].length];
             double[] errMax = new double[directionalPersistence[0].length];
 
@@ -55,15 +52,16 @@ public class DirectionalPersistenceControl extends ModuleControl {
             plot.show();
 
         } else {
-            Track track = tracks.get(ID);
-            double[] f = track.getFAsDouble();
-            TreeMap<Integer,Double> euclideanDistance = track.getRollingEuclideanDistance(pixelDistances);
-            double[] vals = euclideanDistance.values().stream().mapToDouble(Double::doubleValue).toArray();
-
-            String units = track.getUnits(pixelDistances);
-            Plot plot = new Plot("Euclidean distance (track "+ID+")","Time relative to start of track (frames)",
-                    "Euclidean distance ("+units+")",f,vals);
-            plot.show();
+//            Track track = tracks.get(ID);
+//            double[] f = track.getFAsDouble();
+//            TreeMap<Integer,Double> euclideanDistance = track.getRollingEuclideanDistance();
+//            double[] vals = euclideanDistance.values().stream().mapToDouble(Double::doubleValue).toArray();
+//
+//            // TrackCollection could still store the calibrated units
+//            String units = track.getUnits(pixelDistances);
+//            Plot plot = new Plot("Euclidean distance (track "+ID+")","Time relative to start of track (frames)",
+//                    "Euclidean distance ("+units+")",f,vals);
+//            plot.show();
 
         }
     }

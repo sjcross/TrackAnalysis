@@ -80,10 +80,13 @@ public class ShowTrackIDControl extends ModuleControl {
 
                 Color col = Color.getHSBColor((float) Math.random(), (float) (Math.random()*0.2+0.8), (float) (Math.random()*0.2+0.8));
 
-                double[] x = track.getX(true);
-                double[] y = track.getY(true);
-                double[] z = track.getZ(true);
                 int[] f = track.getF();
+                double[] x = track.getX();
+                double[] y = track.getY();
+                double[] z = track.getZ();
+
+                // Converting the coordinates to pixel distances
+
 
                 for (int i=0;i<f.length;i++) {
                     PointRoi roi = new PointRoi(x[i]+0.5,y[i]+0.5);
@@ -106,8 +109,8 @@ public class ShowTrackIDControl extends ModuleControl {
         } else {
             Track track = tracks.get(ID);
 
-            double[] x = track.getX(true);
-            double[] y = track.getY(true);
+            double[] x = track.getX();
+            double[] y = track.getY();
             int[] f = track.getF();
 
             Color col = Color.getHSBColor((float) Math.random(), (float) (Math.random()*0.2+0.8), (float) (Math.random()*0.2+0.8));
