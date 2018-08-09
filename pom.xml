@@ -14,7 +14,7 @@
 
     <groupId>wbif.sjx</groupId>
     <artifactId>TrackAnalysis</artifactId>
-    <version>1.1.2</version>
+    <version>1.1.4</version>
     <name>Track_Analysis</name>
     <description>A Maven project implementing an ImageJ 1.x plugin.</description>
     <url>https://github.com/SJCross/TrackAnalysis/</url>
@@ -146,7 +146,7 @@
         <dependency>
             <groupId>wbif.sjx</groupId>
             <artifactId>Common</artifactId>
-            <version>1.4.1</version>
+            <version>1.4.7</version>
         </dependency>
 
         <!-- Natives -->
