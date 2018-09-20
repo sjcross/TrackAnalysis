@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.TreeMap;
+import java.util.stream.IntStream;
 
 public class TrackDurationControl extends ModuleControl {
     public TrackDurationControl(TrackCollection tracks, ImagePlus ipl, int panelWidth, int elementHeight) {
@@ -23,6 +24,25 @@ public class TrackDurationControl extends ModuleControl {
     }
 
     @Override
+    public JPanel getCommonControls() {
+        JPanel panel = new JPanel(new GridBagLayout());
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 2;
+        c.insets = new Insets(20,5,20,5);
+
+        // Button to run ensemble plotting
+        JButton plotAllButton = new JButton(PLOT_ALL);
+        plotAllButton.setPreferredSize(new Dimension(panelWidth,elementHeight));
+        plotAllButton.addActionListener(this);
+        panel.add(plotAllButton,c);
+
+        return panel;
+    }
+
+    @Override
     public JPanel getExtraControls() {
         return null;
 
@@ -30,9 +50,14 @@ public class TrackDurationControl extends ModuleControl {
 
     @Override
     public void run(int ID) {
-        int[][] numberOfObjects = tracks.getNumberOfObjects(true);
-        double[] duration = Arrays.stream(numberOfObjects[0]).asDoubleStream().toArray();
-        double[] number = Arrays.stream(numberOfObjects[1]).asDoubleStream().toArray();
+        int highestFrame = tracks.getHighestFrame();
+        double[] duration = IntStream.range(0,highestFrame).asDoubleStream().toArray();
+        double[] number = new double[duration.length];
+
+        for (Track track:tracks.values()) {
+            int dur = track.getDuration();
+            for (int i=0;i<dur;i++) number[i] = number[i] + 1;
+        }
 
         Plot plot = new Plot("Duration of objects relative to track start","Duration (frames)","Number of objects");
         plot.setColor(Color.BLACK);

@@ -4,7 +4,7 @@
   <groupId>wbif.sjx</groupId>
   <artifactId>TrackAnalysis</artifactId>
   <name>Track_Analysis</name>
-  <version>1.1.4</version>
+  <version>1.1.5</version>
   <description>A Maven project implementing an ImageJ 1.x plugin.</description>
   <url>https://github.com/SJCross/TrackAnalysis/</url>
   <issueManagement>
