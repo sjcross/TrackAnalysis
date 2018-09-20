@@ -13,8 +13,8 @@ import java.awt.event.ActionListener;
  * Created by sc13967 on 24/06/2017.
  */
 public abstract class ModuleControl implements ActionListener {
-    private static final String PLOT_ALL = "All tracks";
-    private static final String PLOT_SINGLE = "Single track";
+    static final String PLOT_ALL = "All tracks";
+    static final String PLOT_SINGLE = "Single track";
 
     TrackCollection tracks;
     ImagePlus ipl;
