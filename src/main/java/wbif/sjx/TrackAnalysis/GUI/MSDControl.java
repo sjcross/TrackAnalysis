@@ -95,12 +95,12 @@ public class MSDControl extends ModuleControl {
             }
 
             String units = tracks.values().iterator().next().getUnits(pixelDistances);
-            Plot plot = new Plot("Mean squared displacement (all tracks)","Interval (frames)","Mean squared displacement ("+units+"^2)");
-            plot.setColor(Color.BLACK);
-            plot.addPoints(df,msdMean,Plot.LINE);
-            plot.setColor(Color.RED);
-            plot.addPoints(df,errMin,Plot.LINE);
-            plot.addPoints(df,errMax,Plot.LINE);
+            Plot msdPlot = new Plot("Mean squared displacement (all tracks)","Interval (frames)","Mean squared displacement ("+units+"^2)");
+            msdPlot.setColor(Color.BLACK);
+            msdPlot.addPoints(df,msdMean,Plot.LINE);
+            msdPlot.setColor(Color.RED);
+            msdPlot.addPoints(df,errMin,Plot.LINE);
+            msdPlot.addPoints(df,errMax,Plot.LINE);
 
             if (fitLine) {
                 double[] fit = MSDCalculator.getLinearFit(msd, nPoints);
@@ -109,13 +109,13 @@ public class MSDControl extends ModuleControl {
                 for (int i = 0; i < df.length; i++) {
                     y[i] = fit[0] * df[i] + fit[1];
                 }
-                plot.setColor(Color.CYAN);
-                plot.addPoints(df, y, Plot.LINE);
+                msdPlot.setColor(Color.CYAN);
+                msdPlot.addPoints(df, y, Plot.LINE);
 
             }
 
-            plot.setLimitsToFit(true);
-            plot.show();
+            msdPlot.setLimitsToFit(true);
+            msdPlot.show();
 
         } else {
             Track track = tracks.get(ID);
