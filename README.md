@@ -47,4 +47,4 @@ This plugin is still in development and test coverage is currently incomplete.  
 
 Acknowledgements
 ----------------
-A list of bundled dependencies along with their respective licenses can be found [here](https://cdn.staticaly.com/gh/SJCross/TrackAnalysis/blob/master/target/site/dependencies.html).
+A list of bundled dependencies along with their respective licenses can be found [here](https://cdn.statically.io/gh/SJCross/TrackAnalysis/cd9fb994/target/site/dependencies.html).
