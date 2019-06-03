@@ -48,8 +48,22 @@
     <contributors>
         <contributor>
             <name>Stephen Cross</name>
-            <roles><role>founder</role></roles>
-            <properties><id>sjcross</id></properties>
+            <roles>
+                <role>founder</role>
+                <role>developer</role>
+            </roles>
+            <properties>
+                <id>sjcross</id>
+            </properties>
+        </contributor>
+        <contributor>
+            <name>Jordan Fisher</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <properties>
+                <id>jdjfisher</id>
+            </properties>
         </contributor>
     </contributors>
 
@@ -144,7 +158,10 @@
 
         <!--Local repository-->
         <dependency>
-            <groupId>wbif.sjx</groupId>
+<!--            <groupId>wbif.sjx</groupId>-->
+<!--            <artifactId>Common</artifactId>-->
+<!--            <version>1.4.7</version>-->
+            <groupId>com.github.SJCross</groupId>
             <artifactId>Common</artifactId>
             <version>1.4.7</version>
         </dependency>
@@ -206,18 +223,6 @@
                         <configuration>
                             <minimizeJar>true</minimizeJar>
                             <filters>
-                                <!--<filter>-->
-                                    <!--<artifact>org.apache.poi</artifact>-->
-                                    <!--<includes>-->
-                                        <!--<include>**</include>-->
-                                    <!--</includes>-->
-                                <!--</filter>-->
-                                <!--<filter>-->
-                                    <!--<artifact>org.apache.xmlbeans</artifact>-->
-                                    <!--<includes>-->
-                                        <!--<include>**</include>-->
-                                    <!--</includes>-->
-                                <!--</filter>-->
                                 <filter>
                                     <artifact>*:*</artifact>
                                     <excludes>
@@ -240,6 +245,12 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
+            </plugin>
         </plugins>
     </build>
 
@@ -248,7 +259,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.9</version>
+                <version>3.0.0</version>
+                <configuration>
+                    <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+                </configuration>
                 <reportSets>
                     <reportSet>
                         <reports>
