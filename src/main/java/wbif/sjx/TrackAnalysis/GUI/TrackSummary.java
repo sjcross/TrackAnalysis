@@ -91,23 +91,23 @@ public class TrackSummary extends ModuleControl {
         for (int currentID:IDs) {
             Track track = tracks.get(currentID);
 
-            TreeMap<Integer,double[]> nnDistances = track.getNearestNeighbourDistance(tracks,pixelDistances);
+//            TreeMap<Integer,double[]> nnDistances = track.getNearestNeighbourDistance(tracks,pixelDistances);
             TreeMap<Integer,Double> rollingTotalPath = track.getRollingTotalPathLength(pixelDistances);
             TreeMap<Integer,Double> rollingEuclideanDistance = track.getRollingEuclideanDistance(pixelDistances);
             TreeMap<Integer,Double> rollingDirectionalityRatio= track.getRollingDirectionalityRatio(pixelDistances);
-            TreeMap<Integer,Double> instantaneousVelocity = track.getInstantaneousVelocity(pixelDistances);
+            TreeMap<Integer,Double> instantaneousSpeed = track.getInstantaneousSpeed(pixelDistances);
 
             for (int f:track.getF()){
                 rt.setValue("ID", i, currentID);
                 rt.setValue("X (" + units + ")", i, track.getX(f,pixelDistances));
                 rt.setValue("Y (" + units + ")", i, track.getY(f,pixelDistances));
                 rt.setValue("Z (" + units + ")", i, track.getZ(f,pixelDistances));
-                rt.setValue("NN ID", i, nnDistances.get(f)[0]);
-                rt.setValue("NN distance (" + units + ")", i, nnDistances.get(f)[1]);
+//                rt.setValue("NN ID", i, nnDistances.get(f)[0]);
+//                rt.setValue("NN distance (" + units + ")", i, nnDistances.get(f)[1]);
                 rt.setValue("Rolling path length (" + units + ")", i, rollingTotalPath.get(f));
                 rt.setValue("Rolling Euclidean distance (" + units + ")", i, rollingEuclideanDistance.get(f));
                 rt.setValue("Rolling directionality ratio", i, rollingDirectionalityRatio.get(f));
-                rt.setValue("Instantaneous velocity ("+units+"/frame)", i, instantaneousVelocity.get(f));
+                rt.setValue("Instantaneous speed ("+units+"/frame)", i, instantaneousSpeed.get(f));
 
                 i++;
 
@@ -174,7 +174,7 @@ public class TrackSummary extends ModuleControl {
 
         // Using CumStats to keep memory requirements smaller
         CumStat csStep = new CumStat();
-        CumStat csVelocity = new CumStat();
+        CumStat csSpeed = new CumStat();
         CumStat csEuclDist = new CumStat();
         CumStat csTotalDist = new CumStat();
         CumStat csInstDirRatio = new CumStat();
@@ -196,9 +196,9 @@ public class TrackSummary extends ModuleControl {
             steps.values().stream().forEach(csStep::addMeasure);
             rt.setValue("Mean step size ("+units+")",i,new CumStat(steps.values()).getMean());
 
-            TreeMap<Integer,Double> velocities = track.getInstantaneousVelocity(pixelDistances);
-            velocities.values().stream().forEach(csVelocity::addMeasure);
-            rt.setValue("Mean inst. vel. ("+units+"/frame)",i,new CumStat(velocities.values()).getMean());
+            TreeMap<Integer,Double> speeds = track.getInstantaneousSpeed(pixelDistances);
+            speeds.values().stream().forEach(csSpeed::addMeasure);
+            rt.setValue("Mean inst. vel. ("+units+"/frame)",i,new CumStat(speeds.values()).getMean());
 
             TreeMap<Integer,Double> dirRatio = track.getRollingDirectionalityRatio(pixelDistances);
             dirRatio.values().stream().forEach(csInstDirRatio::addMeasure);
@@ -230,10 +230,10 @@ public class TrackSummary extends ModuleControl {
         IJ.log("Minimum step length: "+String.valueOf(df.format(csStep.getMin()))+" "+units);
         IJ.log(" ");
 
-        IJ.log("Mean instantaneous velocity: "+String.valueOf(df.format(csVelocity.getMean()))+" "+units+"/frame");
-        IJ.log("Std. dev. of instantaneous velocities: "+String.valueOf(df.format(csVelocity.getStd()))+" "+units+"/frame");
-        IJ.log("Maximum instantaneous velocity: "+String.valueOf(df.format(csVelocity.getMax()))+" "+units+"/frame");
-        IJ.log("Minimum instantaneous velocity: "+String.valueOf(df.format(csVelocity.getMin()))+" "+units+"/frame");
+        IJ.log("Mean instantaneous speed: "+String.valueOf(df.format(csSpeed.getMean()))+" "+units+"/frame");
+        IJ.log("Std. dev. of instantaneous velocities: "+String.valueOf(df.format(csSpeed.getStd()))+" "+units+"/frame");
+        IJ.log("Maximum instantaneous speed: "+String.valueOf(df.format(csSpeed.getMax()))+" "+units+"/frame");
+        IJ.log("Minimum instantaneous speed: "+String.valueOf(df.format(csSpeed.getMin()))+" "+units+"/frame");
         IJ.log(" ");
 
         IJ.log("Mean instantaneous directionality ratio: "+String.valueOf(df.format(csInstDirRatio.getMean())));
@@ -254,15 +254,15 @@ public class TrackSummary extends ModuleControl {
 
         // Using CumStats to keep memory requirements smaller
         CumStat csStep = new CumStat();
-        CumStat csVelocity = new CumStat();
+        CumStat csSpeed = new CumStat();
         CumStat csInstDirRatio = new CumStat();
 
         // Step-by-step statistics
         TreeMap<Integer,Double> steps = track.getInstantaneousStepSizes(pixelDistances);
         steps.values().stream().forEach(csStep::addMeasure);
 
-        TreeMap<Integer,Double> velocities = track.getInstantaneousVelocity(pixelDistances);
-        velocities.values().stream().forEach(csVelocity::addMeasure);
+        TreeMap<Integer,Double> speeds = track.getInstantaneousSpeed(pixelDistances);
+        speeds.values().stream().forEach(csSpeed::addMeasure);
 
         TreeMap<Integer,Double> dirRatio = track.getRollingDirectionalityRatio(pixelDistances);
         dirRatio.values().stream().forEach(csInstDirRatio::addMeasure);
@@ -271,7 +271,7 @@ public class TrackSummary extends ModuleControl {
         rt.setValue("Total path length ("+units+")",0,track.getTotalPathLength(pixelDistances));
         rt.setValue("Directionality ratio ",0,track.getDirectionalityRatio(pixelDistances));
         rt.setValue("Mean step size ("+units+")",0,new CumStat(steps.values()).getMean());
-        rt.setValue("Mean inst. vel. ("+units+"/frame)",0,new CumStat(velocities.values()).getMean());
+        rt.setValue("Mean inst. vel. ("+units+"/frame)",0,new CumStat(speeds.values()).getMean());
         rt.setValue("Mean inst. dir. ratio",0,new CumStat(dirRatio.values()).getMean());
 
         IJ.log("Euclidean distance: "+String.valueOf(df.format(track.getEuclideanDistance(pixelDistances)))+" "+units);
@@ -285,10 +285,10 @@ public class TrackSummary extends ModuleControl {
         IJ.log("Minimum step length: "+String.valueOf(df.format(csStep.getMin()))+" "+units);
         IJ.log(" ");
 
-        IJ.log("Mean instantaneous velocity: "+String.valueOf(df.format(csVelocity.getMean()))+" "+units+"/frame");
-        IJ.log("Std. dev. of instantaneous velocities: "+String.valueOf(df.format(csVelocity.getStd()))+" "+units+"/frame");
-        IJ.log("Maximum instantaneous velocity: "+String.valueOf(df.format(csVelocity.getMax()))+" "+units+"/frame");
-        IJ.log("Minimum instantaneous velocity: "+String.valueOf(df.format(csVelocity.getMin()))+" "+units+"/frame");
+        IJ.log("Mean instantaneous speed: "+String.valueOf(df.format(csSpeed.getMean()))+" "+units+"/frame");
+        IJ.log("Std. dev. of instantaneous velocities: "+String.valueOf(df.format(csSpeed.getStd()))+" "+units+"/frame");
+        IJ.log("Maximum instantaneous speed: "+String.valueOf(df.format(csSpeed.getMax()))+" "+units+"/frame");
+        IJ.log("Minimum instantaneous speed: "+String.valueOf(df.format(csSpeed.getMin()))+" "+units+"/frame");
         IJ.log(" ");
 
         IJ.log("Mean instantaneous directionality ratio: "+String.valueOf(df.format(csInstDirRatio.getMean())));
@@ -309,8 +309,8 @@ public class TrackSummary extends ModuleControl {
 
         int nPoints = (int) Math.round(Double.parseDouble(nPointsTextField.getText()));
 
-        double[][] dfAndMSD = tracks.getAverageMSD(pixelDistances);
-        double[] linearFit = MSDCalculator.getLinearFit(dfAndMSD[0],dfAndMSD[1],nPoints);
+        TreeMap<Integer,CumStat> msd = tracks.getAverageMSD(pixelDistances);
+        double[] linearFit = MSDCalculator.getLinearFit(msd,nPoints);
 
         IJ.log("Diffusion coefficient (single average MSD): "+String.valueOf(df.format(linearFit[0]/4))+" "+units+"^2/frame");
         IJ.log("Least squares gradient (single average MSD): "+String.valueOf(df.format(linearFit[0]))+" "+units+"^2/frame");
