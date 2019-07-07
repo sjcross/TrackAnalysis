@@ -23,4 +23,8 @@ hs_err_pid*
 
 \.idea/
 
-target/
+target/*
+!target/site
+target/site/*
+!target/site/dependencies.html
+!target/site/images/
