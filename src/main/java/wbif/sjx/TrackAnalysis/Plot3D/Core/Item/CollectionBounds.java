@@ -1,16 +1,11 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core.Item;
 
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.GenerateMesh;
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
-import wbif.sjx.common.Object.TrackCollection;
-
-import java.awt.*;
 
 /**
- * Created by sc13967 on 04/08/2017.
+ * Created by JDJFisher on 04/08/2017.
  */
-public class BoundingBox {
+public class CollectionBounds {
 
     private final Vector3f centrePosition;
     private final Vector3f minPosition;
@@ -20,21 +15,18 @@ public class BoundingBox {
     private final float length;
     private final float height;
 
-    private final Entity boundingBox;
+    public CollectionBounds(double[][] spacialLimits) {
 
-    public BoundingBox(TrackCollection tracks){
-        double[][] spacialLimits = tracks.getSpatialLimits(true);
-
-        //Convert from XZY to XYZ
+        //Convert from Z-up orientation to Y-up
         minPosition = new Vector3f(
-                (float)spacialLimits[0][0],
-                (float)spacialLimits[2][0],
-                (float)spacialLimits[1][0]
+                (float) spacialLimits[0][0],
+                (float) spacialLimits[2][0],
+                (float) spacialLimits[1][0]
         );
         maxPosition = new Vector3f(
-                (float)spacialLimits[0][1],
-                (float)spacialLimits[2][1],
-                (float)spacialLimits[1][1]
+                (float) spacialLimits[0][1],
+                (float) spacialLimits[2][1],
+                (float) spacialLimits[1][1]
         );
 
         width = maxPosition.getX() - minPosition.getX();
@@ -46,13 +38,6 @@ public class BoundingBox {
                 minPosition.getY() + height / 2,
                 minPosition.getZ() + length / 2
         );
-
-        boundingBox = new Entity(GenerateMesh.cuboidFrame(width, height, length, 2), Color.white);
-        boundingBox.getPosition().set(centrePosition);
-    }
-
-    public void render(ShaderProgram shaderProgram){
-        boundingBox.render(shaderProgram);
     }
 
     public Vector3f getCentrePosition() {
@@ -79,7 +64,4 @@ public class BoundingBox {
         return height;
     }
 
-    public Entity getBoundingBox() {
-        return boundingBox;
-    }
 }

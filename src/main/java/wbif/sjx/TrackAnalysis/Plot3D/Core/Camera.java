@@ -1,337 +1,328 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
 import org.apache.commons.math3.util.FastMath;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.BoundingBox;
-import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
+import wbif.sjx.TrackAnalysis.Plot3D.Input.Cursor;
+import wbif.sjx.TrackAnalysis.Plot3D.Input.Keyboard;
+import wbif.sjx.TrackAnalysis.Plot3D.Input.MouseButtons;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
+import wbif.sjx.TrackAnalysis.Plot3D.Math.Quaternion;
+import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static wbif.sjx.TrackAnalysis.Plot3D.Core.Scene.X_AXIS;
+import static wbif.sjx.TrackAnalysis.Plot3D.Core.Scene.Y_AXIS;
+
 public class Camera {
-    public final static float VIEW_DISTANCE_NEAR = 0.01f;
-    public final static int VIEW_DISTANCE_FAR = 100000;
-    private double angularVelocityDegreesPerSec = 45 ; // 360 per sec for a revolution per sec
 
+    public static final float VIEW_DISTANCE_NEAR = 0.01f;
+    public static final int VIEW_DISTANCE_FAR = 100000;
+    private static final int MAX_TILT = 90;
+    public static final int angularVelocityDPS_DEF = 90;
+    public static final int fov_DEF = 70;
+    public static final int fov_MIN = 20;
+    public static final int fov_MAX = 100;
+    public static final float sensitivity_DEF = 0.3f;
+    public static final float sensitivity_MIN = 0.01f;
+    public static final float sensitivity_MAX = 5f;
+    private static final float moveSpeed_DEF = 500f;
+    private static final float moveSpeed_MIN = 10f;
+    private static final float moveSpeed_MAX = 500f;
 
-    public Camera(){
+    private Vector3f position;
+    private Vector3f moveDirection;
+    private float tilt; //Pitch
+    private float pan;  //Yaw
+    private int fov;
+    private float moveSpeed;
+    private float sensitivity;
+    private boolean orbit;
+    private float angularVelocityRPS;
+    private double angularVelocityDPS;
+    private Quaternion rotation;
+    private Matrix4f viewMatrix;
+
+    public Camera() {
         this.position = new Vector3f();
-        this.movementDirection = new Vector3f();
+        this.moveDirection = new Vector3f();
         this.tilt = 0;
         this.pan = 0;
-        this.FOV = FOV_DEFAULT;
-        this.cameraMovementSpeed = cameraMovementSpeed_DEFAULT;
-        this.mouseSensitivity = mouseSensitivity_DEFAULT;
-        this.faceCentre = faceCentre_DEFAULT;
-//        this.orbitVelocity = orbitVelocity_DEFAULT;
+        this.fov = fov_DEF;
+        this.moveSpeed = moveSpeed_DEF;
+        this.sensitivity = sensitivity_DEF;
+        this.orbit = orbit_DEF;
+        this.angularVelocityDPS = angularVelocityDPS_DEF;
+
+        updateAngularVelocityRPS();
     }
 
-    public Matrix4f getViewMatrix(){
-        Matrix4f result = Matrix4f.EulerRotation(-tilt, pan, 0);
-        result.multiply(Matrix4f.Translation(Vector3f.Negative(position)));
-        return result;
-    }
+    public void handleInput() {
+        if (Keyboard.isKeyDown(GLFW_KEY_A)) { // move left
+            moveDirection.setX(-moveSpeed);
+        }
+        else if (Keyboard.isKeyDown(GLFW_KEY_D)) { // move right
+            moveDirection.setX(moveSpeed);
+        }
+        else {
+            moveDirection.setX(0f);
+        }
 
-    public void update(float interval, Vector3f centrePosition){
-        changePositionRelativeToOrientation(Vector3f.Multiply(movementDirection, cameraMovementSpeed * interval));
+        if (Keyboard.isKeyDown(GLFW_KEY_W)) { // move forwards
+            moveDirection.setZ(-moveSpeed);
+        }
+        else if (Keyboard.isKeyDown(GLFW_KEY_S)) { // move backwards
+            moveDirection.setZ(moveSpeed);
+        }
+        else {
+            moveDirection.setZ(0f);
+        }
 
-        //Handles camera EulerRotation
-        if (faceCentre) {
-            Vector3f cameraToCentrePosition = Vector3f.Subtract(centrePosition, position);
-            float cameraToCentrePositionDistance = cameraToCentrePosition.getLength();
+        if (Keyboard.isKeyDown(GLFW_KEY_E)) { // move up
+            moveDirection.setY(-moveSpeed);
+        }
+        else if (Keyboard.isKeyDown(GLFW_KEY_Q)) { // move down
+            moveDirection.setY(moveSpeed);
+        }
+        else {
+            moveDirection.setY(0f);
+        }
 
-            faceDirection(cameraToCentrePosition);
-            double angularVelocityRadiansPerSec = FastMath.toRadians(angularVelocityDegreesPerSec);
-            changePositionXRelativeToOrientation((float) angularVelocityRadiansPerSec * cameraToCentrePositionDistance * interval);
+        if (Keyboard.isKeyDown(GLFW_KEY_SPACE)) { // speed boost
+            moveDirection.multiply(10f);
+        }
+        else if (Keyboard.isKeyDown(GLFW_KEY_LEFT_ALT)) { // slow movement
+            moveDirection.multiply(0.1f);
+        }
 
+        if (MouseButtons.isButtonDown(GLFW_MOUSE_BUTTON_LEFT)) { // handle camera dragging
+            Vector2f deltaCursorPos = Cursor.getDeltaPosition();
+            deltaCursorPos.multiply(getSensitivity());
+            changeTilt(-deltaCursorPos.getY());
+            changePan(deltaCursorPos.getX());
         }
     }
 
-    public void returnToOrigin(){
-        position = new Vector3f();
-        tilt = 0;
-        pan = 0;
+    public void update(float interval, Vector3f centrePosition) {
+        changePositionRelativeToOrientation(Vector3f.Multiply(moveDirection, interval));
+
+        if (orbit) {
+            Vector3f cameraToCentrePosition;
+
+            //First displace the camera horizontally along the tangent of current position in orbit
+            cameraToCentrePosition = Vector3f.Subtract(centrePosition, position);
+            final float cameraToRotationCentreDistanceBeforeDisplacement = (float) FastMath.sqrt(cameraToCentrePosition.getX() * cameraToCentrePosition.getX() + cameraToCentrePosition.getZ() * cameraToCentrePosition.getZ());
+
+            faceDirection(cameraToCentrePosition);
+            changePositionXRelativeToOrientation(angularVelocityRPS * cameraToRotationCentreDistanceBeforeDisplacement * interval);
+
+            //Then displace the camera horizontally along the radius of the orbit motion to correct orbit radius
+            cameraToCentrePosition = Vector3f.Subtract(centrePosition, position);
+            final float cameraToRotationCentreDistanceAfterDisplacement = (float) FastMath.sqrt(cameraToCentrePosition.getX() * cameraToCentrePosition.getX() + cameraToCentrePosition.getZ() * cameraToCentrePosition.getZ());
+
+            faceDirection(cameraToCentrePosition);
+            changePositionZRelativeToOrientation(cameraToRotationCentreDistanceBeforeDisplacement - cameraToRotationCentreDistanceAfterDisplacement);
+        }
     }
 
-    public void facePoint(float x, float y, float z){
+    public void preRender() {
+        rotation = new Quaternion(-tilt, X_AXIS);
+        rotation.multiply(pan, Y_AXIS);
+
+        viewMatrix = Matrix4f.QuaternionRotation(Quaternion.Conjugate(rotation));
+        viewMatrix.multiply(Matrix4f.Translation(Vector3f.Negative(position)));
+    }
+
+    public Quaternion getRotation() {
+        return rotation;
+    }
+
+    public Matrix4f getViewMatrix() {
+        return viewMatrix;
+    }
+
+    public Vector3f getDirection() {
+        return Vector3f.Multiply(new Vector3f(0, 0, -1), getRotation());
+    }
+
+    public void returnToOrigin() {
+        position = new Vector3f();
+        setTilt(0f);
+        setPan(0f);
+    }
+
+    public void facePoint(float x, float y, float z) {
         facePoint(new Vector3f(x, y, z));
     }
 
-    public void facePoint(Vector3f pointPositionVector){
+    public void facePoint(Vector3f pointPositionVector) {
         faceDirection(Vector3f.Subtract(pointPositionVector, position));
     }
 
-    public void faceDirection(Vector3f direction){
+    public void faceDirection(Vector3f direction) {
         direction.normalize();
-        pan = 90 + direction.getTheta();
-        tilt = 90 - direction.getPhi();
+        setPan(90 + direction.getTheta());
+        setTilt(90 - direction.getPhi());
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return String.format("Position  %s\nTilt: %f   Pan: %f\n", getPosition(), getTilt(), getPan());
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private float calcOptimalBoundingBoxViewingDistance(float sideLength){
-        return (float)((sideLength / 2) / FastMath.tan(Math.toRadians(FOV / 2)));
-    }
-
-    public void viewXZplane(BoundingBox boundingBox){
-        setTilt(-90);
-        setPan(0);
-
-        position.set(boundingBox.getCentrePosition());
-
-        float width = calcOptimalBoundingBoxViewingDistance(boundingBox.getWidth());
-        float length = calcOptimalBoundingBoxViewingDistance(boundingBox.getLength());
-        float height = calcOptimalBoundingBoxViewingDistance(boundingBox.getHeight());
-
-        float distance = FastMath.max(width, length);
-
-        position.addY(height + distance);
-    }
-
-    public void viewYZplane(BoundingBox boundingBox){
-        setTilt(0);
-        setPan(-90);
-
-        position.set(boundingBox.getCentrePosition());
-
-        float width = calcOptimalBoundingBoxViewingDistance(boundingBox.getWidth());
-        float length = calcOptimalBoundingBoxViewingDistance(boundingBox.getLength());
-        float height = calcOptimalBoundingBoxViewingDistance(boundingBox.getHeight());
-
-        float distance = FastMath.max(length, height);
-
-        position.addX(width + distance);
-    }
-
-    public void viewXYplane(BoundingBox boundingBox){
-        setTilt(0);
-        setPan(0);
-
-        position.set(boundingBox.getCentrePosition());
-
-        float width = calcOptimalBoundingBoxViewingDistance(boundingBox.getWidth());
-        float length = calcOptimalBoundingBoxViewingDistance(boundingBox.getLength());
-        float height = calcOptimalBoundingBoxViewingDistance(boundingBox.getHeight());
-
-        float distance = FastMath.max(width, height);
-
-        position.addZ(length + distance);
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private Vector3f position;
-
-    public Vector3f getPosition(){
+    public Vector3f getPosition() {
         return position;
     }
 
-    public void changePositionRelativeToOrientation(Vector3f deltaPosition){
+    public void changePositionRelativeToOrientation(Vector3f deltaPosition) {
         changePositionRelativeToOrientation(deltaPosition.getX(), deltaPosition.getY(), deltaPosition.getZ());
     }
 
     public void changePositionRelativeToOrientation(float dx, float dy, float dz) {
-        if(dx != 0){
+        if (dx != 0) {
             changePositionXRelativeToOrientation(dx);
         }
-        if(dy != 0){
+        if (dy != 0) {
             changePositionYRelativeToOrientation(dy);
         }
-        if(dz != 0){
+        if (dz != 0) {
             changePositionZRelativeToOrientation(dz);
         }
     }
 
-    public void changePositionXRelativeToOrientation(float dx){
-        position.addX(-dx * (float)FastMath.sin(FastMath.toRadians(pan - 90)));
+    public void changePositionXRelativeToOrientation(float dx) {
+        position.addX(-dx * (float) FastMath.sin(FastMath.toRadians(pan - 90)));
         position.addZ(dx * (float) FastMath.cos(FastMath.toRadians(pan - 90)));
     }
 
-    public void changePositionYRelativeToOrientation(float dy){
+    public void changePositionYRelativeToOrientation(float dy) {
         position.addY(dy);
     }
 
-    public void changePositionZRelativeToOrientation(float dz){
-        position.addX(-dz * (float)FastMath.sin(FastMath.toRadians(pan)));
-        position.addZ(dz * (float)FastMath.cos(FastMath.toRadians(pan)));
+    public void changePositionZRelativeToOrientation(float dz) {
+        position.addX(-dz * (float) FastMath.sin(FastMath.toRadians(pan)));
+        position.addZ(dz * (float) FastMath.cos(FastMath.toRadians(pan)));
     }
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private static final int MAX_TILT = 90;
-
-    private float tilt; //Pitch
-
-    public float getTilt(){
+    public float getTilt() {
         return tilt;
     }
 
-    public void setTilt(float value){
-        if(value > MAX_TILT){
+    public void setTilt(float value) {
+        if (value > MAX_TILT) {
             tilt = MAX_TILT;
-        }else if(value < -MAX_TILT){
+        }
+        else if (value < -MAX_TILT) {
             tilt = -MAX_TILT;
-        }else {
+        }
+        else {
             tilt = value;
         }
     }
 
-    public void changeTilt(float deltaTilt){
+    public void changeTilt(float deltaTilt) {
         setTilt(getTilt() + deltaTilt);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private float pan; //Yaw
-
-    public float getPan(){
+    public float getPan() {
         return pan;
     }
 
-    public void setPan(float value){
-        pan = Maths.floorMod(value, 360f);
+    public void setPan(float value) {
+        pan = value % 360f;
     }
 
-    public void changePan(float deltaValue){
+    public void changePan(float deltaValue) {
         setPan(getPan() + deltaValue);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private int FOV;
-    public final static int FOV_DEFAULT = 70;
-    public final static int FOV_MINIMUM = 20;
-    public final static int FOV_MAXIMUM = 160;
-
-    public void setFOV(int value){
-        if(value < FOV_MINIMUM){
-            FOV = FOV_MINIMUM;
-        }else if(value > FOV_MAXIMUM){
-            FOV = FOV_MAXIMUM;
-        }else {
-            FOV = value;
+    public void setFOV(int value) {
+        if (value < fov_MIN) {
+            fov = fov_MIN;
+        }
+        else if (value > fov_MAX) {
+            fov = fov_MAX;
+        }
+        else {
+            fov = value;
         }
     }
 
-    public void changeFOV(int value){
+    public void changeFOV(int value) {
         setFOV(getFOV() + value);
     }
 
-    public int getFOV(){
-        return FOV;
+    public int getFOV() {
+        return fov;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private float cameraMovementSpeed;
-    private final static float cameraMovementSpeed_DEFAULT = 500f;
-    private final static float cameraMovementSpeed_MINIMUM = 10f;
-    private final static float cameraMovementSpeed_MAXIMUM = 500f;
-
-    public void setCameraMovementSpeed(float value){
-        if(value < cameraMovementSpeed_MINIMUM){
-            cameraMovementSpeed = cameraMovementSpeed_MINIMUM;
-        }else if(value > cameraMovementSpeed_MAXIMUM){
-            cameraMovementSpeed = cameraMovementSpeed_MAXIMUM;
-        }else {
-            cameraMovementSpeed = value;
+    public void setMovementSpeed(float value) {
+        if (value < moveSpeed_MIN) {
+            moveSpeed = moveSpeed_MIN;
+        }
+        else if (value > moveSpeed_MAX) {
+            moveSpeed = moveSpeed_MAX;
+        }
+        else {
+            moveSpeed = value;
         }
     }
 
-    public void changeCameraMovementSpeed(float value){
-        setCameraMovementSpeed(getCameraMovementSpeed() + value);
+    public void changeMovementSpeed(float deltaValue) {
+        setMovementSpeed(getMovementSpeed() + deltaValue);
     }
 
-    public float getCameraMovementSpeed(){
-        return cameraMovementSpeed;
+    public float getMovementSpeed() {
+        return moveSpeed;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private Vector3f movementDirection;
-
-    public Vector3f getMovementDirection() {
-        return movementDirection;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private float mouseSensitivity;
-    public final static float mouseSensitivity_DEFAULT = 0.3f;
-    public final static float mouseSensitivity_MINIMUM = 0.01f;
-    public final static float mouseSensitivity_MAXIMUM = 5f;
-
-    public void setMouseSensitivity(float value){
-        if(value < mouseSensitivity_MINIMUM){
-            mouseSensitivity = mouseSensitivity_MINIMUM;
-        }else if(value > mouseSensitivity_MAXIMUM){
-            mouseSensitivity = mouseSensitivity_MAXIMUM;
-        }else {
-            mouseSensitivity = value;
+    public void setSensitivity(float value) {
+        if (value < sensitivity_MIN) {
+            sensitivity = sensitivity_MIN;
+        }
+        else if (value > sensitivity_MAX) {
+            sensitivity = sensitivity_MAX;
+        }
+        else {
+            sensitivity = value;
         }
     }
 
-    public void changeMouseSensitivity(float value){
-        setMouseSensitivity(getMouseSensitivity() + value);
+    public void changeSensitivity(float deltaValue) {
+        setSensitivity(getSensitivity() + deltaValue);
     }
 
-    public float getMouseSensitivity(){
-        return mouseSensitivity;
+    public float getSensitivity() {
+        return sensitivity;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static final boolean orbit_DEF = false;
 
-    private boolean faceCentre;
-    public static final boolean faceCentre_DEFAULT = false;
-
-    public boolean isFacingCentre() {
-        return faceCentre;
+    public boolean isOrbiting() {
+        return orbit;
     }
 
-    public void setFaceCentre(boolean state){
-        faceCentre = state;
+    public void setOrbit(boolean state) {
+        orbit = state;
     }
 
-    public void toggleFaceCentre(){
-        faceCentre = ! faceCentre;
+    public void toggleOrbit() {
+        orbit = !orbit;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//    private int orbitVelocity;
-//    public final static int orbitVelocity_DEFAULT = 0;
-//    public final static int orbitVelocity_MAXIMUM = 100;
-//    public final static int orbitVelocity_MINIMUM = -orbitVelocity_MAXIMUM;
-//
-//    public void setOrbitVelocity(int value){
-//        if(value < orbitVelocity_MINIMUM){
-//            orbitVelocity = orbitVelocity_MINIMUM;
-//        }else if(value > orbitVelocity_MAXIMUM){
-//            orbitVelocity = orbitVelocity_MAXIMUM;
-//        }else {
-//            orbitVelocity = value;
-//        }
-//    }
-//
-//    public void changeOrbitVelocity(int value){
-//        setOrbitVelocity(getOrbitVelocity() + value);
-//    }
-//
-//    public int getOrbitVelocity(){
-//        return orbitVelocity;
-//    }
-
-    public final static int angularVelocityDegreesPerSec_DEFAULT = 90;
-
-    public double getAngularVelocityDegreesPerSec() {
-        return angularVelocityDegreesPerSec;
+    public double getAngularVelocityDPS() {
+        return angularVelocityDPS;
     }
 
-    public void setAngularVelocityDegreesPerSec(double angularVelocityDegreesPerSec) {
-        this.angularVelocityDegreesPerSec = angularVelocityDegreesPerSec;
+    public void setAngularVelocityDPS(double value) {
+        angularVelocityDPS = value;
+        updateAngularVelocityRPS();
+    }
+
+    public void changeAngularVelocityDPS(double deltaValue) {
+        setAngularVelocityDPS(getAngularVelocityDPS() + deltaValue);
+    }
+
+    private void updateAngularVelocityRPS() {
+        angularVelocityRPS = (float) FastMath.toRadians(angularVelocityDPS);
     }
 }

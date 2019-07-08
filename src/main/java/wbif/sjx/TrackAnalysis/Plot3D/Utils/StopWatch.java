@@ -1,48 +1,43 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Utils;
 
-
+/**
+ * Created by JDJFisher on 31/07/2017.
+ */
 public class StopWatch {
 
-    private double loopStartTime;
-    private double loopEndTime;
-    private double loopElapsedTime;
+    private float startTime;
+    private float endTime;
     private boolean running;
 
-    public StopWatch(){
+    public StopWatch() {
         running = false;
     }
 
     public void start() {
         running = true;
-        loopEndTime = 0;
-        loopStartTime = getTime();
+        endTime = 0;
+        startTime = getTime();
     }
 
     public void stop() {
-        loopEndTime = getTime();
+        endTime = getTime();
         running = false;
     }
 
-    public void restart(){
+    public void restart() {
         stop();
         start();
     }
 
-    public double getTime() {
-        return System.nanoTime() / 1000_000_000.0;
+    public float getTime() {
+        return System.nanoTime() / 1000_000_000.0f;
     }
 
     public float getElapsedTime() {
-        if(running){
-            loopElapsedTime = getTime() - loopStartTime;
-        }else {
-            loopElapsedTime = loopEndTime - loopStartTime;
-        }
-
-        return (float)loopElapsedTime;
+        return (running ? getTime() : endTime) - startTime;
     }
 
-    public double getLoopStartTime() {
-        return loopStartTime;
+    public double getStartTime() {
+        return startTime;
     }
 }

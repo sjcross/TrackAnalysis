@@ -1,49 +1,68 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core.Item;
 
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.FrustumCuller;
-import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Texture.Texture;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
+import wbif.sjx.TrackAnalysis.Plot3D.Math.Quaternion;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Utils.RNG;
 
 import java.awt.*;
 
 /**
- * Created by sc13967 on 31/07/2017.
+ * Created by JDJFisher on 31/07/2017.
  */
 public class Entity {
+
     private final Mesh mesh;
     private Color colour;
+    private Texture texture;
     private Vector3f position;
-    private Vector3f rotation;
+    private Quaternion rotation;
     private Vector3f scale;
 
-    public Entity(Mesh mesh){
-        this(mesh, RNG.Colour());
+    public Entity(Mesh mesh) {
+        this(mesh, RNG.Colour(), null);
     }
 
-    public Entity(Mesh mesh, Color colour){
+    public Entity(Mesh mesh, Color colour) {
+        this(mesh, colour, null);
+    }
+
+    public Entity(Mesh mesh, Texture texture) {
+        this(mesh, RNG.Colour(), texture);
+    }
+
+    public Entity(Mesh mesh, Color colour, Texture texture) {
         this.mesh = mesh;
         this.colour = colour;
-        position = new Vector3f();
-        rotation = new Vector3f();
-        scale = new Vector3f(1,1,1);
+        this.texture = texture;
+        this.position = new Vector3f();
+        this.rotation = new Quaternion();
+        this.scale = new Vector3f(1, 1, 1);
     }
 
-    private Matrix4f getGlobalMatrix(){
+    private Matrix4f getGlobalMatrix() {
         Matrix4f result = Matrix4f.Translation(position);
-        result.multiply(Matrix4f.EulerRotation(rotation));
+        result.multiply(Matrix4f.QuaternionRotation(rotation));
         result.multiply(Matrix4f.Stretch(scale));
         return result;
     }
 
-    public void render(ShaderProgram shaderProgram){
-        if(FrustumCuller.getInstance().isInsideFrustum(this)) {
+    public void render(ShaderProgram mainShader) {
+        if (FrustumCuller.getInstance().isInsideFrustum(this)) {
+            mainShader.setMatrix4fUniform("globalMatrix", getGlobalMatrix());
 
-            shaderProgram.setMatrix4fUniform("globalMatrix", getGlobalMatrix());
-            shaderProgram.setColourUniform("colour", colour);
+            if (mesh.isSupportsTexture() && texture != null) {
+                mainShader.setBooleanUniform("useTexture", true);
+                texture.bind();
+            }
+            else {
+                mainShader.setBooleanUniform("useTexture", false);
+                mainShader.setColourUniformRGB("colour", colour);
+            }
 
             mesh.render();
         }
@@ -61,27 +80,27 @@ public class Entity {
         this.colour = colour;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public Texture getTexture() {
+        return texture;
+    }
 
-    public Vector3f getRotation(){
+    public void setTexture(Texture texture) {
+        this.texture = texture;
+    }
+
+    public Quaternion getRotation() {
         return rotation;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Vector3f getPosition(){
+    public Vector3f getPosition() {
         return position;
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Vector3f getScale(){
+    public Vector3f getScale() {
         return scale;
     }
 
-    public void setScale(float sf){
+    public void setScale(float sf) {
         scale.set(sf, sf, sf);
     }
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }

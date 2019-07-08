@@ -2,17 +2,14 @@ package wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component;
 
 import java.util.Arrays;
 
-public class Face {
+public class FaceSI {
     private final int[] indexs;
 
-    public Face(int[] indexs) {
-//        if(indexs.length < 3){
-//            throw new Exception("Face order less than 3"); TODO: Handle this
-//        }
+    public FaceSI(int[] indexs) {
         this.indexs = indexs;
     }
 
-    public Face(
+    public FaceSI(
             int iA,
             int iB,
             int iC
@@ -26,7 +23,7 @@ public class Face {
         );
     }
 
-    public Face(
+    public FaceSI(
             int iA,
             int iB,
             int iC,

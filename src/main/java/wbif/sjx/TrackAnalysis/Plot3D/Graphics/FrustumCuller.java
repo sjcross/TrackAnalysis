@@ -8,6 +8,9 @@ import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector4f;
 
 
+/**
+ * Created by JDJFisher on 31/07/2017.
+ */
 public class FrustumCuller {
 
     private static final FrustumCuller INSTANCE = new FrustumCuller();

@@ -1,36 +1,35 @@
 package wbif.sjx.TrackAnalysis.IO;
 
 import ij.*;
-import ij.gui.GenericDialog;
 import ij.measure.ResultsTable;
 import ij.plugin.PlugIn;
 import wbif.sjx.TrackAnalysis.TrackAnalysis;
-import wbif.sjx.common.Object.LUTs;
-import wbif.sjx.common.Object.Point;
 import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
-import wbif.sjx.common.Process.SwitchTAndZ;
 
 import javax.swing.*;
 
 /**
  * Created by sc13967 on 31/07/2017.
  */
-public class JordansSuperSpeedyLoaderOfWin implements PlugIn {
+public class TrackPlotLoader implements PlugIn {
     /**
      * Main method for debugging.
      * @param args
      */
+
+    private static final String resDir = System.getProperty("user.dir") + "\\src\\main\\resources\\";
+
     public static void main(String[] args) {
         new ImageJ();
 
+        IJ.runMacroFile(resDir + "Import_Results_Table.ijm");
 //        IJ.runMacroFile("C:\\Users\\Jordan Fisher\\Documents\\Programming\\Java\\TrackAnalysis-3DTrackRenders\\src\\main\\resources\\Import_Results_Table.ijm");
 //        IJ.runMacroFile("C:\\Users\\sc13967\\Local Documents\\ImageJMacros\\Import_Results_Table.ijm");
-        IJ.runMacroFile("C:\\Users\\sc13967\\Documents\\ImageJ Macros\\Import_Results_Table.ijm");
+//        IJ.runMacroFile("C:\\Users\\sc13967\\Documents\\ImageJ Macros\\Import_Results_Table.ijm");
 //        IJ.runMacroFile("E:\\Stephen\\ImageJ Macros\\ImageJMacros\\Import_Results_Table.ijm");
 
-        new JordansSuperSpeedyLoaderOfWin().run("");
-
+        new TrackPlotLoader().run("");
     }
 
     /**
@@ -39,8 +38,7 @@ public class JordansSuperSpeedyLoaderOfWin implements PlugIn {
      */
     public void run(String s) {
         try {
-            UIManager.setLookAndFeel(
-                    UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
@@ -49,11 +47,10 @@ public class JordansSuperSpeedyLoaderOfWin implements PlugIn {
         ResultsTable rt = ResultsTable.getResultsTable();
         TrackCollection tracks = doImport(rt,null);
 
-        ImagePlus ipl = IJ.openImage("C:\\Users\\Jordan Fisher\\Documents\\Programming\\Java\\TrackAnalysis-3DTrackRenders\\src\\main\\resources\\Tracks\\MAX_SimulatedTracks100_halfheight_z.tif");
+        ImagePlus ipl = IJ.openImage(resDir + "tracks\\MAX_SimulatedTracks100_halfheight_z.tif");
 
         // Running TrackAnalysis
         new TrackAnalysis(tracks,ipl);
-
     }
 
     /**
@@ -95,19 +92,8 @@ public class JordansSuperSpeedyLoaderOfWin implements PlugIn {
 
             tracks.putIfAbsent(ID, new Track(distXY,distZ,units));
             tracks.get(ID).addTimepoint(x,y,z,f);
-
         }
 
-//        // Sorting spots in each track to ensure they are in chronological ORDER
-//        for (Track track:tracks.values()) {
-//            track.sort((o1, o2) -> {
-//                double t1 = o1.getF();
-//                double t2 = o2.getF();
-//                return t1 > t2 ? 1 : t1 == t2 ? 0 : -1;
-//            });
-//        }
-
         return tracks;
-
     }
 }

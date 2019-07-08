@@ -1,69 +1,116 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core.Item;
 
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.FrustumCuller;
+import org.apache.commons.math3.util.FastMath;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
-import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataTypeUtils;
+import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataUtils;
+import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 
 /**
- * Created by sc13967 on 31/07/2017.
+ * Created by JDJFisher on 31/07/2017.
  */
-public class TrackEntityCollection extends LinkedHashMap<Integer, TrackEntity>{
-    private TrackCollection tracks;
+public class TrackEntityCollection extends HashMap<Integer, TrackEntity> {
+
+    public static final int minTrailLength = 3;
+
+    private final Vector3f centreOfTracks;
     private final int highestFrame;
-    private final Vector3f centreOfCollection;
+    public final int maxTrailLength;
+
+    private DisplayColour displayColour;
+    private RenderQuality renderQuality;
+    private boolean bindColourBuffers = true;
+    private boolean bindMeshBuffers = true;
+    private boolean showTrail;
+    private boolean motilityPlot;
+    private int trailLength;
 
     public TrackEntityCollection(TrackCollection tracks){
-        this.tracks = tracks;
-        for(int trackID: tracks.keySet()){
-            put(trackID, new TrackEntity(this, tracks.get(trackID)));
+        final float maximumInstantaneousVelocity = (float) tracks.getMaximumInstantaneousVelocity();
+        final float maximumTotalPathLength = (float) getMaximumTotalPathLength(tracks);
+
+        for(int trackID : tracks.keySet()){
+            put(trackID, new TrackEntity(tracks.get(trackID), maximumInstantaneousVelocity, maximumTotalPathLength));
         }
 
-        centreOfCollection = DataTypeUtils.toVector3f(tracks.getMeanPoint(0));
-
+        this.centreOfTracks = DataUtils.toVector3f(tracks.getMeanPoint(0));
         this.highestFrame = tracks.getHighestFrame();
-        this.displayColour = displayColour_DEFAULT;
-        this.displayQuality = displayQuality_DEFAULT;
-        this.showTrail = showTrail_DEFAULT;
-        this.motilityPlot = motilityPlot_DEFAULT;
-        this.trailLength_MAXIMUM = highestFrame < 1 ? 1 : highestFrame;
-        this.trailLength = trailLength_MAXIMUM;
+        this.maxTrailLength = highestFrame < 1 ? 1 : highestFrame;
+        this.trailLength = maxTrailLength;
+        this.displayColour = displayColour_DEF;
+        this.renderQuality = renderQuality_DEF;
+        this.showTrail = true;
+        this.motilityPlot = false;
+    }
+
+    public double getMaximumTotalPathLength(TrackCollection tracks) { // This needs to be implemented in to Common
+        double maxTotalPathLength = 0;
+
+        for(Track track : tracks.values()){
+            for(double x : track.getRollingTotalPathLength(true).values()){
+                maxTotalPathLength = FastMath.max(maxTotalPathLength, x);
+            }
+        }
+
+        return maxTotalPathLength;
     }
 
     public void render(ShaderProgram shaderProgram, int frame){
-        for(TrackEntity trackEntity: values()){
-            trackEntity.render(shaderProgram, frame);
+        boolean useInstancedColour = displayColour != DisplayColour.ID;
+
+        if(bindMeshBuffers) {
+            bindMeshBuffers = false;
+            for (TrackEntity trackEntity : values()) {
+                trackEntity.updateMeshBuffer(renderQuality);
+            }
+        }
+        if(bindColourBuffers){
+            bindColourBuffers = false;
+            for (TrackEntity trackEntity : values()) {
+                trackEntity.updateColourBuffer(displayColour);
+            }
+        }
+
+        shaderProgram.setBooleanUniform("motilityPlot", motilityPlot);
+        shaderProgram.setBooleanUniform("useInstancedColour", useInstancedColour);
+
+        for (TrackEntity trackEntity : values()) {
+            if(motilityPlot){
+                shaderProgram.setMatrix4fUniform("motilityPlotMatrix", trackEntity.getMotilityPlotMatrix());
+            }
+
+            if(!useInstancedColour) {
+                shaderProgram.setColourUniformRGB("colour", trackEntity.getColour());
+            }
+
+            trackEntity.renderParticle(frame);
+
+            if(showTrail) {
+                trackEntity.renderTrail(frame, trailLength);
+            }
         }
     }
 
-    public TrackCollection getTracks() {
-        return tracks;
+    public void dispose(){
+        for (TrackEntity trackEntity : values()){
+            trackEntity.dispose();
+        }
     }
 
-    public Vector3f getGlobalCentreOfCollection() {
-        return centreOfCollection;
-    }
-
-    public Vector3f getCurrentCentreOfCollection(){
+    public Vector3f getFocusOfPlot(){
         if(motilityPlot){
             return new Vector3f();
         }else {
-            return getGlobalCentreOfCollection();
+            return centreOfTracks;
         }
     }
 
     public int getHighestFrame() {
         return highestFrame;
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final boolean showTrail_DEFAULT = true;
-
-    private boolean showTrail;
 
     public boolean isTrailVisibile(){
         return showTrail;
@@ -77,12 +124,6 @@ public class TrackEntityCollection extends LinkedHashMap<Integer, TrackEntity>{
         showTrail = !showTrail;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final boolean motilityPlot_DEFAULT = false;
-
-    private boolean motilityPlot;
-
     public boolean ifMotilityPlot(){
         return motilityPlot;
     }
@@ -95,22 +136,15 @@ public class TrackEntityCollection extends LinkedHashMap<Integer, TrackEntity>{
         motilityPlot = !motilityPlot;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static final int trailLength_MINIMUM = 3;
-    public final int trailLength_MAXIMUM;
-
-    private int trailLength;
-
     public int getTrailLength(){
         return trailLength;
     }
 
     public void setTrailLength(int value) {
-        if (value < trailLength_MINIMUM) {
-            trailLength = trailLength_MINIMUM;
-        } else if (value > trailLength_MAXIMUM) {
-            trailLength = trailLength_MAXIMUM;
+        if (value < minTrailLength) {
+            trailLength = minTrailLength;
+        } else if (value > maxTrailLength) {
+            trailLength = maxTrailLength;
         } else {
             trailLength = value;
         }
@@ -120,29 +154,38 @@ public class TrackEntityCollection extends LinkedHashMap<Integer, TrackEntity>{
         setTrailLength(getTrailLength() + deltaValue);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static final DisplayColour displayColour_DEF = DisplayColour.ID;
 
-    public displayColourOptions displayColour;
+    public DisplayColour getDisplayColour() {
+        return displayColour;
+    }
 
-    public static final displayColourOptions displayColour_DEFAULT = displayColourOptions.ID;
+    public void setDisplayColour(DisplayColour displayColour) {
+        this.displayColour = displayColour;
+        this.bindColourBuffers = displayColour != DisplayColour.ID;
+    }
 
-    public enum displayColourOptions{
+    public static final RenderQuality renderQuality_DEF = RenderQuality.LOW;
+
+    public RenderQuality getRenderQuality() {
+        return renderQuality;
+    }
+
+    public void setDisplayQuality(RenderQuality renderQuality) {
+        this.renderQuality = renderQuality;
+        this.bindMeshBuffers = true;
+    }
+
+    public enum DisplayColour {
         ID,
         TOTAL_PATH_LENGTH,
         VELOCITY
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public displayQualityOptions displayQuality;
-
-    public static final TrackEntityCollection.displayQualityOptions displayQuality_DEFAULT = displayQualityOptions.MEDIUM;
-
-    public enum displayQualityOptions{
+    public enum RenderQuality {
         LOWEST,
         LOW,
         MEDIUM,
         HIGH
     }
-
 }

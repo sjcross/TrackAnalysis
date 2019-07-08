@@ -1,14 +1,16 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Math;
 
-
-
 import org.apache.commons.math3.util.FastMath;
+import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
-import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector4f;
-import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataTypeUtils;
+import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataUtils;
 
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 
+/**
+ * Created by JDJFisher on 31/07/2017.
+ */
 public class Matrix4f{
 
     public static final int ORDER = 4;
@@ -40,42 +42,71 @@ public class Matrix4f{
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
 
-        final String spacing = "     ";
-        int longestelement = 1;
+        final int MIN_SPACING = 3;
 
-        for (int row = 0; row < ORDER; row++) {
-            for (int col = 0; col < ORDER; col++) {
-                if (Float.toString(elements[row][col]).length() > longestelement) {
-                    longestelement = Float.toString(elements[row][col]).length();
+        String[][] stringData = new String[ORDER][ORDER];
+        int[] longestColStringElements = new int[ORDER];
+
+        for(int col = 0; col < ORDER; col++) {
+            int longestColStringElement = 0;
+
+            for(int row = 0; row < ORDER; row++){
+                String stringElement = Float.toString(elements[row][col]);
+
+                stringData[row][col] = stringElement;
+
+                int stringElementLength = stringElement.length();
+                if(stringElementLength > longestColStringElement){
+                    longestColStringElement = stringElementLength;
+                }
+            }
+
+            longestColStringElements[col] = longestColStringElement;
+        }
+
+        for(int row = 0; row < ORDER; row++){
+            stringBuilder.append("|");
+            for (int i = 0; i < MIN_SPACING; i++){
+                stringBuilder.append(" ");
+            }
+            for(int col = 0; col < ORDER; col++) {
+                String stringElement = stringData[row][col];
+                stringBuilder.append(stringElement);
+                for (int i = 0; i < longestColStringElements[col] - stringElement.length() + MIN_SPACING; i++) {
+                    stringBuilder.append(" ");
+                }
+            }
+            stringBuilder.append("|\n");
+        }
+
+        return stringBuilder.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        float[][] elements2 = ((Matrix4f)obj).elements;
+
+        for(int row = 0; row < ORDER; row++){
+            for(int col = 0; col < ORDER; col++){
+                if(elements2[row][col] != this.elements[row][col]){
+                    return false;
                 }
             }
         }
 
-        for (int row = 0; row < ORDER; row++) {
-            result.append("\n|");
-            result.append(spacing);
+        return true;
+    }
 
-            for (int col = 0; col < ORDER; col++) {
-                result.append(elements[row][col]);
-                for (int i = Float.toString(elements[row][col]).length(); i < longestelement; i++) {
-                    result.append(" ");
-                }
-
-                result.append(spacing);
-            }
-            result.append("|");
-        }
-
-        return result.toString();
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(DataUtils.toFloatArray(elements));
     }
 
     public FloatBuffer toFloatBuffer() {
-        return DataTypeUtils.toFloatBuffer(DataTypeUtils.toFloatArray(elements));
+        return DataUtils.toFloatBuffer(DataUtils.toFloatArray(elements));
     }
-
-    ///////////////////////////////////////////////////STATIC///////////////////////////////////////////////////////////
 
     public static Matrix4f Identity() {
         return new Matrix4f(
@@ -127,10 +158,10 @@ public class Matrix4f{
         final Matrix4f result = Identity();
         result.elements[0][0] = 2f / (right - left);
         result.elements[1][1] = 2f / (top - bottom);
-        result.elements[2][2] = 2f / (zFar - zNear);
-        result.elements[0][3] = (right + left) / (left - right);
-        result.elements[1][3] = (top + bottom) / (bottom - top);
-        result.elements[2][3] = (zFar + zNear) / (zNear - zFar);
+        result.elements[2][2] = -2f / (zFar - zNear);
+        result.elements[0][3] = -(right + left) / (right - left);
+        result.elements[1][3] = -(top + bottom) / (top - bottom);
+        result.elements[2][3] = -(zFar + zNear) / (zFar - zNear);
         return result;
     }
 
@@ -153,6 +184,17 @@ public class Matrix4f{
         result.elements[0][ORDER - 1] = dX;
         result.elements[1][ORDER - 1] = dY;
         result.elements[2][ORDER - 1] = dZ;
+        return result;
+    }
+
+    public static Matrix4f Translation(Vector2f translation) {
+        return Translation(translation.getX(), translation.getY());
+    }
+
+    public static Matrix4f Translation(float dX, float dY) {
+        Matrix4f result = Identity();
+        result.elements[0][ORDER - 1] = dX;
+        result.elements[1][ORDER - 1] = dY;
         return result;
     }
 
@@ -251,21 +293,21 @@ public class Matrix4f{
         return result;
     }
 
-    public static Matrix4f StretchX(float sfX) {
+    public static Matrix4f StretchX(float sf) {
         final Matrix4f result = Identity();
-        result.elements[0][0] = sfX;
+        result.elements[0][0] = sf;
         return result;
     }
 
-    public static Matrix4f StretchY(float sfY) {
+    public static Matrix4f StretchY(float sf) {
         final Matrix4f result = Identity();
-        result.elements[1][1] = sfY;
+        result.elements[1][1] = sf;
         return result;
     }
 
-    public static Matrix4f StretchZ(float sfZ) {
+    public static Matrix4f StretchZ(float sf) {
         final Matrix4f result = Identity();
-        result.elements[2][2] = sfZ;
+        result.elements[2][2] = sf;
         return result;
     }
 
