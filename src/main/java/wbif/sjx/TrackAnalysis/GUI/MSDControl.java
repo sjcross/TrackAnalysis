@@ -71,9 +71,6 @@ public class MSDControl extends ModuleControl {
 
     @Override
     public void run(int ID) {
-        boolean pixelDistances = calibrationCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
-
         boolean fitLine = fitLineCheckbox.isSelected();
         Prefs.set("TrackAnalysis.MSD.fitLine",fitLine);
 
@@ -81,7 +78,7 @@ public class MSDControl extends ModuleControl {
         Prefs.set("TrackAnalysis.MSD.nPoints",fitLine);
 
         if (ID == -1) {
-            TreeMap<Integer,CumStat> msd = tracks.getAverageMSD(pixelDistances);
+            TreeMap<Integer,CumStat> msd = tracks.getAverageMSD();
             double[] errMin = new double[msd.size()];
             double[] errMax = new double[msd.size()];
 
@@ -94,7 +91,7 @@ public class MSDControl extends ModuleControl {
                 errMax[i] = msdMean[i] + msdStd[i];
             }
 
-            String units = tracks.values().iterator().next().getUnits(pixelDistances);
+            String units = tracks.values().iterator().next().getUnits();
             Plot msdPlot = new Plot("Mean squared displacement (all tracks)","Interval (frames)","Mean squared displacement ("+units+"^2)");
             msdPlot.setColor(Color.BLACK);
             msdPlot.addPoints(df,msdMean,Plot.LINE);
@@ -119,11 +116,11 @@ public class MSDControl extends ModuleControl {
 
         } else {
             Track track = tracks.get(ID);
-            TreeMap<Integer,CumStat> msd = track.getMSD(pixelDistances);
+            TreeMap<Integer,CumStat> msd = track.getMSD();
             double[] df = msd.keySet().stream().mapToDouble(v->v).toArray();
             double[] msdVals = msd.values().stream().mapToDouble(CumStat::getMean).toArray();
 
-            String units = track.getUnits(pixelDistances);
+            String units = track.getUnits();
             Plot plot = new Plot("Mean squared displacement (track "+ID+")","Interval (frames)","Mean squared displacement ("+units+")");
             plot.setColor(Color.BLACK);
             plot.addPoints(df,msdVals,Plot.LINE);

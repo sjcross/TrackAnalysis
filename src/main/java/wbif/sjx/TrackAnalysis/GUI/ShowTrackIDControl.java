@@ -80,9 +80,9 @@ public class ShowTrackIDControl extends ModuleControl {
 
                 Color col = Color.getHSBColor((float) Math.random(), (float) (Math.random()*0.2+0.8), (float) (Math.random()*0.2+0.8));
 
-                double[] x = track.getX(true);
-                double[] y = track.getY(true);
-                double[] z = track.getZ(true);
+                double[] x = track.getX();
+                double[] y = track.getY();
+                double[] z = track.getZ();
                 int[] f = track.getF();
 
                 for (int i=0;i<f.length;i++) {
@@ -106,8 +106,8 @@ public class ShowTrackIDControl extends ModuleControl {
         } else {
             Track track = tracks.get(ID);
 
-            double[] x = track.getX(true);
-            double[] y = track.getY(true);
+            double[] x = track.getX();
+            double[] y = track.getY();
             int[] f = track.getF();
 
             Color col = Color.getHSBColor((float) Math.random(), (float) (Math.random()*0.2+0.8), (float) (Math.random()*0.2+0.8));

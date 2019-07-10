@@ -69,8 +69,6 @@ public class TrackPlotLoader implements PlugIn {
         int frameIdx = (int) Prefs.get("TrackAnalysis.frameIdx",1);
 
         // Getting default calibration value
-        double distXY = 1;
-        double distZ = 1;
         String units = "px";
 
         // Updating column headings
@@ -90,7 +88,7 @@ public class TrackPlotLoader implements PlugIn {
             double z = Double.parseDouble(rt.getStringValue(zCol,row));
             int f = Integer.parseInt(rt.getStringValue(fCol,row));
 
-            tracks.putIfAbsent(ID, new Track(distXY,distZ,units));
+            tracks.putIfAbsent(ID, new Track(units));
             tracks.get(ID).addTimepoint(x,y,z,f);
         }
 

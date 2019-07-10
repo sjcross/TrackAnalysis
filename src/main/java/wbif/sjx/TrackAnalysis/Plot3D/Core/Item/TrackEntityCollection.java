@@ -28,8 +28,8 @@ public class TrackEntityCollection extends HashMap<Integer, TrackEntity> {
     private int trailLength;
 
     public TrackEntityCollection(TrackCollection tracks) {
-        final float maximumInstantaneousVelocity = (float) tracks.getMaximumInstantaneousVelocity();
-        final float maximumTotalPathLength = (float) getMaximumTotalPathLength(tracks);
+        final float maximumInstantaneousVelocity = (float) tracks.getMaximumInstantaneousSpeed();
+        final float maximumTotalPathLength = (float) tracks.getMaximumTotalPathLength();
 
         for (int trackID : tracks.keySet()) {
             put(trackID, new TrackEntity(tracks.get(trackID), maximumInstantaneousVelocity, maximumTotalPathLength));
@@ -43,18 +43,6 @@ public class TrackEntityCollection extends HashMap<Integer, TrackEntity> {
         this.renderQuality = RenderQuality.LOW;
         this.showTrail = true;
         this.motilityPlot = false;
-    }
-
-    public double getMaximumTotalPathLength(TrackCollection tracks) { // This needs to be implemented in to Common
-        double maxTotalPathLength = 0;
-
-        for (Track track : tracks.values()) {
-            for (double x : track.getRollingTotalPathLength(true).values()) {
-                maxTotalPathLength = Math.max(maxTotalPathLength, x);
-            }
-        }
-
-        return maxTotalPathLength;
     }
 
     public void render(ShaderProgram shaderProgram, int frame) {
