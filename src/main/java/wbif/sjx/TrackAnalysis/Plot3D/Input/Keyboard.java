@@ -3,36 +3,40 @@ package wbif.sjx.TrackAnalysis.Plot3D.Input;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
-public class Keyboard extends GLFWKeyCallback{
+/**
+ * Created by JDJFisher on 31/07/2017.
+ */
+public class Keyboard extends GLFWKeyCallback {
+
     private static final int KEY_TOTAL = 350;
 
-    private static boolean[] currentKeyState;
-    private static boolean[] previousKeyState;
+    private static boolean[] curKeyState;
+    private static boolean[] prevKeyState;
 
-    public Keyboard(){
-        currentKeyState = new boolean[KEY_TOTAL];
-        previousKeyState = new boolean[KEY_TOTAL];
+    public Keyboard() {
+        curKeyState = new boolean[KEY_TOTAL];
+        prevKeyState = new boolean[KEY_TOTAL];
     }
 
     public void invoke(long window, int key, int scancode, int action, int mods) {
         if(key >= 0) {
-            currentKeyState[key] = action != GLFW.GLFW_RELEASE;
+            curKeyState[key] = action != GLFW.GLFW_RELEASE;
         }
     }
 
     public static void update(){
-        previousKeyState = currentKeyState.clone();
+        prevKeyState = curKeyState.clone();
     }
 
     public static boolean isKeyDown(int keyCode) {
-        return currentKeyState[keyCode];
+        return curKeyState[keyCode];
     }
 
     public static boolean isKeyUp(int keyCode) {
-        return !currentKeyState[keyCode];
+        return !curKeyState[keyCode];
     }
 
     public static boolean isKeyTapped(int keyCode) {
-        return isKeyUp(keyCode) & previousKeyState[keyCode];
+        return isKeyUp(keyCode) & prevKeyState[keyCode];
     }
 }

@@ -3,100 +3,157 @@ package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
 import com.jogamp.opengl.util.awt.ImageUtil;
 import ij.ImagePlus;
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.FrustumCuller;
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.GenerateMesh;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.Entity;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
-import wbif.sjx.TrackAnalysis.Plot3D.Input.Keyboard;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Texture.Texture;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
-import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataTypeUtils;
+import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
+import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataUtils;
 
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
- * Created by sc13967 on 31/07/2017.
+ * Created by JDJFisher on 31/07/2017.
  */
 public class Renderer {
-    private ShaderProgram mainShader;
 
-    private boolean takeScreenshotOnNextRender;
+    public static final float BIAS = 20;
 
-    private Matrix4f projectedViewMatrix;
+    private final ShaderProgram mainShader;
+    private final ShaderProgram arrayTextureShader;
+    private final ShaderProgram instancedShader;
 
-    public Renderer() throws Exception{
-        mainShader = new ShaderProgram("main");
+    private boolean captureNextRender;
 
-        mainShader.createVertexShader(DataTypeUtils.loadAsString("Shaders/main/vertex.vs"));
-        mainShader.createFragmentShader(DataTypeUtils.loadAsString("Shaders/main/fragment.fs"));
-        mainShader.link();
+    private boolean useOrthoProj;
+    private Vector2f orthoBoundingConstraints;
 
-        mainShader.createUniform("projectedViewMatrix");
-        mainShader.createUniform("globalMatrix");
+    public Renderer() throws Exception {
+        mainShader = new ShaderProgram("main", "main", "texture2D");
+        arrayTextureShader = new ShaderProgram("arrayTexture", "main", "texture2DArray");
+        instancedShader = new ShaderProgram("instanced", "instanced", "instanced");
 
-        mainShader.createUniform("colour");
-    }
+        Texture.SetActivateUnit(0);
 
-    final int j = 500;
-
-    private void preRender(GLFWWindow window, Camera camera){
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        if (window.isVSyncEnabled()) {
-            glfwSwapInterval(1);
-        }else {
-            glfwSwapInterval(0);
-        }
-
-        Matrix4f perspective = Matrix4f.Perspective(camera.getFOV(), window.getAspectRatio(), Camera.VIEW_DISTANCE_NEAR, Camera.VIEW_DISTANCE_FAR);
-
-        projectedViewMatrix = Matrix4f.Multiply(perspective, camera.getViewMatrix());
-    }
-
-    public void render(GLFWWindow window, Camera camera, Scene scene){
-        preRender(window, camera);
-
-        //Binds shader
         mainShader.bind();
-
-        //Sets matrix uniform for viewpoint
-        mainShader.setMatrix4fUniform("projectedViewMatrix", projectedViewMatrix);
-        FrustumCuller.getInstance().setProjectedViewMatrix(projectedViewMatrix);
-
-        //Renders scene
-        scene.render(mainShader);
-
-        //Unbinds shader
+        mainShader.setTextureSamplerUniform("textureSampler", 0);
         mainShader.unbind();
 
-        //Handles screenshot
-        if(takeScreenshotOnNextRender){
+        useOrthoProj = false;
+        orthoBoundingConstraints = new Vector2f();
+    }
+
+    public void render(GLFWWindow window, Camera camera, Scene scene) {
+        camera.preRender();
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glfwSwapInterval(window.isVSyncEnabled() ? 1 : 0);
+
+
+        Matrix4f projViewMatrix = calcProjViewMatrix(window, camera);
+
+
+        mainShader.bind();
+        mainShader.setMatrix4fUniform("projectedViewMatrix", projViewMatrix);
+
+        if (scene.isAxesVisible()) {
+            for (Entity axis : scene.getAxes()) {
+                axis.render(mainShader);
+            }
+        }
+
+        if (scene.isBoundingBoxVisible() && !scene.getTracksEntities().ifMotilityPlot()) {
+            scene.getBoundingFrame().render(mainShader);
+        }
+
+//        if(!scene.getTracksEntities().ifMotilityPlot()) {
+//            scene.getPlaneXY().render(mainShader);
+//            scene.getPlaneYZ().render(mainShader);
+//        }
+
+        mainShader.unbind();
+
+
+        arrayTextureShader.bind();
+        arrayTextureShader.setMatrix4fUniform("projectedViewMatrix", projViewMatrix);
+        arrayTextureShader.setIntUniform("frame", scene.getFrame());
+
+        if(!scene.getTracksEntities().ifMotilityPlot()) {
+            scene.getPlaneXZ().render(arrayTextureShader);
+        }
+
+        arrayTextureShader.unbind();
+
+
+        instancedShader.bind();
+        instancedShader.setMatrix4fUniform("projectedViewMatrix", projViewMatrix);
+        scene.getTracksEntities().render(instancedShader, scene.getFrame());
+        instancedShader.unbind();
+
+
+        if (captureNextRender) {
             doScreenshot(window);
-            takeScreenshotOnNextRender = false;
+            captureNextRender = false;
         }
     }
 
-    public void takeScreenshot(){
-        takeScreenshotOnNextRender = true;
+    private Matrix4f calcProjViewMatrix(GLFWWindow window, Camera camera) {
+        Matrix4f projMatrix;
+
+        if (useOrthoProj) {
+            float widthRatio = window.getWidth() / orthoBoundingConstraints.getX();
+            float heightRatio = window.getHeight() / orthoBoundingConstraints.getY();
+
+            float a = (orthoBoundingConstraints.getX() + BIAS) / 2;
+            float b = (orthoBoundingConstraints.getY() + BIAS) / 2;
+
+            if (widthRatio < heightRatio) {
+                b = (orthoBoundingConstraints.getX() / window.getAspectRatio() + BIAS) / 2;
+            } else if (heightRatio < widthRatio) {
+                a = (orthoBoundingConstraints.getY() * window.getAspectRatio() + BIAS) / 2;
+            }
+
+            projMatrix = Matrix4f.Orthographic(-a, a, b, -b, Camera.VIEW_DISTANCE_NEAR, Camera.VIEW_DISTANCE_FAR);
+        } else {
+            projMatrix = Matrix4f.Perspective(camera.getFOV(), window.getAspectRatio(), Camera.VIEW_DISTANCE_NEAR, Camera.VIEW_DISTANCE_FAR);
+        }
+
+        return Matrix4f.Multiply(projMatrix, camera.getViewMatrix());
     }
 
-    private void doScreenshot(GLFWWindow window){
+    public void takeScreenshot() {
+        captureNextRender = true;
+    }
+
+    private void doScreenshot(GLFWWindow window) {
         ByteBuffer pixels = ByteBuffer.allocateDirect(4 * window.getWidth() * window.getHeight());
 
         glReadBuffer(GL_BACK);
         glReadPixels(0, 0, window.getWidth(), window.getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
         BufferedImage image = new BufferedImage(window.getWidth(), window.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
-        image.getWritableTile(0,0).setDataElements(0,0,window.getWidth(), window.getHeight(), DataTypeUtils.toByteArray(pixels));
+        image.getWritableTile(0, 0).setDataElements(0, 0, window.getWidth(), window.getHeight(), DataUtils.toByteArray(pixels));
 
         ImageUtil.flipImageVertically(image);
         new ImagePlus("Screenshot", image).show();
     }
 
-    public void dispose(){
+    public void dispose() {
         mainShader.dispose();
+        arrayTextureShader.dispose();
+        instancedShader.dispose();
+    }
+
+    public void setOrthoBoundingConstraints(float x, float y) {
+        orthoBoundingConstraints.set(x, y);
+        useOrthoProj = true;
+    }
+
+    public void disableOrthoProj() {
+        useOrthoProj = false;
     }
 }

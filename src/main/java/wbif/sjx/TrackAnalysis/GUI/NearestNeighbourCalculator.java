@@ -35,11 +35,8 @@ public class NearestNeighbourCalculator extends ModuleControl {
 
     @Override
     public void run(int ID) {
-        boolean pixelDistances = calibrationCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
-
         if (ID == -1) {
-            double[][] nnDistance = tracks.getAverageNearestNeighbourDistance(pixelDistances);
+            double[][] nnDistance = tracks.getAverageNearestNeighbourDistance();
             double[] errMin = new double[nnDistance[0].length];
             double[] errMax = new double[nnDistance[0].length];
 
@@ -48,7 +45,7 @@ public class NearestNeighbourCalculator extends ModuleControl {
                 errMax[i] = nnDistance[1][i] + nnDistance[2][i];
             }
 
-            String units = tracks.values().iterator().next().getUnits(pixelDistances);
+            String units = tracks.values().iterator().next().getUnits();
 
             Plot plot = new Plot("Nearest neighbour distance (all tracks)","Frame","Nearest neighbour distance ("+units+")");
             plot.setColor(Color.BLACK);
@@ -62,13 +59,13 @@ public class NearestNeighbourCalculator extends ModuleControl {
         } else {
             Track track = tracks.get(ID);
             double[] f = track.getFAsDouble();
-            TreeMap<Integer,double[]> nnDistance = track.getNearestNeighbourDistance(tracks,pixelDistances);
+            TreeMap<Integer,double[]> nnDistance = track.getNearestNeighbourDistance(tracks);
             double[] vals = new double[nnDistance.size()];
             for (int i=0;i<vals.length;i++) {
                 vals[i] = nnDistance.get((int) Math.round(f[i]))[1];
             }
 
-            String units = track.getUnits(pixelDistances);
+            String units = track.getUnits();
             Plot plot = new Plot("Nearest neighbour distance (track "+ID+")","Frame","Nearest neighbour distance ("+units+")");
             plot.setColor(Color.BLACK);
             plot.addPoints(f,vals,Plot.LINE);

@@ -51,16 +51,13 @@ public class TotalPathLengthControl extends ModuleControl {
 
     @Override
     public void run(int ID) {
-        boolean pixelDistances = calibrationCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
-
         String relativePosition = (String) comboBox.getSelectedItem();
         Prefs.set("TrackAnalysis.relativePosition",relativePosition);
         boolean relativeToTrackStart = relativePosition.equals(RELATIVE_TO_TRACK_START);
         String xLabel = relativeToTrackStart ? "Time relative to start of track (frames)" : "Time relative to first frame (frames)";
 
         if (ID == -1) {
-            double[][] totalPathLength = tracks.getAverageTotalPathLength(pixelDistances,relativeToTrackStart);
+            double[][] totalPathLength = tracks.getAverageTotalPathLength(relativeToTrackStart);
             double[] errMin = new double[totalPathLength[0].length];
             double[] errMax = new double[totalPathLength[0].length];
 
@@ -69,7 +66,7 @@ public class TotalPathLengthControl extends ModuleControl {
                 errMax[i] = totalPathLength[1][i] + totalPathLength[2][i];
             }
 
-            String units = tracks.values().iterator().next().getUnits(pixelDistances);
+            String units = tracks.values().iterator().next().getUnits();
             Plot plot = new Plot("Total path length (all tracks)",xLabel,"Total path length ("+units+")");
             plot.setColor(Color.BLACK);
             plot.addPoints(totalPathLength[0],totalPathLength[1],Plot.LINE);
@@ -82,10 +79,10 @@ public class TotalPathLengthControl extends ModuleControl {
         } else {
             Track track = tracks.get(ID);
             double[] f = track.getFAsDouble();
-            TreeMap<Integer,Double> totalPathLength = track.getRollingTotalPathLength(pixelDistances);
+            TreeMap<Integer,Double> totalPathLength = track.getRollingTotalPathLength();
             double[] vals = totalPathLength.values().stream().mapToDouble(Double::doubleValue).toArray();
 
-            String units = track.getUnits(pixelDistances);
+            String units = track.getUnits();
             Plot plot = new Plot("Total path length (track "+ID+")",xLabel,"Total path length ("+units+")",f,vals);
             plot.show();
 

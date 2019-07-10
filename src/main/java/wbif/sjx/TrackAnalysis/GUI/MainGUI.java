@@ -48,7 +48,7 @@ public class MainGUI implements ActionListener {
             TOTAL_PATH_LENGTH,
             TRACK_DURATION,
             TRACK_INTENSITY,
-//            TRACK_PLOT
+            TRACK_PLOT
 
     };
 

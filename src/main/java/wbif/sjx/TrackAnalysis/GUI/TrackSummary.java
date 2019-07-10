@@ -35,15 +35,12 @@ public class TrackSummary extends ModuleControl {
     }
 
     private void showTrackSummary(ResultsTable rt) {
-        boolean pixelDistances = calibrationCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
-
-        DecimalFormat df = new DecimalFormat("#.###");
-        String units = tracks.values().iterator().next().getUnits(pixelDistances);
+         DecimalFormat df = new DecimalFormat("#.###");
+        String units = tracks.values().iterator().next().getUnits();
 
         int i=0;
         for (Track track:tracks.values()) {
-            double[][] meanPos = track.getMeanPosition(pixelDistances);
+            double[][] meanPos = track.getMeanPosition();
 
             rt.setValue("Mean x-pos ("+units+")", i, df.format(meanPos[0][0])); //Distances reported in image units
             rt.setValue("Mean y-pos ("+units+")", i, df.format(meanPos[0][1])); //Distances reported in image units
@@ -56,15 +53,12 @@ public class TrackSummary extends ModuleControl {
     }
 
     private void showTrackSummary(int ID, ResultsTable rt) {
-        boolean pixelDistances = calibrationCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
-
         Track track = tracks.get(ID);
 
         DecimalFormat df = new DecimalFormat("#.###");
-        String units = track.getUnits(pixelDistances);
+        String units = track.getUnits();
 
-        double[][] meanPos = track.getMeanPosition(pixelDistances);
+        double[][] meanPos = track.getMeanPosition();
 
         rt.setValue("Mean x-pos ("+units+")", 0, df.format(meanPos[0][0])); //Distances reported in image units
         rt.setValue("Mean y-pos ("+units+")", 0, df.format(meanPos[0][1])); //Distances reported in image units
@@ -76,9 +70,7 @@ public class TrackSummary extends ModuleControl {
     }
 
     private void showFullTrackResults(int ID, ResultsTable rt) {
-        boolean pixelDistances = calibrationCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
-        String units = tracks.values().iterator().next().getUnits(pixelDistances);
+        String units = tracks.values().iterator().next().getUnits();
 
         Set<Integer> IDs = new TreeSet<>();
         if (ID == -1) {
@@ -91,17 +83,17 @@ public class TrackSummary extends ModuleControl {
         for (int currentID:IDs) {
             Track track = tracks.get(currentID);
 
-//            TreeMap<Integer,double[]> nnDistances = track.getNearestNeighbourDistance(tracks,pixelDistances);
-            TreeMap<Integer,Double> rollingTotalPath = track.getRollingTotalPathLength(pixelDistances);
-            TreeMap<Integer,Double> rollingEuclideanDistance = track.getRollingEuclideanDistance(pixelDistances);
-            TreeMap<Integer,Double> rollingDirectionalityRatio= track.getRollingDirectionalityRatio(pixelDistances);
-            TreeMap<Integer,Double> instantaneousSpeed = track.getInstantaneousSpeed(pixelDistances);
+//            TreeMap<Integer,double[]> nnDistances = track.getNearestNeighbourDistance(tracks);
+            TreeMap<Integer,Double> rollingTotalPath = track.getRollingTotalPathLength();
+            TreeMap<Integer,Double> rollingEuclideanDistance = track.getRollingEuclideanDistance();
+            TreeMap<Integer,Double> rollingDirectionalityRatio= track.getRollingDirectionalityRatio();
+            TreeMap<Integer,Double> instantaneousSpeed = track.getInstantaneousSpeed();
 
             for (int f:track.getF()){
                 rt.setValue("ID", i, currentID);
-                rt.setValue("X (" + units + ")", i, track.getX(f,pixelDistances));
-                rt.setValue("Y (" + units + ")", i, track.getY(f,pixelDistances));
-                rt.setValue("Z (" + units + ")", i, track.getZ(f,pixelDistances));
+                rt.setValue("X (" + units + ")", i, track.getX(f));
+                rt.setValue("Y (" + units + ")", i, track.getY(f));
+                rt.setValue("Z (" + units + ")", i, track.getZ(f));
 //                rt.setValue("NN ID", i, nnDistances.get(f)[0]);
 //                rt.setValue("NN distance (" + units + ")", i, nnDistances.get(f)[1]);
                 rt.setValue("Rolling path length (" + units + ")", i, rollingTotalPath.get(f));
@@ -167,10 +159,8 @@ public class TrackSummary extends ModuleControl {
     }
 
     private void showAllTracksSpatialStatistics(ResultsTable rt) {
-        boolean pixelDistances = calibrationCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
         DecimalFormat df = new DecimalFormat("#.###");
-        String units = tracks.values().iterator().next().getUnits(pixelDistances);
+        String units = tracks.values().iterator().next().getUnits();
 
         // Using CumStats to keep memory requirements smaller
         CumStat csStep = new CumStat();
@@ -182,25 +172,25 @@ public class TrackSummary extends ModuleControl {
 
         int i = 0;
         for (Track track:tracks.values()) {
-            rt.setValue("Euclidean distance ("+units+")",i,track.getEuclideanDistance(pixelDistances));
-            rt.setValue("Total path length ("+units+")",i,track.getTotalPathLength(pixelDistances));
-            rt.setValue("Directionality ratio ",i,track.getDirectionalityRatio(pixelDistances));
+            rt.setValue("Euclidean distance ("+units+")",i,track.getEuclideanDistance());
+            rt.setValue("Total path length ("+units+")",i,track.getTotalPathLength());
+            rt.setValue("Directionality ratio ",i,track.getDirectionalityRatio());
 
             // Whole track statistics
-            csEuclDist.addMeasure(track.getEuclideanDistance(pixelDistances));
-            csTotalDist.addMeasure(track.getTotalPathLength(pixelDistances));
-            csDirRatio.addMeasure(track.getDirectionalityRatio(pixelDistances));
+            csEuclDist.addMeasure(track.getEuclideanDistance());
+            csTotalDist.addMeasure(track.getTotalPathLength());
+            csDirRatio.addMeasure(track.getDirectionalityRatio());
 
             // Step-by-step statistics
-            TreeMap<Integer,Double> steps = track.getInstantaneousStepSizes(pixelDistances);
+            TreeMap<Integer,Double> steps = track.getInstantaneousStepSizes();
             steps.values().stream().forEach(csStep::addMeasure);
             rt.setValue("Mean step size ("+units+")",i,new CumStat(steps.values()).getMean());
 
-            TreeMap<Integer,Double> speeds = track.getInstantaneousSpeed(pixelDistances);
+            TreeMap<Integer,Double> speeds = track.getInstantaneousSpeed();
             speeds.values().stream().forEach(csSpeed::addMeasure);
             rt.setValue("Mean inst. vel. ("+units+"/frame)",i,new CumStat(speeds.values()).getMean());
 
-            TreeMap<Integer,Double> dirRatio = track.getRollingDirectionalityRatio(pixelDistances);
+            TreeMap<Integer,Double> dirRatio = track.getRollingDirectionalityRatio();
             dirRatio.values().stream().forEach(csInstDirRatio::addMeasure);
             rt.setValue("Mean inst. dir. ratio",i++,new CumStat(dirRatio.values()).getMean());
 
@@ -245,12 +235,9 @@ public class TrackSummary extends ModuleControl {
     }
 
     private void showTrackSpatialStatistics(int ID, ResultsTable rt) {
-        boolean pixelDistances = calibrationCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
-
         Track track = tracks.get(ID);
         DecimalFormat df = new DecimalFormat("#.###");
-        String units = track.getUnits(pixelDistances);
+        String units = track.getUnits();
 
         // Using CumStats to keep memory requirements smaller
         CumStat csStep = new CumStat();
@@ -258,25 +245,25 @@ public class TrackSummary extends ModuleControl {
         CumStat csInstDirRatio = new CumStat();
 
         // Step-by-step statistics
-        TreeMap<Integer,Double> steps = track.getInstantaneousStepSizes(pixelDistances);
+        TreeMap<Integer,Double> steps = track.getInstantaneousStepSizes();
         steps.values().stream().forEach(csStep::addMeasure);
 
-        TreeMap<Integer,Double> speeds = track.getInstantaneousSpeed(pixelDistances);
+        TreeMap<Integer,Double> speeds = track.getInstantaneousSpeed();
         speeds.values().stream().forEach(csSpeed::addMeasure);
 
-        TreeMap<Integer,Double> dirRatio = track.getRollingDirectionalityRatio(pixelDistances);
+        TreeMap<Integer,Double> dirRatio = track.getRollingDirectionalityRatio();
         dirRatio.values().stream().forEach(csInstDirRatio::addMeasure);
 
-        rt.setValue("Euclidean distance ("+units+")",0,track.getEuclideanDistance(pixelDistances));
-        rt.setValue("Total path length ("+units+")",0,track.getTotalPathLength(pixelDistances));
-        rt.setValue("Directionality ratio ",0,track.getDirectionalityRatio(pixelDistances));
+        rt.setValue("Euclidean distance ("+units+")",0,track.getEuclideanDistance());
+        rt.setValue("Total path length ("+units+")",0,track.getTotalPathLength());
+        rt.setValue("Directionality ratio ",0,track.getDirectionalityRatio());
         rt.setValue("Mean step size ("+units+")",0,new CumStat(steps.values()).getMean());
         rt.setValue("Mean inst. vel. ("+units+"/frame)",0,new CumStat(speeds.values()).getMean());
         rt.setValue("Mean inst. dir. ratio",0,new CumStat(dirRatio.values()).getMean());
 
-        IJ.log("Euclidean distance: "+String.valueOf(df.format(track.getEuclideanDistance(pixelDistances)))+" "+units);
-        IJ.log("Total path length: "+String.valueOf(df.format(track.getTotalPathLength(pixelDistances)))+" "+units);
-        IJ.log("Directionality ratio: "+String.valueOf(df.format(track.getDirectionalityRatio(pixelDistances))));
+        IJ.log("Euclidean distance: "+String.valueOf(df.format(track.getEuclideanDistance()))+" "+units);
+        IJ.log("Total path length: "+String.valueOf(df.format(track.getTotalPathLength()))+" "+units);
+        IJ.log("Directionality ratio: "+String.valueOf(df.format(track.getDirectionalityRatio())));
         IJ.log(" ");
 
         IJ.log("Mean step length: "+String.valueOf(df.format(csStep.getMean()))+" "+units);
@@ -300,16 +287,13 @@ public class TrackSummary extends ModuleControl {
     }
 
     private void showDiffusionCoefficient(ResultsTable rt) {
-        boolean pixelDistances = calibrationCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
-
         DecimalFormat df = new DecimalFormat("0.000E0");
         DecimalFormat dfS = new DecimalFormat("#");
-        String units = tracks.values().iterator().next().getUnits(pixelDistances);
+        String units = tracks.values().iterator().next().getUnits();
 
         int nPoints = (int) Math.round(Double.parseDouble(nPointsTextField.getText()));
 
-        TreeMap<Integer,CumStat> msd = tracks.getAverageMSD(pixelDistances);
+        TreeMap<Integer,CumStat> msd = tracks.getAverageMSD();
         double[] linearFit = MSDCalculator.getLinearFit(msd,nPoints);
 
         IJ.log("Diffusion coefficient (single average MSD): "+String.valueOf(df.format(linearFit[0]/4))+" "+units+"^2/frame");
@@ -320,23 +304,20 @@ public class TrackSummary extends ModuleControl {
 
         int i = 0;
         for (Track track:tracks.values()) {
-            double[] fit = track.getMSDLinearFit(pixelDistances,nPoints);
+            double[] fit = track.getMSDLinearFit(nPoints);
             rt.setValue("Diffusion coefficient ("+units+"^2/frame)",i++,df.format(fit[0]/4));
         }
     }
 
     private void showDiffusionCoefficient(int ID, ResultsTable rt) {
-        boolean pixelDistances = calibrationCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
-
         Track track = tracks.get(ID);
         DecimalFormat df = new DecimalFormat("0.000E0");
         DecimalFormat dfS = new DecimalFormat("#");
-        String units = track.getUnits(pixelDistances);
+        String units = track.getUnits();
 
         int nPoints = (int) Math.round(Double.parseDouble(nPointsTextField.getText()));
 
-        double[] linearFit = track.getMSDLinearFit(pixelDistances,nPoints);
+        double[] linearFit = track.getMSDLinearFit(nPoints);
 
         rt.setValue("Diffusion coefficient ("+units+"^2/frame)",0,df.format(linearFit[0]/4));
 
