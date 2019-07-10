@@ -43,8 +43,6 @@ public class TrackMateLoader extends AbstractTMAction {
         ImagePlus ipl = trackMate.getSettings().imp;
         Calibration calibration = ipl.getCalibration();
 
-        double distXY = calibration.getX(1);
-        double distZ = calibration.getZ(1);
         String units = calibration.getXUnit();
 
         // Creating the ArrayList to hold all Tracks
@@ -64,7 +62,7 @@ public class TrackMateLoader extends AbstractTMAction {
                 double z = spot.getFeature(Spot.POSITION_Z);
                 int f = (int) Math.round(spot.getFeature(Spot.FRAME));
 
-                tracks.putIfAbsent(trackID, new Track(distXY,distZ,units));
+                tracks.putIfAbsent(trackID, new Track(units));
                 tracks.get(trackID).addTimepoint(x,y,z,f);
 
             }

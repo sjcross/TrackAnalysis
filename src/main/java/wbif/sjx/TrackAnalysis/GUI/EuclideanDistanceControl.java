@@ -51,16 +51,13 @@ public class EuclideanDistanceControl extends ModuleControl {
 
     @Override
     public void run(int ID) {
-        boolean pixelDistances = calibrationCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
-
         String relativePosition = (String) comboBox.getSelectedItem();
         Prefs.set("TrackAnalysis.relativePosition",relativePosition);
         boolean relativeToTrackStart = relativePosition.equals(RELATIVE_TO_TRACK_START);
         String xLabel = relativeToTrackStart ? "Time relative to start of track (frames)" : "Time relative to first frame (frames)";
 
         if (ID == -1) {
-            double[][] euclideanDistance = tracks.getAverageRollingEuclideanDistance(pixelDistances,relativeToTrackStart);
+            double[][] euclideanDistance = tracks.getAverageRollingEuclideanDistance(relativeToTrackStart);
             double[] errMin = new double[euclideanDistance[0].length];
             double[] errMax = new double[euclideanDistance[0].length];
 
@@ -69,7 +66,7 @@ public class EuclideanDistanceControl extends ModuleControl {
                 errMax[i] = euclideanDistance[1][i] + euclideanDistance[2][i];
             }
 
-            String units = tracks.values().iterator().next().getUnits(pixelDistances);
+            String units = tracks.values().iterator().next().getUnits();
 
             Plot plot = new Plot("Euclidean distance (all tracks)",xLabel,"Euclidean distance ("+units+")");
             plot.setColor(Color.BLACK);
@@ -83,10 +80,10 @@ public class EuclideanDistanceControl extends ModuleControl {
         } else {
             Track track = tracks.get(ID);
             double[] f = track.getFAsDouble();
-            TreeMap<Integer,Double> euclideanDistance = track.getRollingEuclideanDistance(pixelDistances);
+            TreeMap<Integer,Double> euclideanDistance = track.getRollingEuclideanDistance();
             double[] vals = euclideanDistance.values().stream().mapToDouble(Double::doubleValue).toArray();
 
-            String units = track.getUnits(pixelDistances);
+            String units = track.getUnits();
             Plot plot = new Plot("Euclidean distance (track "+ID+")",xLabel,"Euclidean distance ("+units+")");
             plot.setColor(Color.BLACK);
             plot.addPoints(f,vals,Plot.LINE);

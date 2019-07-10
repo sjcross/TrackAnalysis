@@ -151,7 +151,7 @@ public class TrackEntity {
 
         FloatBuffer colourFloatBuffer = BufferUtils.createFloatBuffer(globalPositionList.size());
 
-        TreeMap<Integer, Double> instantaneousVelocity = track.getInstantaneousSpeed(true);
+        TreeMap<Integer, Double> instantaneousVelocity = track.getInstantaneousSpeed();
 
         for (int i = 0; i < globalPositionList.size(); i++) {
             colourFloatBuffer.put(Maths.scaleRange(0, maxInstantaneousVelocity, 0, 1, instantaneousVelocity.get(i).floatValue()));
@@ -163,7 +163,7 @@ public class TrackEntity {
         glBufferData(GL_ARRAY_BUFFER, colourFloatBuffer, GL_STATIC_DRAW);
         colourFloatBuffer.clear();
 
-        TreeMap<Integer, Double> totalPathLength = track.getRollingTotalPathLength(true);
+        TreeMap<Integer, Double> totalPathLength = track.getRollingTotalPathLength();
 
         for (int i = 0; i < globalPositionList.size(); i++) {
             colourFloatBuffer.put(Maths.scaleRange(0, maxTotalPathLength, 0, 1, totalPathLength.get(i).floatValue()));

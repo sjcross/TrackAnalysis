@@ -43,6 +43,13 @@
                 <role>maintainer</role>
             </roles>
         </developer>
+        <developer>
+            <id>jdjfisher</id>
+            <name>Jordan Fisher</name>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
     </developers>
 
     <contributors>
@@ -125,14 +132,11 @@
             <scope>${myscope}</scope>
         </dependency>
 
-        <!--Local repository-->
         <dependency>
             <!--<groupId>wbif.sjx</groupId>-->
-            <!--<artifactId>Common</artifactId>-->
-            <!--<version>1.4.7</version>-->
             <groupId>com.github.SJCross</groupId>
             <artifactId>Common</artifactId>
-            <version>1.4.7</version>
+            <version>1.4.35</version>
         </dependency>
 
         <!-- PLot3D Libs -->

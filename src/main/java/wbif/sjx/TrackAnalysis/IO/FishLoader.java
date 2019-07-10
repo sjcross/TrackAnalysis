@@ -118,8 +118,6 @@ public class FishLoader implements PlugIn {
         gd.showDialog();
 
         // Getting calibration
-        distXY = gd.getNextNumber();
-        distZ = gd.getNextNumber();
         units = gd.getNextString();
 
         // Getting the file to read
@@ -142,7 +140,7 @@ public class FishLoader implements PlugIn {
 
         // Initialising tracks
         for (int i=0;i<nTracks;i++) {
-            tracks.put(i+1,new Track(distXY,distZ,units));
+            tracks.put(i+1,new Track(units));
         }
 
         // Reading subsequent lines

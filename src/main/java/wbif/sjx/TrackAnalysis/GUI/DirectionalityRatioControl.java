@@ -52,16 +52,13 @@ public class DirectionalityRatioControl extends ModuleControl {
 
     @Override
     public void run(int ID) {
-        boolean pixelDistances = calibrationCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
-
         String relativePosition = (String) comboBox.getSelectedItem();
         Prefs.set("TrackAnalysis.relativePosition",relativePosition);
         boolean relativeToTrackStart = relativePosition.equals(RELATIVE_TO_TRACK_START);
         String xLabel = relativeToTrackStart ? "Time relative to start of track (frames)" : "Time relative to first frame (frames)";
 
         if (ID == -1) {
-            double[][] directionalityRatio = tracks.getAverageDirectionalityRatio(pixelDistances,relativeToTrackStart);
+            double[][] directionalityRatio = tracks.getAverageDirectionalityRatio(relativeToTrackStart);
             double[] errMin = new double[directionalityRatio[0].length];
             double[] errMax = new double[directionalityRatio[0].length];
 
@@ -82,7 +79,7 @@ public class DirectionalityRatioControl extends ModuleControl {
         } else {
             Track track = tracks.get(ID);
             double[] f = track.getFAsDouble();
-            TreeMap<Integer,Double> directionalityRatio = track.getRollingDirectionalityRatio(pixelDistances);
+            TreeMap<Integer,Double> directionalityRatio = track.getRollingDirectionalityRatio();
 
             double[] vals = directionalityRatio.values().stream().mapToDouble(Double::doubleValue).toArray();
             Plot plot = new Plot("Directionality ratio (track "+ID+")",xLabel,"Directionality ratio",f,vals);

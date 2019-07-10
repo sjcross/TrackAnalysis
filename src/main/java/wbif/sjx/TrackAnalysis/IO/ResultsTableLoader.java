@@ -155,8 +155,6 @@ public class ResultsTableLoader implements PlugIn {
         frameIdx = gd.getNextChoiceIndex();
 
         // Getting calibration
-        distXY = gd.getNextNumber();
-        distZ = gd.getNextNumber();
         units = gd.getNextString();
 
         // Storing indices as preferences
@@ -183,7 +181,7 @@ public class ResultsTableLoader implements PlugIn {
             double z = Double.parseDouble(rt.getStringValue(zCol,row));
             int f = Integer.parseInt(rt.getStringValue(fCol,row));
 
-            tracks.putIfAbsent(ID, new Track(distXY,distZ,units));
+            tracks.putIfAbsent(ID, new Track(units));
             tracks.get(ID).addTimepoint(x,y,z,f);
 
         }

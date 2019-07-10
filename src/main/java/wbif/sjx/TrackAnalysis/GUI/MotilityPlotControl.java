@@ -76,9 +76,6 @@ public class MotilityPlotControl extends ModuleControl {
 
     @Override
     public void run(int ID) {
-        boolean pixelDistances = calibrationCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.pixelDistances",pixelDistances);
-
         double lineWidth = Double.parseDouble(lineWidthTextField.getText());
 
         boolean blackPlot = blackPlotCheckbox.isSelected();
@@ -89,7 +86,7 @@ public class MotilityPlotControl extends ModuleControl {
 
         Plot plot;
         if (ID == -1) {
-            String units = tracks.values().iterator().next().getUnits(pixelDistances);
+            String units = tracks.values().iterator().next().getUnits();
             plot = new Plot("Object motility (All tracks)","X-position ("+units+")","Y-position ("+units+")");
             plot.setLineWidth((float) lineWidth);
 
@@ -101,8 +98,8 @@ public class MotilityPlotControl extends ModuleControl {
                     col = Color.getHSBColor((float) Math.random(), (float) (Math.random()*0.2+0.8), (float) (Math.random()*0.2+0.8));
                 }
 
-                double[] x = track.getX(pixelDistances);
-                double[] y = track.getY(pixelDistances);
+                double[] x = track.getX();
+                double[] y = track.getY();
 
                 for (int i = 1; i < x.length; i++) {
                     x[i] = x[i] - x[0];
@@ -118,7 +115,7 @@ public class MotilityPlotControl extends ModuleControl {
             }
 
         } else {
-            String units = tracks.values().iterator().next().getUnits(pixelDistances);
+            String units = tracks.values().iterator().next().getUnits();
             plot = new Plot("Object motility (All tracks)", "X-position (" + units + ")", "Y-position (" + units + ")");
             plot.setLineWidth((float) lineWidth);
 
@@ -129,8 +126,8 @@ public class MotilityPlotControl extends ModuleControl {
                 col = Color.getHSBColor((float) Math.random(), (float) (Math.random() * 0.2 + 0.8), (float) (Math.random() * 0.2 + 0.8));
             }
 
-            double[] x = track.getX(pixelDistances);
-            double[] y = track.getY(pixelDistances);
+            double[] x = track.getX();
+            double[] y = track.getY();
 
             for (int i = 1; i < x.length; i++) {
                 x[i] = x[i] - x[0];
