@@ -89,8 +89,7 @@ public class GLFWWindow {
     public void setVisibility(boolean state) {
         if (state) {
             glfwShowWindow(windowHandle);
-        }
-        else {
+        } else {
             glfwHideWindow(windowHandle);
         }
     }

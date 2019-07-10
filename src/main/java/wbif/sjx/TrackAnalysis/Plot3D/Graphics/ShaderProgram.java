@@ -52,11 +52,11 @@ public class ShaderProgram {
     }
 
     private String loadVertexShader(String vertexShaderName) throws Exception {
-        return DataUtils.loadAsString(String.format("shaders/vertex/%s.glsl", vertexShaderName));
+        return DataUtils.loadAsString(String.format("Shaders/Vertex/%s.glsl", vertexShaderName));
     }
 
     private String loadFragmentShader(String fragmentShaderName) throws Exception {
-        return DataUtils.loadAsString(String.format("shaders/fragment/%s.glsl", fragmentShaderName));
+        return DataUtils.loadAsString(String.format("Shaders/Fragment/%s.glsl", fragmentShaderName));
     }
 
     private void createVertexShader(String shaderCode) throws Exception {

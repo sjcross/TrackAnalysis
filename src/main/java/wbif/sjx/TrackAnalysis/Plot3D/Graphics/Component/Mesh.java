@@ -1,7 +1,6 @@
 
 package wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component;
 
-import org.apache.commons.math3.util.FastMath;
 import org.lwjgl.BufferUtils;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
@@ -24,7 +23,7 @@ import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
  */
 public class Mesh {
 
-    public static final int FLOAT_SIZE = 4; // number of bytes in a java float
+    public static final int FLOAT_SIZE = 4; // number of bytes in a Java float
 
     private final int indexedVertexCount;
     private final int vao;
@@ -145,7 +144,7 @@ public class Mesh {
         float boundingSphereRadius = 0;
 
         for (Vertex vertex : vertices) {
-            boundingSphereRadius = FastMath.max(boundingSphereRadius, vertex.getPosition().getLength());
+            boundingSphereRadius = Math.max(boundingSphereRadius, vertex.getPosition().getLength());
         }
 
         return boundingSphereRadius;

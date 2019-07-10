@@ -1,7 +1,6 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core.Item;
 
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.FrustumCuller;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Texture.Texture;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
@@ -52,20 +51,17 @@ public class Entity {
     }
 
     public void render(ShaderProgram mainShader) {
-        if (FrustumCuller.getInstance().isInsideFrustum(this)) {
-            mainShader.setMatrix4fUniform("globalMatrix", getGlobalMatrix());
+        mainShader.setMatrix4fUniform("globalMatrix", getGlobalMatrix());
 
-            if (mesh.isSupportsTexture() && texture != null) {
-                mainShader.setBooleanUniform("useTexture", true);
-                texture.bind();
-            }
-            else {
-                mainShader.setBooleanUniform("useTexture", false);
-                mainShader.setColourUniformRGB("colour", colour);
-            }
-
-            mesh.render();
+        if (mesh.isSupportsTexture() && texture != null) {
+            mainShader.setBooleanUniform("useTexture", true);
+            texture.bind();
+        } else {
+            mainShader.setBooleanUniform("useTexture", false);
+            mainShader.setColourUniformRGB("colour", colour);
         }
+
+        mesh.render();
     }
 
     public Mesh getMesh() {

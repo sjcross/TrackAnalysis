@@ -5,7 +5,7 @@ import java.util.Objects;
 public class FaceMI {
     private final IndexSet[] indexSets;
 
-    public FaceMI(IndexSet[] indexSets){
+    public FaceMI(IndexSet[] indexSets) {
         this.indexSets = indexSets;
     }
 
@@ -13,7 +13,7 @@ public class FaceMI {
             int vA,
             int vB,
             int vC
-    ){
+    ) {
         this(
                 new IndexSet[]{
                         new IndexSet(vA),
@@ -28,7 +28,7 @@ public class FaceMI {
             int vB,
             int vC,
             int vD
-    ){
+    ) {
         this(
                 new IndexSet[]{
                         new IndexSet(vA),
@@ -43,7 +43,7 @@ public class FaceMI {
             int vA, int tA,
             int vB, int tB,
             int vC, int tC
-    ){
+    ) {
         this(
                 new IndexSet[]{
                         new IndexSet(vA, tA),
@@ -58,7 +58,7 @@ public class FaceMI {
             int vB, int tB,
             int vC, int tC,
             int vD, int tD
-    ){
+    ) {
         this(
                 new IndexSet[]{
                         new IndexSet(vA, tA),
@@ -74,25 +74,25 @@ public class FaceMI {
         return indexSets;
     }
 
-    public int getFaceOrder(){
+    public int getFaceOrder() {
         return indexSets.length;
     }
 
-    public int getPrimtiveFaceCount(){
+    public int getPrimtiveFaceCount() {
         return getFaceOrder() - 2;
     }
 
-    public static class IndexSet{
+    public static class IndexSet {
         public static final int NULL_INDEX = -1;
 
         private final int vertexPositionIndex;
         private final int textureCoordinateIndex;
 
-        public IndexSet(int vertexPositionIndex){
+        public IndexSet(int vertexPositionIndex) {
             this(vertexPositionIndex, NULL_INDEX);
         }
 
-        public IndexSet(int vertexPositionIndex, int textureCoordinateIndex){
+        public IndexSet(int vertexPositionIndex, int textureCoordinateIndex) {
             this.vertexPositionIndex = vertexPositionIndex;
             this.textureCoordinateIndex = textureCoordinateIndex;
         }
@@ -107,7 +107,7 @@ public class FaceMI {
 
         @Override
         public boolean equals(Object obj) {
-            IndexSet indexSet = (IndexSet)obj;
+            IndexSet indexSet = (IndexSet) obj;
             return indexSet.vertexPositionIndex == vertexPositionIndex && indexSet.textureCoordinateIndex == textureCoordinateIndex;
         }
 

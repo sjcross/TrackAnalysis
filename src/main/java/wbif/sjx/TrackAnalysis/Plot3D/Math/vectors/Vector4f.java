@@ -1,6 +1,5 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Math.vectors;
 
-import org.apache.commons.math3.util.FastMath;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
 
@@ -194,7 +193,7 @@ public class Vector4f {
     }
 
     public static float Length(final Vector4f vec) {
-        return (float) FastMath.sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z + vec.w * vec.w);
+        return (float) Math.sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z + vec.w * vec.w);
     }
 
     public static Vector4f Normalize(final Vector4f vec) {

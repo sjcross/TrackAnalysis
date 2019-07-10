@@ -1,7 +1,5 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Math.vectors;
 
-import org.apache.commons.math3.util.FastMath;
-
 import java.util.Objects;
 
 /**
@@ -72,7 +70,7 @@ public class Vector2f {
     }
 
     public float getLength() {
-        return (float) FastMath.sqrt(x * x + y * y);
+        return (float) Math.sqrt(x * x + y * y);
     }
 
     public void multiply(final float multiplier) {

@@ -43,11 +43,11 @@ public class FaceSI {
         return indexs;
     }
 
-    public int getFaceOrder(){
+    public int getFaceOrder() {
         return indexs.length;
     }
 
-    public int getPrimtiveFaceCount(){
+    public int getPrimtiveFaceCount() {
         return getFaceOrder() - 2;
     }
 

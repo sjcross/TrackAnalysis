@@ -1,6 +1,5 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
-import org.apache.commons.math3.util.FastMath;
 import wbif.sjx.TrackAnalysis.GUI.TrackPlotControl;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.CollectionBounds;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.Cursor;
@@ -11,7 +10,7 @@ import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Utils.StopWatch;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static wbif.sjx.TrackAnalysis.Plot3D.Core.Renderer.CONST;
+import static wbif.sjx.TrackAnalysis.Plot3D.Core.Renderer.BIAS;
 
 /**
  * Created by JDJFisher on 31/07/2017.
@@ -72,9 +71,7 @@ public class Engine {
             cumulativeLagTime += timeElapsedLastLoop;
             loopTimer.start();
 
-            if(window.isFocused()) {
-                handleInput();
-            }
+            handleInput();
 
             while (cumulativeLagTime >= secondsPerUpdate) {
                 update(secondsPerUpdate);
@@ -145,8 +142,8 @@ public class Engine {
             scene.togglePlayFrames();
         }
 
-        if(MouseButtons.isButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
-            renderer.disableOrthoProjection();
+        if (MouseButtons.isButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
+            renderer.disableOrthoProj();
         }
 
         Keyboard.update();
@@ -189,7 +186,7 @@ public class Engine {
     }
 
     private float calcOptimalViewingDistance(float xRange, float yRange){
-        return ((FastMath.max(xRange / window.getAspectRatio(), yRange) + CONST) / 2) / (float) FastMath.tan(Math.toRadians(camera.getFOV() / 2));
+        return ((Math.max(xRange / window.getAspectRatio(), yRange) + BIAS) / 2) / (float) Math.tan(Math.toRadians(camera.getFOV() / 2));
     }
 
     // the plane view methods position the camera to face to relevant faces of the collection in the z-up coordinate system

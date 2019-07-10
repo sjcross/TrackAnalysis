@@ -1,6 +1,5 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
-import org.apache.commons.math3.util.FastMath;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.Cursor;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.Keyboard;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.MouseButtons;
@@ -59,38 +58,31 @@ public class Camera {
     public void handleInput() {
         if (Keyboard.isKeyDown(GLFW_KEY_A)) { // move left
             moveDirection.setX(-moveSpeed);
-        }
-        else if (Keyboard.isKeyDown(GLFW_KEY_D)) { // move right
+        } else if (Keyboard.isKeyDown(GLFW_KEY_D)) { // move right
             moveDirection.setX(moveSpeed);
-        }
-        else {
+        } else {
             moveDirection.setX(0f);
         }
 
         if (Keyboard.isKeyDown(GLFW_KEY_W)) { // move forwards
             moveDirection.setZ(-moveSpeed);
-        }
-        else if (Keyboard.isKeyDown(GLFW_KEY_S)) { // move backwards
+        } else if (Keyboard.isKeyDown(GLFW_KEY_S)) { // move backwards
             moveDirection.setZ(moveSpeed);
-        }
-        else {
+        } else {
             moveDirection.setZ(0f);
         }
 
         if (Keyboard.isKeyDown(GLFW_KEY_E)) { // move up
             moveDirection.setY(-moveSpeed);
-        }
-        else if (Keyboard.isKeyDown(GLFW_KEY_Q)) { // move down
+        } else if (Keyboard.isKeyDown(GLFW_KEY_Q)) { // move down
             moveDirection.setY(moveSpeed);
-        }
-        else {
+        } else {
             moveDirection.setY(0f);
         }
 
         if (Keyboard.isKeyDown(GLFW_KEY_SPACE)) { // speed boost
             moveDirection.multiply(10f);
-        }
-        else if (Keyboard.isKeyDown(GLFW_KEY_LEFT_ALT)) { // slow movement
+        } else if (Keyboard.isKeyDown(GLFW_KEY_LEFT_ALT)) { // slow movement
             moveDirection.multiply(0.1f);
         }
 
@@ -110,14 +102,14 @@ public class Camera {
 
             //First displace the camera horizontally along the tangent of current position in orbit
             cameraToCentrePosition = Vector3f.Subtract(centrePosition, position);
-            final float cameraToRotationCentreDistanceBeforeDisplacement = (float) FastMath.sqrt(cameraToCentrePosition.getX() * cameraToCentrePosition.getX() + cameraToCentrePosition.getZ() * cameraToCentrePosition.getZ());
+            final float cameraToRotationCentreDistanceBeforeDisplacement = (float) Math.sqrt(cameraToCentrePosition.getX() * cameraToCentrePosition.getX() + cameraToCentrePosition.getZ() * cameraToCentrePosition.getZ());
 
             faceDirection(cameraToCentrePosition);
             changePositionXRelativeToOrientation(angularVelocityRPS * cameraToRotationCentreDistanceBeforeDisplacement * interval);
 
             //Then displace the camera horizontally along the radius of the orbit motion to correct orbit radius
             cameraToCentrePosition = Vector3f.Subtract(centrePosition, position);
-            final float cameraToRotationCentreDistanceAfterDisplacement = (float) FastMath.sqrt(cameraToCentrePosition.getX() * cameraToCentrePosition.getX() + cameraToCentrePosition.getZ() * cameraToCentrePosition.getZ());
+            final float cameraToRotationCentreDistanceAfterDisplacement = (float) Math.sqrt(cameraToCentrePosition.getX() * cameraToCentrePosition.getX() + cameraToCentrePosition.getZ() * cameraToCentrePosition.getZ());
 
             faceDirection(cameraToCentrePosition);
             changePositionZRelativeToOrientation(cameraToRotationCentreDistanceBeforeDisplacement - cameraToRotationCentreDistanceAfterDisplacement);
@@ -190,8 +182,8 @@ public class Camera {
     }
 
     public void changePositionXRelativeToOrientation(float dx) {
-        position.addX(-dx * (float) FastMath.sin(FastMath.toRadians(pan - 90)));
-        position.addZ(dx * (float) FastMath.cos(FastMath.toRadians(pan - 90)));
+        position.addX(-dx * (float) Math.sin(Math.toRadians(pan - 90)));
+        position.addZ(dx * (float) Math.cos(Math.toRadians(pan - 90)));
     }
 
     public void changePositionYRelativeToOrientation(float dy) {
@@ -199,8 +191,8 @@ public class Camera {
     }
 
     public void changePositionZRelativeToOrientation(float dz) {
-        position.addX(-dz * (float) FastMath.sin(FastMath.toRadians(pan)));
-        position.addZ(dz * (float) FastMath.cos(FastMath.toRadians(pan)));
+        position.addX(-dz * (float) Math.sin(Math.toRadians(pan)));
+        position.addZ(dz * (float) Math.cos(Math.toRadians(pan)));
     }
 
     public float getTilt() {
@@ -210,11 +202,9 @@ public class Camera {
     public void setTilt(float value) {
         if (value > MAX_TILT) {
             tilt = MAX_TILT;
-        }
-        else if (value < -MAX_TILT) {
+        } else if (value < -MAX_TILT) {
             tilt = -MAX_TILT;
-        }
-        else {
+        } else {
             tilt = value;
         }
     }
@@ -238,11 +228,9 @@ public class Camera {
     public void setFOV(int value) {
         if (value < fov_MIN) {
             fov = fov_MIN;
-        }
-        else if (value > fov_MAX) {
+        } else if (value > fov_MAX) {
             fov = fov_MAX;
-        }
-        else {
+        } else {
             fov = value;
         }
     }
@@ -258,11 +246,9 @@ public class Camera {
     public void setMovementSpeed(float value) {
         if (value < moveSpeed_MIN) {
             moveSpeed = moveSpeed_MIN;
-        }
-        else if (value > moveSpeed_MAX) {
+        } else if (value > moveSpeed_MAX) {
             moveSpeed = moveSpeed_MAX;
-        }
-        else {
+        } else {
             moveSpeed = value;
         }
     }
@@ -278,11 +264,9 @@ public class Camera {
     public void setSensitivity(float value) {
         if (value < sensitivity_MIN) {
             sensitivity = sensitivity_MIN;
-        }
-        else if (value > sensitivity_MAX) {
+        } else if (value > sensitivity_MAX) {
             sensitivity = sensitivity_MAX;
-        }
-        else {
+        } else {
             sensitivity = value;
         }
     }
@@ -323,6 +307,6 @@ public class Camera {
     }
 
     private void updateAngularVelocityRPS() {
-        angularVelocityRPS = (float) FastMath.toRadians(angularVelocityDPS);
+        angularVelocityRPS = (float) Math.toRadians(angularVelocityDPS);
     }
 }

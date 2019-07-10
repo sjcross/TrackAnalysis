@@ -179,7 +179,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         panel.add(displayQualityTextField,c);
         displayQualityComboBox = new JComboBox<>(TrackEntityCollection.RenderQuality.values());
         displayQualityComboBox.setPreferredSize(new Dimension(panelWidth*2/3-5,elementHeight));
-        displayQualityComboBox.setSelectedItem(TrackEntityCollection.renderQuality_DEF);
+        displayQualityComboBox.setSelectedItem(TrackEntityCollection.RenderQuality.LOW);
         displayQualityComboBox.setName(DISPLAY_QUALITY);
         displayQualityComboBox.setEnabled(false);
         displayQualityComboBox.addActionListener(this);
@@ -198,7 +198,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         panel.add(displayColourTextField,c);
         displayColourComboBox = new JComboBox<>(TrackEntityCollection.DisplayColour.values());
         displayColourComboBox.setPreferredSize(new Dimension(panelWidth*2/3-5,elementHeight));
-        displayColourComboBox.setSelectedItem(TrackEntityCollection.displayColour_DEF);
+        displayColourComboBox.setSelectedItem(TrackEntityCollection.DisplayColour.ID);
         displayColourComboBox.setName(DISPLAY_COLOUR);
         displayColourComboBox.setEnabled(false);
         displayColourComboBox.addActionListener(this);
@@ -285,7 +285,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         c.gridx++;
         panel.add(frameRateLabelTextField,c);
 
-        frameSlider = new JSlider(JSlider.HORIZONTAL, 0, tracks.getHighestFrame(), Scene.frame_DEF);
+        frameSlider = new JSlider(JSlider.HORIZONTAL, 0, tracks.getHighestFrame(), 0);
         frameSlider.setPreferredSize(new Dimension(panelWidth,elementHeight));
         frameSlider.setEnabled(false);
         frameSlider.addChangeListener(this);
@@ -339,11 +339,10 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
                 engine.init();
                 setControlMode(true);
                 engine.start();
-                setControlMode(false);
-
             }catch (Exception e){
                 e.printStackTrace();
             }finally {
+                setControlMode(false);
                 engine.dispose();
             }
         }).start();

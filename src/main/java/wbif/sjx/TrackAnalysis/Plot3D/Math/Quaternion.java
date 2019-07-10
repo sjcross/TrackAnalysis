@@ -1,6 +1,5 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Math;
 
-import org.apache.commons.math3.util.FastMath;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 
 /**
@@ -158,17 +157,17 @@ public class Quaternion {
     }
 
     private static Quaternion EulerAnglesToQuaternion(final float eulerX, final float eulerY, final float eulerZ) { //Eulers angles
-        final double halfX = FastMath.toRadians(eulerX / 2);
-        final double halfY = FastMath.toRadians(eulerY / 2);
-        final double halfZ = FastMath.toRadians(eulerZ / 2);
+        final double halfX = Math.toRadians(eulerX / 2);
+        final double halfY = Math.toRadians(eulerY / 2);
+        final double halfZ = Math.toRadians(eulerZ / 2);
 
-        final float cosX = (float) FastMath.cos(halfX);
-        final float cosY = (float) FastMath.cos(halfY);
-        final float cosZ = (float) FastMath.cos(halfZ);
+        final float cosX = (float) Math.cos(halfX);
+        final float cosY = (float) Math.cos(halfY);
+        final float cosZ = (float) Math.cos(halfZ);
 
-        final float sinX = (float) FastMath.sin(halfX);
-        final float sinY = (float) FastMath.sin(halfY);
-        final float sinZ = (float) FastMath.sin(halfZ);
+        final float sinX = (float) Math.sin(halfX);
+        final float sinY = (float) Math.sin(halfY);
+        final float sinZ = (float) Math.sin(halfZ);
 
         return new Quaternion(
                 cosZ * cosY * sinX - sinZ * sinY * cosX,
@@ -191,16 +190,16 @@ public class Quaternion {
         double t4 = 1.0 - 2.0 * (ysqr + quaternion.z * quaternion.z);
 
         return new Vector3f(
-                (float) FastMath.toDegrees(FastMath.atan2(t0, t1)),
-                (float) FastMath.toDegrees(FastMath.asin(t2)),
-                (float) FastMath.toDegrees(FastMath.atan2(t3, t4))
+                (float) Math.toDegrees(Math.atan2(t0, t1)),
+                (float) Math.toDegrees(Math.asin(t2)),
+                (float) Math.toDegrees(Math.atan2(t3, t4))
         );
     }
 
     private static Quaternion RotationAxisToQuaternion(final float theta, final Vector3f axisDirection) {
-        final double θ = FastMath.toRadians(theta);
-        final float sinHalfθ = (float) FastMath.sin(θ / 2);
-        final float cosHalfθ = (float) FastMath.cos(θ / 2);
+        final double θ = Math.toRadians(theta);
+        final float sinHalfθ = (float) Math.sin(θ / 2);
+        final float cosHalfθ = (float) Math.cos(θ / 2);
 
         return new Quaternion(
                 axisDirection.getX() * sinHalfθ,
@@ -215,6 +214,6 @@ public class Quaternion {
     }
 
     private static Quaternion Normalize(Quaternion quaternion) {
-        return Multiply(quaternion, (float) FastMath.sqrt(quaternion.x * quaternion.x + quaternion.y * quaternion.y + quaternion.z * quaternion.z + quaternion.w * quaternion.w));
+        return Multiply(quaternion, (float) Math.sqrt(quaternion.x * quaternion.x + quaternion.y * quaternion.y + quaternion.z * quaternion.z + quaternion.w * quaternion.w));
     }
 }

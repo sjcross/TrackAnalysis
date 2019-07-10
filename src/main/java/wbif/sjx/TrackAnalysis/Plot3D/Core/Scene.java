@@ -2,33 +2,30 @@ package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
 import ij.ImagePlus;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.CollectionBounds;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.TrackEntity;
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.*;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.Entity;
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.TrackEntity;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.TrackEntityCollection;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.MeshFactory;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Texture.Texture;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Texture.Texture2D;
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Texture.Texture2DArray;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
-import wbif.sjx.TrackAnalysis.Plot3D.Utils.TextureLoader;
 import wbif.sjx.common.Object.TrackCollection;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 
 /**
  * Created by JDJFisher on 31/07/2017.
  */
 public class Scene {
-    public static final Vector3f X_AXIS = new Vector3f(1,0,0);
-    public static final Vector3f Y_AXIS = new Vector3f(0,1,0);
-    public static final Vector3f Z_AXIS = new Vector3f(0,0,1);
 
-    private static final float BOUNDING_FRAME_THICKNESS = 1;
+    public static final Vector3f X_AXIS = new Vector3f(1, 0, 0);
+    public static final Vector3f Y_AXIS = new Vector3f(0, 1, 0);
+    public static final Vector3f Z_AXIS = new Vector3f(0, 0, 1);
+
+    private static final float BOUNDING_FRAME_THICKNESS = 1.5f;
     public static final boolean playFrames_DEF = false;
     public final int framePlaybackRate_DEF = 5;
-    public static final int frame_DEF = 0;
 
     private final TrackEntityCollection tracksEntities;
     private final CollectionBounds collectionBounds;
@@ -49,13 +46,13 @@ public class Scene {
     private final Texture debugTexture;
 //    private final Texture iplXZTexture;
 
-    public Scene(TrackCollection tracks, ImagePlus ipl) throws Exception{
+    public Scene(TrackCollection tracks, ImagePlus ipl) throws Exception {
         TrackEntity.initStaticMeshes();
 
         tracksEntities = new TrackEntityCollection(tracks);
         collectionBounds = new CollectionBounds(tracks.getSpatialLimits(true));
 
-        frame = frame_DEF;
+        frame = 0;
         playFrames = playFrames_DEF;
         showAxes = false;
         showBoundingBox = true;
@@ -86,14 +83,14 @@ public class Scene {
         planeXY.getPosition().setX(centrePosition.getX());
         planeXY.getPosition().setY(centrePosition.getY());
         planeXY.getPosition().setZ(minPosition.getZ() - BOUNDING_FRAME_THICKNESS / 2);
-        planeXY.getRotation().set(-90 , X_AXIS);
+        planeXY.getRotation().set(-90, X_AXIS);
 
         planeYZ = new Entity(MeshFactory.plane(length, height), debugTexture);
         planeYZ.getPosition().setX(minPosition.getX() - BOUNDING_FRAME_THICKNESS / 2);
         planeYZ.getPosition().setY(centrePosition.getY());
         planeYZ.getPosition().setZ(centrePosition.getZ());
-        planeYZ.getRotation().set(-90 , Y_AXIS);
-        planeYZ.getRotation().multiply(90 , Z_AXIS);
+        planeYZ.getRotation().set(-90, Y_AXIS);
+        planeYZ.getRotation().multiply(90, Z_AXIS);
 
 
         Mesh axesMesh = MeshFactory.pipe(1f, 20, 10000);
@@ -109,11 +106,11 @@ public class Scene {
         axes = new Entity[]{origin, xAxis, yAxis, zAxis};
     }
 
-    public void update(float interval){
-        if(playFrames){
+    public void update(float interval) {
+        if (playFrames) {
             cumulativeTime += interval;
 
-            if(cumulativeTime >= secsPerFrame){
+            if (cumulativeTime >= secsPerFrame) {
                 cumulativeTime -= secsPerFrame;
 
                 if (frame == tracksEntities.getHighestFrame()) {
@@ -129,7 +126,7 @@ public class Scene {
         return tracksEntities;
     }
 
-    public CollectionBounds getCollectionBounds(){
+    public CollectionBounds getCollectionBounds() {
         return collectionBounds;
     }
 
@@ -149,7 +146,7 @@ public class Scene {
         return planeYZ;
     }
 
-    public void dispose(){
+    public void dispose() {
         tracksEntities.dispose();
         debugTexture.dispose();
 //        iplXZTexture.dispose();
@@ -165,61 +162,61 @@ public class Scene {
         return frame;
     }
 
-    public void setFrame(int frame){
-        if(frame < 0){
+    public void setFrame(int frame) {
+        if (frame < 0) {
             this.frame = 0;
-        }else if(frame > tracksEntities.getHighestFrame()){
+        } else if (frame > tracksEntities.getHighestFrame()) {
             this.frame = tracksEntities.getHighestFrame();
-        }else {
+        } else {
             this.frame = frame;
         }
     }
 
-    public void changeFrame(int deltaFrame){
+    public void changeFrame(int deltaFrame) {
         setFrame(getFrame() + deltaFrame);
     }
 
-    public void incrementFrame(){
+    public void incrementFrame() {
         setFrame(getFrame() + 1);
     }
 
-    public void decrementFrame(){
+    public void decrementFrame() {
         setFrame(getFrame() - 1);
     }
 
-    public boolean isPlayingFrames(){
+    public boolean isPlayingFrames() {
         return playFrames;
     }
 
-    public void setPlayFrames(boolean state){
+    public void setPlayFrames(boolean state) {
         playFrames = state;
     }
 
-    public void togglePlayFrames(){
+    public void togglePlayFrames() {
         playFrames = !playFrames;
     }
 
-    public boolean isAxesVisible(){
+    public boolean isAxesVisible() {
         return showAxes;
     }
 
-    public void setAxesVisibility(boolean state){
+    public void setAxesVisibility(boolean state) {
         showAxes = state;
     }
 
-    public void toggleAxesVisibility(){
+    public void toggleAxesVisibility() {
         showAxes = !showAxes;
     }
 
-    public boolean isBoundingBoxVisible(){
+    public boolean isBoundingBoxVisible() {
         return showBoundingBox;
     }
 
-    public void setBoundingBoxVisibility(boolean state){
+    public void setBoundingBoxVisibility(boolean state) {
         showBoundingBox = state;
     }
 
-    public void toggleBoundingBoxVisibility(){
+    public void toggleBoundingBoxVisibility() {
         showBoundingBox = !showBoundingBox;
     }
 
@@ -234,6 +231,6 @@ public class Scene {
             framePlaybackRate = value;
         }
 
-        secsPerFrame = 1f / (float)(framePlaybackRate);
+        secsPerFrame = 1f / (float) (framePlaybackRate);
     }
 }

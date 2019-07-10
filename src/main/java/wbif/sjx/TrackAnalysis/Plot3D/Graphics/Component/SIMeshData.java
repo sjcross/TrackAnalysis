@@ -10,7 +10,7 @@ public class SIMeshData {
     private ArrayList<Vertex> vertices;
     private ArrayList<FaceSI> faces;
 
-    public SIMeshData(ArrayList<Vertex> vertices, ArrayList<FaceSI> faces){
+    public SIMeshData(ArrayList<Vertex> vertices, ArrayList<FaceSI> faces) {
         this.vertices = vertices;
         this.faces = faces;
     }

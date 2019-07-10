@@ -1,9 +1,9 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Graphics;
 
-import org.apache.commons.math3.util.FastMath;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.*;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
+
 import java.util.ArrayList;
 
 /**
@@ -15,8 +15,8 @@ public class MeshFactory {
     }
 
     public static Mesh plane(float width, float length) {
-        float halfWidth = FastMath.abs(width / 2);
-        float halfLength = FastMath.abs(length / 2);
+        float halfWidth = Math.abs(width / 2);
+        float halfLength = Math.abs(length / 2);
 
         Vector3f[] vertexPositions = new Vector3f[]{
                 new Vector3f(halfWidth, 0, -halfLength),
@@ -45,14 +45,14 @@ public class MeshFactory {
     }
 
     public static Mesh cube(float sideLength) {
-        sideLength = FastMath.abs(sideLength);
+        sideLength = Math.abs(sideLength);
         return cuboid(sideLength, sideLength, sideLength);
     }
 
     public static Mesh cuboid(float width, float height, float length) {
-        float halfWidth = FastMath.abs(width / 2);
-        float halfHeight = FastMath.abs(height / 2);
-        float halfLength = FastMath.abs(length / 2);
+        float halfWidth = Math.abs(width / 2);
+        float halfHeight = Math.abs(height / 2);
+        float halfLength = Math.abs(length / 2);
 
         Vertex[] vertices = new Vertex[]{
                 new Vertex(new Vector3f(-halfWidth, halfHeight, halfLength)),   //V0
@@ -671,128 +671,19 @@ public class MeshFactory {
         return new Mesh(vertices, faces);
     }
 
-    public static Mesh roundedPipe(float radius, int resolution, float length) {
-        resolution = resolution < 3 ? 3 : resolution;
-
-        radius = FastMath.abs(radius);
-
-        final int ringCount = resolution / 2;
-        final int sectorCount = resolution;
-
-        ArrayList<Vertex> vertices = new ArrayList<>();
-        ArrayList<FaceSI> faces = new ArrayList<>();
-
-        double deltaRingTheta = FastMath.PI / (2 * ringCount);
-        double deltaSectorTheta = 2 * FastMath.PI / sectorCount;
-        double ringTheta = 0;
-        double sectorTheta = 0;
-
-        //Pipe
-
-        for (int i = 0; i < sectorCount; i++) {
-            float rSinTheta = radius * (float) FastMath.sin(sectorTheta);
-            float rCosTheta = radius * (float) FastMath.cos(sectorTheta);
-            vertices.add(new Vertex(new Vector3f(rSinTheta, length, rCosTheta)));
-            sectorTheta += deltaSectorTheta;
-        }
-
-        for (int i = 0; i < sectorCount - 1; i++) {
-            faces.add(new FaceSI(
-                    i + 1,
-                    i,
-                    sectorCount + i,
-                    sectorCount + i + 1
-            ));
-        }
-
-        faces.add(new FaceSI(
-                0,
-                sectorCount - 1,
-                (sectorCount * 2) - 1,
-                sectorCount
-        ));
-
-        //Semi sphere
-
-        for (int ring = 0; ring < ringCount; ring++) {
-            sectorTheta = 0;
-            for (int sector = 0; sector < sectorCount; sector++) {
-                float sinSθ = (float) FastMath.sin(sectorTheta);
-                float cosSθ = (float) FastMath.cos(sectorTheta);
-                float sinRθ = (float) FastMath.sin(ringTheta);
-                float cosRθ = (float) FastMath.cos(ringTheta);
-
-                vertices.add(new Vertex(new Vector3f(
-                        radius * sinSθ * cosRθ,
-                        -radius * sinRθ,
-                        radius * cosRθ * cosSθ
-                )));
-                sectorTheta += deltaSectorTheta;
-            }
-            ringTheta += deltaRingTheta;
-        }
-
-        vertices.add(new Vertex(new Vector3f(0, -radius, 0)));
-        final int peakIndex = vertices.size() - 1;
-
-        for (int ring = 0; ring < ringCount - 1; ring++) {
-
-            final int currentRingIndexOffset = (ring + 1) * sectorCount;
-            final int nextRingIndexOffset = (ring + 2) * sectorCount;
-
-            for (int sector = 0; sector < sectorCount - 1; sector++) {
-                //faces
-                faces.add(new FaceSI(
-                        currentRingIndexOffset + sector + 1,
-                        currentRingIndexOffset + sector,
-                        nextRingIndexOffset + sector,
-                        nextRingIndexOffset + sector + 1
-                ));
-            }
-
-            //filler faces
-            faces.add(new FaceSI(
-                    currentRingIndexOffset + 0,
-                    currentRingIndexOffset + sectorCount - 1,
-                    nextRingIndexOffset + sectorCount - 1,
-                    nextRingIndexOffset + 0
-            ));
-        }
-
-        final int frontRingIndexOffset = ringCount * sectorCount;
-
-        for (int sector = frontRingIndexOffset; sector < peakIndex; sector++) {
-            //front faces
-            faces.add(new FaceSI(
-                    sector + 1,
-                    sector,
-                    peakIndex
-            ));
-        }
-
-        //front face filler
-        faces.add(new FaceSI(
-                frontRingIndexOffset,
-                peakIndex - 1,
-                peakIndex
-        ));
-
-        return new Mesh(vertices, faces);
-    }
-
     public static Mesh pipe(float radius, int resolution, float length) {
         resolution = resolution < 3 ? 3 : resolution;
-        radius = FastMath.abs(radius);
-        length = FastMath.abs(length);
+        radius = Math.abs(radius);
+        length = Math.abs(length);
 
         Vertex[] vertices = new Vertex[resolution * 2];
 
-        double deltaTheta = 2 * FastMath.PI / (resolution);
+        double deltaTheta = 2 * Math.PI / (resolution);
         double theta = 0;
 
         for (int i = 0; i < resolution; i++) {
-            float rSinTheta = radius * (float) FastMath.sin(theta);
-            float rCosTheta = radius * (float) FastMath.cos(theta);
+            float rSinTheta = radius * (float) Math.sin(theta);
+            float rCosTheta = radius * (float) Math.cos(theta);
             vertices[i] = new Vertex(new Vector3f(rCosTheta, length, rSinTheta));
             vertices[resolution + i] = new Vertex(new Vector3f(rCosTheta, 0, rSinTheta));
             theta -= deltaTheta;
@@ -821,7 +712,7 @@ public class MeshFactory {
 
     public static Mesh sphere(float radius, int resolution) {
         resolution = resolution < 3 ? 3 : resolution;
-        radius = FastMath.abs(radius);
+        radius = Math.abs(radius);
 
         final int ringCount = resolution - 1;
         final int meridianCount = resolution;
@@ -834,8 +725,8 @@ public class MeshFactory {
         vertices[northPoleIndex] = new Vertex(new Vector3f(0, radius, 0));
         vertices[southPoleIndex] = new Vertex(new Vector3f(0, -radius, 0));
 
-        double deltaAlpha = FastMath.PI / resolution;
-        double deltaTheta = 2 * FastMath.PI / resolution;
+        double deltaAlpha = Math.PI / resolution;
+        double deltaTheta = 2 * Math.PI / resolution;
         double alpha = 0;
         double theta;
 
@@ -843,10 +734,10 @@ public class MeshFactory {
             alpha -= deltaAlpha;
             theta = 0;
             for (int meridian = 0; meridian < meridianCount; meridian++) {
-                float sinTheta = (float) FastMath.sin(theta);
-                float cosTheta = (float) FastMath.cos(theta);
-                float sinPhi = (float) FastMath.sin(alpha);
-                float cosPhi = (float) FastMath.cos(alpha);
+                float sinTheta = (float) Math.sin(theta);
+                float cosTheta = (float) Math.cos(theta);
+                float sinPhi = (float) Math.sin(alpha);
+                float cosPhi = (float) Math.cos(alpha);
 
                 vertices[(ring * meridianCount) + meridian] = new Vertex(new Vector3f(
                         radius * sinPhi * cosTheta,
@@ -877,10 +768,10 @@ public class MeshFactory {
 
             //filler faces
             faces.add(new FaceSI(
-                    currentRingIndexOffset + 0,
+                    currentRingIndexOffset,
                     currentRingIndexOffset + meridianCount - 1,
                     nextRingIndexOffset + meridianCount - 1,
-                    nextRingIndexOffset + 0
+                    nextRingIndexOffset
             ));
         }
 

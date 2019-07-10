@@ -1,6 +1,5 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core.Item;
 
-import org.apache.commons.math3.util.FastMath;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataUtils;
@@ -28,11 +27,11 @@ public class TrackEntityCollection extends HashMap<Integer, TrackEntity> {
     private boolean motilityPlot;
     private int trailLength;
 
-    public TrackEntityCollection(TrackCollection tracks){
+    public TrackEntityCollection(TrackCollection tracks) {
         final float maximumInstantaneousVelocity = (float) tracks.getMaximumInstantaneousVelocity();
         final float maximumTotalPathLength = (float) getMaximumTotalPathLength(tracks);
 
-        for(int trackID : tracks.keySet()){
+        for (int trackID : tracks.keySet()) {
             put(trackID, new TrackEntity(tracks.get(trackID), maximumInstantaneousVelocity, maximumTotalPathLength));
         }
 
@@ -40,8 +39,8 @@ public class TrackEntityCollection extends HashMap<Integer, TrackEntity> {
         this.highestFrame = tracks.getHighestFrame();
         this.maxTrailLength = highestFrame < 1 ? 1 : highestFrame;
         this.trailLength = maxTrailLength;
-        this.displayColour = displayColour_DEF;
-        this.renderQuality = renderQuality_DEF;
+        this.displayColour = DisplayColour.ID;
+        this.renderQuality = RenderQuality.LOW;
         this.showTrail = true;
         this.motilityPlot = false;
     }
@@ -49,25 +48,25 @@ public class TrackEntityCollection extends HashMap<Integer, TrackEntity> {
     public double getMaximumTotalPathLength(TrackCollection tracks) { // This needs to be implemented in to Common
         double maxTotalPathLength = 0;
 
-        for(Track track : tracks.values()){
-            for(double x : track.getRollingTotalPathLength(true).values()){
-                maxTotalPathLength = FastMath.max(maxTotalPathLength, x);
+        for (Track track : tracks.values()) {
+            for (double x : track.getRollingTotalPathLength(true).values()) {
+                maxTotalPathLength = Math.max(maxTotalPathLength, x);
             }
         }
 
         return maxTotalPathLength;
     }
 
-    public void render(ShaderProgram shaderProgram, int frame){
+    public void render(ShaderProgram shaderProgram, int frame) {
         boolean useInstancedColour = displayColour != DisplayColour.ID;
 
-        if(bindMeshBuffers) {
+        if (bindMeshBuffers) {
             bindMeshBuffers = false;
             for (TrackEntity trackEntity : values()) {
                 trackEntity.updateMeshBuffer(renderQuality);
             }
         }
-        if(bindColourBuffers){
+        if (bindColourBuffers) {
             bindColourBuffers = false;
             for (TrackEntity trackEntity : values()) {
                 trackEntity.updateColourBuffer(displayColour);
@@ -78,32 +77,32 @@ public class TrackEntityCollection extends HashMap<Integer, TrackEntity> {
         shaderProgram.setBooleanUniform("useInstancedColour", useInstancedColour);
 
         for (TrackEntity trackEntity : values()) {
-            if(motilityPlot){
+            if (motilityPlot) {
                 shaderProgram.setMatrix4fUniform("motilityPlotMatrix", trackEntity.getMotilityPlotMatrix());
             }
 
-            if(!useInstancedColour) {
+            if (!useInstancedColour) {
                 shaderProgram.setColourUniformRGB("colour", trackEntity.getColour());
             }
 
             trackEntity.renderParticle(frame);
 
-            if(showTrail) {
+            if (showTrail) {
                 trackEntity.renderTrail(frame, trailLength);
             }
         }
     }
 
-    public void dispose(){
-        for (TrackEntity trackEntity : values()){
+    public void dispose() {
+        for (TrackEntity trackEntity : values()) {
             trackEntity.dispose();
         }
     }
 
-    public Vector3f getFocusOfPlot(){
-        if(motilityPlot){
+    public Vector3f getFocusOfPlot() {
+        if (motilityPlot) {
             return new Vector3f();
-        }else {
+        } else {
             return centreOfTracks;
         }
     }
@@ -112,31 +111,31 @@ public class TrackEntityCollection extends HashMap<Integer, TrackEntity> {
         return highestFrame;
     }
 
-    public boolean isTrailVisibile(){
+    public boolean isTrailVisibile() {
         return showTrail;
     }
 
-    public void setTrailVisibility(boolean state){
+    public void setTrailVisibility(boolean state) {
         showTrail = state;
     }
 
-    public void toggleTrailVisibility(){
+    public void toggleTrailVisibility() {
         showTrail = !showTrail;
     }
 
-    public boolean ifMotilityPlot(){
+    public boolean ifMotilityPlot() {
         return motilityPlot;
     }
 
-    public void setMotilityPlot(boolean state){
+    public void setMotilityPlot(boolean state) {
         motilityPlot = state;
     }
 
-    public void toggleMotilityPlot(){
+    public void toggleMotilityPlot() {
         motilityPlot = !motilityPlot;
     }
 
-    public int getTrailLength(){
+    public int getTrailLength() {
         return trailLength;
     }
 
@@ -150,11 +149,9 @@ public class TrackEntityCollection extends HashMap<Integer, TrackEntity> {
         }
     }
 
-    public void changeTrailLength(int deltaValue){
+    public void changeTrailLength(int deltaValue) {
         setTrailLength(getTrailLength() + deltaValue);
     }
-
-    public static final DisplayColour displayColour_DEF = DisplayColour.ID;
 
     public DisplayColour getDisplayColour() {
         return displayColour;
@@ -164,8 +161,6 @@ public class TrackEntityCollection extends HashMap<Integer, TrackEntity> {
         this.displayColour = displayColour;
         this.bindColourBuffers = displayColour != DisplayColour.ID;
     }
-
-    public static final RenderQuality renderQuality_DEF = RenderQuality.LOW;
 
     public RenderQuality getRenderQuality() {
         return renderQuality;

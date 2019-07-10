@@ -17,7 +17,7 @@ public class CollectionBounds {
 
     public CollectionBounds(double[][] spacialLimits) {
 
-        //Convert from Z-up orientation to Y-up
+        // Convert from Z-up orientation to Y-up
         minPosition = new Vector3f(
                 (float) spacialLimits[0][0],
                 (float) spacialLimits[2][0],
@@ -63,5 +63,4 @@ public class CollectionBounds {
     public float getHeight() {
         return height;
     }
-
 }

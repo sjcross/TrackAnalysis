@@ -149,7 +149,6 @@ public class TrackEntity {
         pipeMatricesFloatBuffer.clear();
 
 
-
         FloatBuffer colourFloatBuffer = BufferUtils.createFloatBuffer(globalPositionList.size());
 
         TreeMap<Integer, Double> instantaneousVelocity = track.getInstantaneousSpeed(true);
@@ -175,7 +174,6 @@ public class TrackEntity {
         glBindBuffer(GL_ARRAY_BUFFER, icboPathLength);
         glBufferData(GL_ARRAY_BUFFER, colourFloatBuffer, GL_STATIC_DRAW);
         colourFloatBuffer.clear();
-
 
 
         renderDataParticle = new RenderData(igmboHinge);

@@ -13,7 +13,7 @@ public class Vertex {
     private Vector3f position;
     private Vector2f textureCoord;
 
-    public Vertex(Vector3f position){
+    public Vertex(Vector3f position) {
         this(position, null);
     }
 

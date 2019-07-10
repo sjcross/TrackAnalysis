@@ -1,6 +1,5 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Math.vectors;
 
-import org.apache.commons.math3.util.FastMath;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Quaternion;
@@ -94,11 +93,11 @@ public class Vector3f {
     }
 
     public float getPhi() {
-        return (float) FastMath.toDegrees(FastMath.atan2(FastMath.sqrt(x * x + z * z), y));
+        return (float) Math.toDegrees(Math.atan2(Math.sqrt(x * x + z * z), y));
     }
 
     public float getTheta() {
-        return (float) FastMath.toDegrees(FastMath.atan2(z, x));
+        return (float) Math.toDegrees(Math.atan2(z, x));
     }
 
     public void multiply(final float multiplier) {
@@ -203,7 +202,7 @@ public class Vector3f {
     }
 
     public static float Length(final Vector3f vec) {
-        return (float) FastMath.sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+        return (float) Math.sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
     }
 
     public static Vector3f Normalize(final Vector3f vec) {
