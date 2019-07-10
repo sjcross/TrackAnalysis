@@ -1,0 +1,8 @@
+Let it be noted that while the track data abides by the `z-up` coordinate system
+in which the z dimension represents the vertical displacement of the points,
+the Plot3D package alternatively uses a `y-up` coordinate system in all its
+linear algebra and rendering processes to follow the openGL standard. To ensure
+that the resulting render produces a faithful rendering of the data, the y,z
+coordinates are swapped when creating the track entity transform buffers. This
+can been traced to the `toVector3f` method in DataUtils where the primitive track
+point objects from the common library are converted to suitable vector3fs.

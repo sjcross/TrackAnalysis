@@ -1,40 +1,38 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Math;
 
-import org.apache.commons.math3.util.FastMath;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 
 /**
- * Created by fisherj16 on 9/20/2017.
+ * Created by JDJFisher on 31/07/2017.
  */
 public class Quaternion {
-    public static final Quaternion IDENTITY = new Quaternion(0,0,0,1);
 
     private float x;
     private float y;
     private float z;
     private float w;
 
-    public Quaternion(){
-        this(IDENTITY);
+    public Quaternion() {
+        this(0, 0, 0, 1);
     }
 
-    public Quaternion(final Quaternion quaternion){
+    public Quaternion(final Quaternion quaternion) {
         set(quaternion);
     }
 
-    public Quaternion(float x, float y, float z, float w){
+    public Quaternion(float x, float y, float z, float w) {
         set(x, y, z, w);
     }
 
-    public Quaternion(final Vector3f eulerAngles){
+    public Quaternion(final Vector3f eulerAngles) {
         set(eulerAngles);
     }
 
-    public Quaternion(final float eulerX, final float eulerY, final float eulerZ){
+    public Quaternion(final float eulerX, final float eulerY, final float eulerZ) {
         set(eulerX, eulerY, eulerZ);
     }
 
-    public Quaternion(final float theta, final Vector3f axisDirection){
+    public Quaternion(final float theta, final Vector3f axisDirection) {
         set(theta, axisDirection);
     }
 
@@ -49,62 +47,58 @@ public class Quaternion {
         return x == quaternion.x && y == quaternion.y && z == quaternion.z && w == quaternion.w;
     }
 
-    public Quaternion getConjugate(){
+    public Quaternion getConjugate() {
         return Conjugate(this);
     }
 
-    public void normalize(){
+    public void normalize() {
         set(Normalize(this));
     }
 
-    //////////////////////////////////////////////MULTIPLY//////////////////////////////////////////////////////////////
-
-    public void multiply(final Quaternion multiplier){
+    public void multiply(final Quaternion multiplier) {
         set(Multiply(this, multiplier));
     }
 
-    public void multiply(final float x, final float y, final float z, final float w){
+    public void multiply(final float x, final float y, final float z, final float w) {
         multiply(new Quaternion(x, y, z, w));
     }
 
-    public void multiply(final Vector3f eulerAngles){
+    public void multiply(final Vector3f eulerAngles) {
         multiply(eulerAngles.getX(), eulerAngles.getY(), eulerAngles.getZ());
     }
 
-    public void multiply(final float eulerX, final float eulerY, final float eulerZ){
+    public void multiply(final float eulerX, final float eulerY, final float eulerZ) {
         set(Multiply(this, EulerAnglesToQuaternion(eulerX, eulerY, eulerZ)));
     }
 
-    public void multiply(final float theta, final Vector3f axisDirection){
+    public void multiply(final float theta, final Vector3f axisDirection) {
         set(Multiply(this, RotationAxisToQuaternion(theta, axisDirection)));
     }
 
-    public void multiply(final float scaler){
+    public void multiply(final float scaler) {
         set(Multiply(this, scaler));
     }
 
-    ////////////////////////////////////////////////SET/////////////////////////////////////////////////////////////////
-
-    public void set(final Quaternion quaternion){
+    public void set(final Quaternion quaternion) {
         set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
     }
 
-    public void set(final float x, final float y, final float z, final float w){
+    public void set(final float x, final float y, final float z, final float w) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = w;
     }
 
-    public void set(final Vector3f eulerAngles){
+    public void set(final Vector3f eulerAngles) {
         set(eulerAngles.getX(), eulerAngles.getY(), eulerAngles.getZ());
     }
 
-    public void set(final float eulerX, final float eulerY, final float eulerZ){
+    public void set(final float eulerX, final float eulerY, final float eulerZ) {
         set(EulerAnglesToQuaternion(eulerX, eulerY, eulerZ));
     }
 
-    public void set(final float theta, final Vector3f axisDirection){
+    public void set(final float theta, final Vector3f axisDirection) {
         set(RotationAxisToQuaternion(theta, axisDirection));
     }
 
@@ -140,9 +134,7 @@ public class Quaternion {
         return w;
     }
 
-    ///////////////////////////////////////////////STATIC///////////////////////////////////////////////////////////////
-
-    private static Quaternion Multiply(final Quaternion multiplicand, final Quaternion multiplier){
+    private static Quaternion Multiply(final Quaternion multiplicand, final Quaternion multiplier) {
         return new Quaternion(
                 multiplicand.x * multiplier.w + multiplicand.y * multiplier.z - multiplicand.z * multiplier.y + multiplicand.w * multiplier.x,
                 -multiplicand.x * multiplier.z + multiplicand.y * multiplier.w + multiplicand.z * multiplier.x + multiplicand.w * multiplier.y,
@@ -160,22 +152,22 @@ public class Quaternion {
         );
     }
 
-    private static Quaternion EulerAnglesToQuaternion(final Vector3f eulerAngles){ //Eulers angles
+    private static Quaternion EulerAnglesToQuaternion(final Vector3f eulerAngles) { //Eulers angles
         return EulerAnglesToQuaternion(eulerAngles.getX(), eulerAngles.getY(), eulerAngles.getZ());
     }
 
-    private static Quaternion EulerAnglesToQuaternion(final float eulerX, final float eulerY, final float eulerZ){ //Eulers angles
-        final double halfX = FastMath.toRadians(eulerX / 2);
-        final double halfY = FastMath.toRadians(eulerY / 2);
-        final double halfZ = FastMath.toRadians(eulerZ / 2);
+    private static Quaternion EulerAnglesToQuaternion(final float eulerX, final float eulerY, final float eulerZ) { //Eulers angles
+        final double halfX = Math.toRadians(eulerX / 2);
+        final double halfY = Math.toRadians(eulerY / 2);
+        final double halfZ = Math.toRadians(eulerZ / 2);
 
-        final float cosX = (float) FastMath.cos(halfX);
-        final float cosY = (float) FastMath.cos(halfY);
-        final float cosZ = (float) FastMath.cos(halfZ);
+        final float cosX = (float) Math.cos(halfX);
+        final float cosY = (float) Math.cos(halfY);
+        final float cosZ = (float) Math.cos(halfZ);
 
-        final float sinX = (float) FastMath.sin(halfX);
-        final float sinY = (float) FastMath.sin(halfY);
-        final float sinZ = (float) FastMath.sin(halfZ);
+        final float sinX = (float) Math.sin(halfX);
+        final float sinY = (float) Math.sin(halfY);
+        final float sinZ = (float) Math.sin(halfZ);
 
         return new Quaternion(
                 cosZ * cosY * sinX - sinZ * sinY * cosX,
@@ -185,29 +177,29 @@ public class Quaternion {
         );
     }
 
-    public static Vector3f QuaternionToEulerAngles(final Quaternion quaternion){
+    public static Vector3f QuaternionToEulerAngles(final Quaternion quaternion) {
         double ysqr = quaternion.y * quaternion.y;
 
         double t0 = 2.0 * (quaternion.w * quaternion.x + quaternion.y * quaternion.z);
         double t1 = 1.0 - 2.0 * (quaternion.x * quaternion.x + ysqr);
 
         double t2 = 2.0 * (quaternion.w * quaternion.y - quaternion.z * quaternion.x);
-        t2 = t2 > 1.0 ? ( 1.0 ):( t2 < -1.0 ? -1.0 : t2 );
+        t2 = t2 > 1.0 ? (1.0) : (t2 < -1.0 ? -1.0 : t2);
 
         double t3 = 2.0 * (quaternion.w * quaternion.z + quaternion.x * quaternion.y);
         double t4 = 1.0 - 2.0 * (ysqr + quaternion.z * quaternion.z);
 
         return new Vector3f(
-                (float) FastMath.toDegrees(FastMath.atan2(t0, t1)),
-                (float) FastMath.toDegrees(FastMath.asin(t2)),
-                (float) FastMath.toDegrees(FastMath.atan2(t3, t4))
+                (float) Math.toDegrees(Math.atan2(t0, t1)),
+                (float) Math.toDegrees(Math.asin(t2)),
+                (float) Math.toDegrees(Math.atan2(t3, t4))
         );
     }
 
     private static Quaternion RotationAxisToQuaternion(final float theta, final Vector3f axisDirection) {
-        final double θ = FastMath.toRadians(theta);
-        final float sinHalfθ = (float) FastMath.sin(θ / 2);
-        final float cosHalfθ = (float) FastMath.cos(θ / 2);
+        final double θ = Math.toRadians(theta);
+        final float sinHalfθ = (float) Math.sin(θ / 2);
+        final float cosHalfθ = (float) Math.cos(θ / 2);
 
         return new Quaternion(
                 axisDirection.getX() * sinHalfθ,
@@ -217,11 +209,11 @@ public class Quaternion {
         );
     }
 
-    public static Quaternion Conjugate(Quaternion quaternion){
+    public static Quaternion Conjugate(Quaternion quaternion) {
         return new Quaternion(-quaternion.x, -quaternion.y, -quaternion.z, quaternion.w);
     }
 
-    private static Quaternion Normalize(Quaternion quaternion){
-        return Multiply(quaternion, (float) FastMath.sqrt(quaternion.x * quaternion.x + quaternion.y * quaternion.y + quaternion.z * quaternion.z + quaternion.w * quaternion.w));
+    private static Quaternion Normalize(Quaternion quaternion) {
+        return Multiply(quaternion, (float) Math.sqrt(quaternion.x * quaternion.x + quaternion.y * quaternion.y + quaternion.z * quaternion.z + quaternion.w * quaternion.w));
     }
 }

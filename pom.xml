@@ -125,13 +125,17 @@
             <scope>${myscope}</scope>
         </dependency>
 
+        <!--Local repository-->
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-math3</artifactId>
-            <version>3.6.1</version>
-            <scope>${myscope}</scope>
+            <!--<groupId>wbif.sjx</groupId>-->
+            <!--<artifactId>Common</artifactId>-->
+            <!--<version>1.4.7</version>-->
+            <groupId>com.github.SJCross</groupId>
+            <artifactId>Common</artifactId>
+            <version>1.4.7</version>
         </dependency>
 
+        <!-- PLot3D Libs -->
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
@@ -150,23 +154,7 @@
             <version>${lwjgl.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.l33tlabs.twl</groupId>
-            <artifactId>pngdecoder</artifactId>
-            <version>1.0</version>
-        </dependency>
-
-        <!--Local repository-->
-        <dependency>
-<!--            <groupId>wbif.sjx</groupId>-->
-<!--            <artifactId>Common</artifactId>-->
-<!--            <version>1.4.7</version>-->
-            <groupId>com.github.SJCross</groupId>
-            <artifactId>Common</artifactId>
-            <version>1.4.7</version>
-        </dependency>
-
-        <!-- Natives -->
+        <!-- Plot3D Natives -->
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
