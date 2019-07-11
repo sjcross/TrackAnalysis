@@ -49,7 +49,7 @@ public class Engine {
         }
     }
 
-    public void start() throws Exception {
+    public void start() {
         window.setVisibility(true);
         running = true;
         mainLoop();
@@ -60,15 +60,13 @@ public class Engine {
     }
 
     private void mainLoop() {
-        float timeElapsedLastLoop;
         float cumulativeLagTime = 0f;
-        final float secondsPerUpdate = 1f / (float)TARGET_UPDATES_PER_SECOND;
+        final float secondsPerUpdate = 1f / TARGET_UPDATES_PER_SECOND;
         final float secondsPerFrame = 1f / window.getRefreshRate();
         fpsTimer.start();
 
         while (running && window.isOpen()){
-            timeElapsedLastLoop = loopTimer.getElapsedTime();
-            cumulativeLagTime += timeElapsedLastLoop;
+            cumulativeLagTime += loopTimer.getElapsedTime();
             loopTimer.start();
 
             handleInput();
