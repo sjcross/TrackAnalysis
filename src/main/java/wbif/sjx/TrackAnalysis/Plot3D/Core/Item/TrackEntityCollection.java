@@ -1,174 +1,85 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core.Item;
 
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
-import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
-import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataUtils;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Scene;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
+import wbif.sjx.TrackAnalysis.Plot3D.Graphics.MeshFactory;
+import wbif.sjx.TrackAnalysis.Plot3D.Utils.UniCallback;
 import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
-
-import java.util.HashMap;
 
 /**
  * Created by JDJFisher on 31/07/2017.
  */
-public class TrackEntityCollection extends HashMap<Integer, TrackEntity> {
+public class TrackEntityCollection {
 
-    public static final int minTrailLength = 3;
+    private static final float TRAIL_RADIUS = 0.5f;
+    private static final float PARTICLE_RADIUS = 2.5f;
 
-    private final Vector3f centreOfTracks;
-    private final int highestFrame;
-    public final int maxTrailLength;
+    private static final int PARTICLE_RESOLUTION = 20;
+    private static final int LOWEST_RESOLUTION = 3;
+    private static final int LOW_RESOLUTION = 6;
+    private static final int MEDIUM_RESOLUTION = 10;
+    private static final int HIGH_RESOLUTION = 20;
 
-    private DisplayColour displayColour;
-    private RenderQuality renderQuality;
-    private boolean bindColourBuffers = true;
-    private boolean bindMeshBuffers = true;
-    private boolean showTrail;
-    private boolean motilityPlot;
-    private int trailLength;
+    Mesh particleMesh;
+    Mesh pipeMeshLowest;
+    Mesh hingePointMeshLowest;
+    Mesh pipeMeshLow;
+    Mesh hingePointMeshLow;
+    Mesh pipeMeshMedium;
+    Mesh hingePointMeshMedium;
+    Mesh pipeMeshHigh;
+    Mesh hingePointMeshHigh;
+
+    private final TrackEntity[] trackEntities;
 
     public TrackEntityCollection(TrackCollection tracks) {
-        final float maximumInstantaneousVelocity = (float) tracks.getMaximumInstantaneousSpeed();
-        final float maximumTotalPathLength = (float) tracks.getMaximumTotalPathLength();
+        particleMesh = MeshFactory.sphere(PARTICLE_RADIUS, PARTICLE_RESOLUTION);
+        pipeMeshLowest = MeshFactory.pipe(TRAIL_RADIUS, LOWEST_RESOLUTION, 1);
+        hingePointMeshLowest = MeshFactory.sphere(TRAIL_RADIUS, LOWEST_RESOLUTION);
+        pipeMeshLow = MeshFactory.pipe(TRAIL_RADIUS, LOW_RESOLUTION, 1);
+        hingePointMeshLow = MeshFactory.sphere(TRAIL_RADIUS, LOW_RESOLUTION);
+        pipeMeshMedium = MeshFactory.pipe(TRAIL_RADIUS, MEDIUM_RESOLUTION, 1);
+        hingePointMeshMedium = MeshFactory.sphere(TRAIL_RADIUS, MEDIUM_RESOLUTION);
+        pipeMeshHigh = MeshFactory.pipe(TRAIL_RADIUS, HIGH_RESOLUTION, 1);
+        hingePointMeshHigh = MeshFactory.sphere(TRAIL_RADIUS, HIGH_RESOLUTION);
 
-        for (int trackID : tracks.keySet()) {
-            put(trackID, new TrackEntity(tracks.get(trackID), maximumInstantaneousVelocity, maximumTotalPathLength));
+        trackEntities = new TrackEntity[tracks.size()];
+
+        final float maxInstSpeed = (float) tracks.getMaximumInstantaneousSpeed();
+        final float maxPathLength = (float) tracks.getMaximumTotalPathLength();
+        int i = 0;
+
+        for (Track track : tracks.values()) {
+            trackEntities[i++] = new TrackEntity(track, maxInstSpeed, maxPathLength, this);
         }
-
-        this.centreOfTracks = DataUtils.toVector3f(tracks.getMeanPoint(0));
-        this.highestFrame = tracks.getHighestFrame();
-        this.maxTrailLength = highestFrame < 1 ? 1 : highestFrame;
-        this.trailLength = maxTrailLength;
-        this.displayColour = DisplayColour.ID;
-        this.renderQuality = RenderQuality.LOW;
-        this.showTrail = true;
-        this.motilityPlot = false;
     }
 
-    public void render(ShaderProgram shaderProgram, int frame) {
-        boolean useInstancedColour = displayColour != DisplayColour.ID;
-
-        if (bindMeshBuffers) {
-            bindMeshBuffers = false;
-            for (TrackEntity trackEntity : values()) {
-                trackEntity.updateMeshBuffer(renderQuality);
-            }
+    public void forEachTrackEntity(UniCallback<TrackEntity> x) {
+        for(TrackEntity trackEntity : trackEntities) {
+            x.invoke(trackEntity);
         }
-        if (bindColourBuffers) {
-            bindColourBuffers = false;
-            for (TrackEntity trackEntity : values()) {
-                trackEntity.updateColourBuffer(displayColour);
-            }
-        }
+    }
 
-        shaderProgram.setBooleanUniform("motilityPlot", motilityPlot);
-        shaderProgram.setBooleanUniform("useInstancedColour", useInstancedColour);
+    public void updateColourBuffers(Scene.DisplayColour colour) {
+        forEachTrackEntity(e -> e.updateColourBuffer(colour));
+    }
 
-        for (TrackEntity trackEntity : values()) {
-            if (motilityPlot) {
-                shaderProgram.setMatrix4fUniform("motilityPlotMatrix", trackEntity.getMotilityPlotMatrix());
-            }
-
-            if (!useInstancedColour) {
-                shaderProgram.setColourUniformRGB("colour", trackEntity.getColour());
-            }
-
-            trackEntity.renderParticle(frame);
-
-            if (showTrail) {
-                trackEntity.renderTrail(frame, trailLength);
-            }
-        }
+    public void updateMeshBuffers(Scene.RenderQuality quality) {
+        forEachTrackEntity(e -> e.updateMeshBuffer(quality, this));
     }
 
     public void dispose() {
-        for (TrackEntity trackEntity : values()) {
-            trackEntity.dispose();
-        }
-    }
+        forEachTrackEntity(TrackEntity::dispose);
 
-    public Vector3f getFocusOfPlot() {
-        if (motilityPlot) {
-            return new Vector3f();
-        } else {
-            return centreOfTracks;
-        }
-    }
-
-    public int getHighestFrame() {
-        return highestFrame;
-    }
-
-    public boolean isTrailVisibile() {
-        return showTrail;
-    }
-
-    public void setTrailVisibility(boolean state) {
-        showTrail = state;
-    }
-
-    public void toggleTrailVisibility() {
-        showTrail = !showTrail;
-    }
-
-    public boolean ifMotilityPlot() {
-        return motilityPlot;
-    }
-
-    public void setMotilityPlot(boolean state) {
-        motilityPlot = state;
-    }
-
-    public void toggleMotilityPlot() {
-        motilityPlot = !motilityPlot;
-    }
-
-    public int getTrailLength() {
-        return trailLength;
-    }
-
-    public void setTrailLength(int value) {
-        if (value < minTrailLength) {
-            trailLength = minTrailLength;
-        } else if (value > maxTrailLength) {
-            trailLength = maxTrailLength;
-        } else {
-            trailLength = value;
-        }
-    }
-
-    public void changeTrailLength(int deltaValue) {
-        setTrailLength(getTrailLength() + deltaValue);
-    }
-
-    public DisplayColour getDisplayColour() {
-        return displayColour;
-    }
-
-    public void setDisplayColour(DisplayColour displayColour) {
-        this.displayColour = displayColour;
-        this.bindColourBuffers = displayColour != DisplayColour.ID;
-    }
-
-    public RenderQuality getRenderQuality() {
-        return renderQuality;
-    }
-
-    public void setDisplayQuality(RenderQuality renderQuality) {
-        this.renderQuality = renderQuality;
-        this.bindMeshBuffers = true;
-    }
-
-    public enum DisplayColour {
-        ID,
-        TOTAL_PATH_LENGTH,
-        VELOCITY
-    }
-
-    public enum RenderQuality {
-        LOWEST,
-        LOW,
-        MEDIUM,
-        HIGH
+        particleMesh.dispose();
+        pipeMeshLowest.dispose();
+        hingePointMeshLowest.dispose();
+        pipeMeshLow.dispose();
+        hingePointMeshLow.dispose();
+        pipeMeshMedium.dispose();
+        hingePointMeshMedium.dispose();
+        pipeMeshHigh.dispose();
+        hingePointMeshHigh.dispose();
     }
 }

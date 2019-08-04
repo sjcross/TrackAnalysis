@@ -1,9 +1,9 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core.Item;
 
 import org.lwjgl.BufferUtils;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Scene;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Vertex;
-import wbif.sjx.TrackAnalysis.Plot3D.Graphics.MeshFactory;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Quaternion;
@@ -30,65 +30,11 @@ import static org.lwjgl.opengl.GL42.glDrawElementsInstancedBaseInstance;
 import static wbif.sjx.TrackAnalysis.Plot3D.Core.Scene.X_AXIS;
 import static wbif.sjx.TrackAnalysis.Plot3D.Core.Scene.Y_AXIS;
 import static wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh.FLOAT_SIZE;
-import static wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f.ORDER;
 
 /**
  * Created by JDJFisher on 31/07/2017.
  */
 public class TrackEntity {
-
-    private static final float TRAIL_RADIUS = 0.5f;
-    private static final float PARTICLE_RADIUS = 2.5f;
-
-    private static final int PARTICLE_RESOLUTION = 20;
-    private static final int LOWEST_RESOLUTION = 3;
-    private static final int LOW_RESOLUTION = 6;
-    private static final int MEDIUM_RESOLUTION = 10;
-    private static final int HIGH_RESOLUTION = 20;
-
-    private static Mesh PARTICLE_MESH;
-    private static Mesh PIPE_MESH_LOWEST;
-    private static Mesh HINGE_POINT_MESH_LOWEST;
-    private static Mesh PIPE_MESH_LOW;
-    private static Mesh HINGE_POINT_MESH_LOW;
-    private static Mesh PIPE_MESH_MEDIUM;
-    private static Mesh HINGE_POINT_MESH_MEDIUM;
-    private static Mesh PIPE_MESH_HIGH;
-    private static Mesh HINGE_POINT_MESH_HIGH;
-
-    private static boolean MESHES_INITIALISED = false;
-
-    public static void initStaticMeshes() {
-        if (!MESHES_INITIALISED) {
-            PARTICLE_MESH = MeshFactory.sphere(PARTICLE_RADIUS, PARTICLE_RESOLUTION);
-            PIPE_MESH_LOWEST = MeshFactory.pipe(TRAIL_RADIUS, LOWEST_RESOLUTION, 1);
-            HINGE_POINT_MESH_LOWEST = MeshFactory.sphere(TRAIL_RADIUS, LOWEST_RESOLUTION);
-            PIPE_MESH_LOW = MeshFactory.pipe(TRAIL_RADIUS, LOW_RESOLUTION, 1);
-            HINGE_POINT_MESH_LOW = MeshFactory.sphere(TRAIL_RADIUS, LOW_RESOLUTION);
-            PIPE_MESH_MEDIUM = MeshFactory.pipe(TRAIL_RADIUS, MEDIUM_RESOLUTION, 1);
-            HINGE_POINT_MESH_MEDIUM = MeshFactory.sphere(TRAIL_RADIUS, MEDIUM_RESOLUTION);
-            PIPE_MESH_HIGH = MeshFactory.pipe(TRAIL_RADIUS, HIGH_RESOLUTION, 1);
-            HINGE_POINT_MESH_HIGH = MeshFactory.sphere(TRAIL_RADIUS, HIGH_RESOLUTION);
-            MESHES_INITIALISED = true;
-        }
-    }
-
-    public static void disposeStaticMeshes() {
-        if (MESHES_INITIALISED) {
-            PARTICLE_MESH.dispose();
-            PIPE_MESH_LOWEST.dispose();
-            HINGE_POINT_MESH_LOWEST.dispose();
-            PIPE_MESH_LOW.dispose();
-            HINGE_POINT_MESH_LOW.dispose();
-            PIPE_MESH_MEDIUM.dispose();
-            HINGE_POINT_MESH_MEDIUM.dispose();
-            PIPE_MESH_HIGH.dispose();
-            HINGE_POINT_MESH_HIGH.dispose();
-            MESHES_INITIALISED = false;
-        }
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final RenderData renderDataParticle;
     private final RenderData renderDataHinge;
@@ -102,23 +48,23 @@ public class TrackEntity {
     private final Color colour;
     private final Matrix4f motilityPlotMatrix;
 
-    public TrackEntity(Track track, float maxInstantaneousVelocity, float maxTotalPathLength) {
+    public TrackEntity(Track track, float maxInstSpeed, float maxPathLength, TrackEntityCollection tec) {
         this.colour = RNG.Colour();
 
-        ArrayList<Vector3f> globalPositionList = new ArrayList<>();
+        ArrayList<Vector3f> globalPosList = new ArrayList<>();
 
         for (int frame : track.keySet()) {
-            globalPositionList.add(frame, DataUtils.toVector3f(track.get(frame)));
+            globalPosList.add(frame, DataUtils.toVector3f(track.get(frame)));
         }
 
-        this.motilityPlotMatrix = Matrix4f.Translation(Vector3f.Negative(globalPositionList.get(0)));
+        this.motilityPlotMatrix = Matrix4f.Translation(Vector3f.Negative(globalPosList.get(0)));
 
-        FloatBuffer hingeMatricesFloatBuffer = BufferUtils.createFloatBuffer(globalPositionList.size() * ORDER * ORDER);
-        FloatBuffer pipeMatricesFloatBuffer = BufferUtils.createFloatBuffer((globalPositionList.size() - 1) * ORDER * ORDER);
+        FloatBuffer hingeMatricesBuffer = BufferUtils.createFloatBuffer(globalPosList.size() * Matrix4f.ORDER * Matrix4f.ORDER);
+        FloatBuffer pipeMatricesBuffer = BufferUtils.createFloatBuffer((globalPosList.size() - 1) * Matrix4f.ORDER * Matrix4f.ORDER);
 
-        for (int i = 0; i < globalPositionList.size() - 1; i++) {
-            Vector3f currentPosition = globalPositionList.get(i);
-            Vector3f nextPosition = globalPositionList.get(i + 1);
+        for (int i = 0; i < globalPosList.size() - 1; i++) {
+            Vector3f currentPosition = globalPosList.get(i);
+            Vector3f nextPosition = globalPosList.get(i + 1);
             Vector3f pipeVector = Vector3f.Subtract(nextPosition, currentPosition);
             Quaternion pipeRotation = new Quaternion(pipeVector.getPhi(), X_AXIS);
             pipeRotation.multiply(pipeVector.getTheta() + 90, Y_AXIS);
@@ -127,34 +73,34 @@ public class TrackEntity {
             globalMatrix.multiply(Matrix4f.QuaternionRotation(pipeRotation));
 
 
-            DataUtils.putMatrix4f(hingeMatricesFloatBuffer, globalMatrix);
+            DataUtils.putMatrix4f(hingeMatricesBuffer, globalMatrix);
 
             globalMatrix.multiply(Matrix4f.StretchY(pipeVector.getLength()));
 
-            DataUtils.putMatrix4f(pipeMatricesFloatBuffer, globalMatrix);
+            DataUtils.putMatrix4f(pipeMatricesBuffer, globalMatrix);
         }
 
-        DataUtils.putMatrix4f(hingeMatricesFloatBuffer, Matrix4f.Translation(globalPositionList.get(globalPositionList.size() - 1)));
+        DataUtils.putMatrix4f(hingeMatricesBuffer, Matrix4f.Translation(globalPosList.get(globalPosList.size() - 1)));
 
-        hingeMatricesFloatBuffer.flip();
+        hingeMatricesBuffer.flip();
         igmboHinge = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, igmboHinge);
-        glBufferData(GL_ARRAY_BUFFER, hingeMatricesFloatBuffer, GL_STATIC_DRAW);
-        hingeMatricesFloatBuffer.clear();
+        glBufferData(GL_ARRAY_BUFFER, hingeMatricesBuffer, GL_STATIC_DRAW);
+        hingeMatricesBuffer.clear();
 
-        pipeMatricesFloatBuffer.flip();
+        pipeMatricesBuffer.flip();
         igmboPipe = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, igmboPipe);
-        glBufferData(GL_ARRAY_BUFFER, pipeMatricesFloatBuffer, GL_STATIC_DRAW);
-        pipeMatricesFloatBuffer.clear();
+        glBufferData(GL_ARRAY_BUFFER, pipeMatricesBuffer, GL_STATIC_DRAW);
+        pipeMatricesBuffer.clear();
 
 
-        FloatBuffer colourFloatBuffer = BufferUtils.createFloatBuffer(globalPositionList.size());
+        FloatBuffer colourFloatBuffer = BufferUtils.createFloatBuffer(globalPosList.size());
 
         TreeMap<Integer, Double> instantaneousVelocity = track.getInstantaneousSpeed();
 
-        for (int i = 0; i < globalPositionList.size(); i++) {
-            colourFloatBuffer.put(Maths.scaleRange(0, maxInstantaneousVelocity, 0, 1, instantaneousVelocity.get(i).floatValue()));
+        for (int i = 0; i < globalPosList.size(); i++) {
+            colourFloatBuffer.put(Maths.scaleRange(0, maxInstSpeed, 0, 1, instantaneousVelocity.get(i).floatValue()));
         }
 
         colourFloatBuffer.flip();
@@ -165,8 +111,8 @@ public class TrackEntity {
 
         TreeMap<Integer, Double> totalPathLength = track.getRollingTotalPathLength();
 
-        for (int i = 0; i < globalPositionList.size(); i++) {
-            colourFloatBuffer.put(Maths.scaleRange(0, maxTotalPathLength, 0, 1, totalPathLength.get(i).floatValue()));
+        for (int i = 0; i < globalPosList.size(); i++) {
+            colourFloatBuffer.put(Maths.scaleRange(0, maxPathLength, 0, 1, totalPathLength.get(i).floatValue()));
         }
 
         colourFloatBuffer.flip();
@@ -178,7 +124,7 @@ public class TrackEntity {
 
         renderDataParticle = new RenderData(igmboHinge);
         renderDataParticle.bind();
-        renderDataParticle.bindMeshBuffers(PARTICLE_MESH);
+        renderDataParticle.bindMeshBuffers(tec.particleMesh);
 
         renderDataHinge = new RenderData(igmboHinge);
         renderDataPipe = new RenderData(igmboPipe);
@@ -189,17 +135,19 @@ public class TrackEntity {
         renderDataParticle.render(1, frame);
     }
 
-    public void renderTrail(int frame, int trailLength) {
+    public void renderTrail(int frame, int trailLength, boolean renderHinge) {
         final int baseInstance = trailLength > frame ? 0 : frame - trailLength;
         final int primCount = frame - baseInstance;
 
-        renderDataHinge.bind();
-        renderDataHinge.render(primCount, baseInstance);
+        if(renderHinge) {
+            renderDataHinge.bind();
+            renderDataHinge.render(primCount, baseInstance);
+        }
         renderDataPipe.bind();
         renderDataPipe.render(primCount, baseInstance);
     }
 
-    public void updateColourBuffer(TrackEntityCollection.DisplayColour colour) {
+    public void updateColourBuffer(Scene.DisplayColour colour) {
         switch (colour) { // Change vao's icbo
             case VELOCITY:
                 renderDataParticle.bind();
@@ -224,35 +172,35 @@ public class TrackEntity {
         }
     }
 
-    public void updateMeshBuffer(TrackEntityCollection.RenderQuality quality) {
+    public void updateMeshBuffer(Scene.RenderQuality quality, TrackEntityCollection tec) {
         switch (quality) { // Change vao's vbo and ibo
             case LOWEST:
                 renderDataHinge.bind();
-                renderDataHinge.bindMeshBuffers(HINGE_POINT_MESH_LOWEST);
+                renderDataHinge.bindMeshBuffers(tec.hingePointMeshLowest);
 
                 renderDataPipe.bind();
-                renderDataPipe.bindMeshBuffers(PIPE_MESH_LOWEST);
+                renderDataPipe.bindMeshBuffers(tec.pipeMeshLowest);
                 break;
             case LOW:
                 renderDataHinge.bind();
-                renderDataHinge.bindMeshBuffers(HINGE_POINT_MESH_LOW);
+                renderDataHinge.bindMeshBuffers(tec.hingePointMeshLow);
 
                 renderDataPipe.bind();
-                renderDataPipe.bindMeshBuffers(PIPE_MESH_LOW);
+                renderDataPipe.bindMeshBuffers(tec.pipeMeshLow);
                 break;
             case MEDIUM:
                 renderDataHinge.bind();
-                renderDataHinge.bindMeshBuffers(HINGE_POINT_MESH_MEDIUM);
+                renderDataHinge.bindMeshBuffers(tec.hingePointMeshMedium);
 
                 renderDataPipe.bind();
-                renderDataPipe.bindMeshBuffers(PIPE_MESH_MEDIUM);
+                renderDataPipe.bindMeshBuffers(tec.pipeMeshMedium);
                 break;
             case HIGH:
                 renderDataHinge.bind();
-                renderDataHinge.bindMeshBuffers(HINGE_POINT_MESH_HIGH);
+                renderDataHinge.bindMeshBuffers(tec.hingePointMeshHigh);
 
                 renderDataPipe.bind();
-                renderDataPipe.bindMeshBuffers(PIPE_MESH_HIGH);
+                renderDataPipe.bindMeshBuffers(tec.pipeMeshHigh);
                 break;
         }
     }
@@ -289,16 +237,16 @@ public class TrackEntity {
             // instanced matrices
             glBindBuffer(GL_ARRAY_BUFFER, igmbo);
             glEnableVertexAttribArray(2);
-            glVertexAttribPointer(2, Vector4f.SIZE, GL_FLOAT, false, ORDER * ORDER * FLOAT_SIZE, 0);
+            glVertexAttribPointer(2, Vector4f.SIZE, GL_FLOAT, false, Matrix4f.ORDER * Matrix4f.ORDER * FLOAT_SIZE, 0);
             glVertexAttribDivisor(2, 1);
             glEnableVertexAttribArray(3);
-            glVertexAttribPointer(3, Vector4f.SIZE, GL_FLOAT, false, ORDER * ORDER * FLOAT_SIZE, Vector4f.SIZE * FLOAT_SIZE);
+            glVertexAttribPointer(3, Vector4f.SIZE, GL_FLOAT, false, Matrix4f.ORDER * Matrix4f.ORDER * FLOAT_SIZE, Vector4f.SIZE * FLOAT_SIZE);
             glVertexAttribDivisor(3, 1);
             glEnableVertexAttribArray(4);
-            glVertexAttribPointer(4, Vector4f.SIZE, GL_FLOAT, false, ORDER * ORDER * FLOAT_SIZE, 2 * Vector4f.SIZE * FLOAT_SIZE);
+            glVertexAttribPointer(4, Vector4f.SIZE, GL_FLOAT, false, Matrix4f.ORDER * Matrix4f.ORDER * FLOAT_SIZE, 2 * Vector4f.SIZE * FLOAT_SIZE);
             glVertexAttribDivisor(4, 1);
             glEnableVertexAttribArray(5);
-            glVertexAttribPointer(5, Vector4f.SIZE, GL_FLOAT, false, ORDER * ORDER * FLOAT_SIZE, 3 * Vector4f.SIZE * FLOAT_SIZE);
+            glVertexAttribPointer(5, Vector4f.SIZE, GL_FLOAT, false, Matrix4f.ORDER * Matrix4f.ORDER * FLOAT_SIZE, 3 * Vector4f.SIZE * FLOAT_SIZE);
             glVertexAttribDivisor(5, 1);
         }
 

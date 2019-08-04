@@ -4,6 +4,7 @@ package wbif.sjx.TrackAnalysis.Plot3D.Core;
 import com.jogamp.opengl.util.awt.ImageUtil;
 import ij.ImagePlus;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.Entity;
+import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.TrackEntity;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Texture.Texture;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
@@ -30,6 +31,8 @@ public class Renderer {
     private boolean captureNextRender;
 
     private boolean useOrthoProj;
+    private boolean bindColourBuffers = true;
+    private boolean bindMeshBuffers = true;
     private Vector2f orthoBoundingConstraints;
 
     public Renderer() throws Exception {
@@ -48,14 +51,10 @@ public class Renderer {
     }
 
     public void render(GLFWWindow window, Camera camera, Scene scene) {
-        camera.preRender();
-
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glfwSwapInterval(window.isVSyncEnabled() ? 1 : 0);
 
-
         Matrix4f projViewMatrix = calcProjViewMatrix(window, camera);
-
 
         mainShader.bind();
         mainShader.setMatrix4fUniform("projectedViewMatrix", projViewMatrix);
@@ -66,7 +65,7 @@ public class Renderer {
             }
         }
 
-        if (scene.isBoundingBoxVisible() && !scene.getTracksEntities().ifMotilityPlot()) {
+        if (scene.isBoundingBoxVisible() && !scene.ifMotilityPlot()) {
             scene.getBoundingFrame().render(mainShader);
         }
 
@@ -82,7 +81,7 @@ public class Renderer {
         arrayTextureShader.setMatrix4fUniform("projectedViewMatrix", projViewMatrix);
         arrayTextureShader.setIntUniform("frame", scene.getFrame());
 
-        if(!scene.getTracksEntities().ifMotilityPlot()) {
+        if(!scene.ifMotilityPlot()) {
             scene.getPlaneXZ().render(arrayTextureShader);
         }
 
@@ -91,7 +90,37 @@ public class Renderer {
 
         instancedShader.bind();
         instancedShader.setMatrix4fUniform("projectedViewMatrix", projViewMatrix);
-        scene.getTracksEntities().render(instancedShader, scene.getFrame());
+
+        boolean useInstancedColour = scene.getDisplayColour() != Scene.DisplayColour.ID;
+
+        if (bindMeshBuffers) {
+            bindMeshBuffers = false;
+            scene.getTracksEntities().updateMeshBuffers(scene.getRenderQuality());
+        }
+        if (bindColourBuffers) {
+            bindColourBuffers = false;
+            scene.getTracksEntities().updateColourBuffers(scene.getDisplayColour());
+        }
+
+        instancedShader.setBooleanUniform("motilityPlot", scene.ifMotilityPlot());
+        instancedShader.setBooleanUniform("useInstancedColour", useInstancedColour);
+
+        scene.getTracksEntities().forEachTrackEntity(trackEntity -> {
+            if (scene.ifMotilityPlot()) {
+                instancedShader.setMatrix4fUniform("motilityPlotMatrix", trackEntity.getMotilityPlotMatrix());
+            }
+
+            if (!useInstancedColour) {
+                instancedShader.setColourUniformRGB("colour", trackEntity.getColour());
+            }
+
+            trackEntity.renderParticle(scene.getFrame());
+
+            if (scene.isTrailVisibile()) {
+                trackEntity.renderTrail(scene.getFrame(), scene.getTrailLength(), scene.getRenderQuality() != Scene.RenderQuality.LOWEST);
+            }
+        });
+
         instancedShader.unbind();
 
 
@@ -104,7 +133,7 @@ public class Renderer {
     private Matrix4f calcProjViewMatrix(GLFWWindow window, Camera camera) {
         Matrix4f projMatrix;
 
-        if (useOrthoProj) {
+        if (useOrthoProj && !camera.isOrbiting()) {
             float widthRatio = window.getWidth() / orthoBoundingConstraints.getX();
             float heightRatio = window.getHeight() / orthoBoundingConstraints.getY();
 
@@ -121,6 +150,8 @@ public class Renderer {
         } else {
             projMatrix = Matrix4f.Perspective(camera.getFOV(), window.getAspectRatio(), Camera.VIEW_DISTANCE_NEAR, Camera.VIEW_DISTANCE_FAR);
         }
+
+        camera.calcViewMatrix();
 
         return Matrix4f.Multiply(projMatrix, camera.getViewMatrix());
     }
@@ -155,5 +186,13 @@ public class Renderer {
 
     public void disableOrthoProj() {
         useOrthoProj = false;
+    }
+
+    public void setBindColourBuffers(boolean bindColourBuffers) {
+        this.bindColourBuffers = bindColourBuffers;
+    }
+
+    public void setBindMeshBuffers(boolean bindMeshBuffers) {
+        this.bindMeshBuffers = bindMeshBuffers;
     }
 }

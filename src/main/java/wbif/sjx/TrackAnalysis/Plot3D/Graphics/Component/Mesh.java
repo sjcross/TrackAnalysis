@@ -141,13 +141,13 @@ public class Mesh {
     }
 
     private static float calcBoundingSphereRadius(Vertex[] vertices) {
-        float boundingSphereRadius = 0;
+        float boundingRadius = 0;
 
         for (Vertex vertex : vertices) {
-            boundingSphereRadius = Math.max(boundingSphereRadius, vertex.getPosition().getLength());
+            boundingRadius = Math.max(boundingRadius, vertex.getPosition().getLength());
         }
 
-        return boundingSphereRadius;
+        return boundingRadius;
     }
 
     public float getBoundingSphereRadius() {
