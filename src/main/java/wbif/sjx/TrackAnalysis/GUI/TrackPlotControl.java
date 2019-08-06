@@ -3,7 +3,6 @@ package wbif.sjx.TrackAnalysis.GUI;
 import ij.ImagePlus;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Camera;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Engine;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.TrackEntityCollection;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Scene;
 import wbif.sjx.common.Object.TrackCollection;
 
@@ -77,11 +76,11 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
     private final static String SCREEN_SHOT = "Screen shot";
 
     private JTextField displayQualityTextField;
-    private JComboBox<TrackEntityCollection.RenderQuality> displayQualityComboBox;
+    private JComboBox<Scene.RenderQuality> displayQualityComboBox;
     private final static String DISPLAY_QUALITY = "Display quality";
 
     private JTextField displayColourTextField;
-    private JComboBox<TrackEntityCollection.DisplayColour> displayColourComboBox;
+    private JComboBox<Scene.DisplayColour> displayColourComboBox;
     private final static String DISPLAY_COLOUR = "Display colour";
 
     private final Engine engine;
@@ -177,9 +176,9 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         c.gridwidth = 1;
         c.gridy++;
         panel.add(displayQualityTextField,c);
-        displayQualityComboBox = new JComboBox<>(TrackEntityCollection.RenderQuality.values());
+        displayQualityComboBox = new JComboBox<>(Scene.RenderQuality.values());
         displayQualityComboBox.setPreferredSize(new Dimension(panelWidth*2/3-5,elementHeight));
-        displayQualityComboBox.setSelectedItem(TrackEntityCollection.RenderQuality.LOW);
+        displayQualityComboBox.setSelectedItem(Scene.RenderQuality.LOW);
         displayQualityComboBox.setName(DISPLAY_QUALITY);
         displayQualityComboBox.setEnabled(false);
         displayQualityComboBox.addActionListener(this);
@@ -196,9 +195,9 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         c.gridwidth = 1;
         c.gridy++;
         panel.add(displayColourTextField,c);
-        displayColourComboBox = new JComboBox<>(TrackEntityCollection.DisplayColour.values());
+        displayColourComboBox = new JComboBox<>(Scene.DisplayColour.values());
         displayColourComboBox.setPreferredSize(new Dimension(panelWidth*2/3-5,elementHeight));
-        displayColourComboBox.setSelectedItem(TrackEntityCollection.DisplayColour.ID);
+        displayColourComboBox.setSelectedItem(Scene.DisplayColour.ID);
         displayColourComboBox.setName(DISPLAY_COLOUR);
         displayColourComboBox.setEnabled(false);
         displayColourComboBox.addActionListener(this);
@@ -262,7 +261,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
 
         playFramesButton = new JToggleButton(PLAY_FRAMES);
         playFramesButton.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
-        playFramesButton.setSelected(Scene.playFrames_DEF);
+        playFramesButton.setSelected(false);
         playFramesButton.setEnabled(false);
         playFramesButton.addActionListener(this);
         playFramesButton.setName(PLAY_FRAMES);
@@ -360,10 +359,16 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
             case PLOT_TYPE:
                 switch ((String) ((JComboBox) e.getSource()).getSelectedItem()) {
                     case PlotTypes.NORMAL:
-                        engine.getScene().getTracksEntities().setMotilityPlot(false);
+                        engine.getScene().setMotilityPlot(false);
+                        viewXYplaneButton.setEnabled(true);
+                        viewXZplaneButton.setEnabled(true);
+                        viewYZplaneButton.setEnabled(true);
                         break;
                     case PlotTypes.MOTILITY:
-                        engine.getScene().getTracksEntities().setMotilityPlot(true);
+                        engine.getScene().setMotilityPlot(true);
+                        viewXYplaneButton.setEnabled(false);
+                        viewXZplaneButton.setEnabled(false);
+                        viewYZplaneButton.setEnabled(false);
                         break;
                 }
                 break;
@@ -398,6 +403,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
                 break;
             case ORBIT:
                 engine.getCamera().setOrbit(((JToggleButton)e.getSource()).isSelected());
+                engine.getRenderer().disableOrthoProj();
                 int angularVelocityDPS = Integer.parseInt(orbitSpeedTextEdit.getText());
                 engine.getCamera().setAngularVelocityDPS(angularVelocityDPS);
                 break;
@@ -406,13 +412,13 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
                 engine.getCamera().setAngularVelocityDPS(angularVelocityDPS);
                 break;
             case SHOW_TRAILS:
-                engine.getScene().getTracksEntities().setTrailVisibility(((JToggleButton)e.getSource()).isSelected());
+                engine.getScene().setTrailVisibility(((JToggleButton)e.getSource()).isSelected());
                 int trailLength = Integer.parseInt(trailLengthTextEdit.getText());
-                engine.getScene().getTracksEntities().setTrailLength(trailLength);
+                engine.getScene().setTrailLength(trailLength);
                 break;
             case TRAILS_LENGTH:
                 trailLength = Integer.parseInt(trailLengthTextEdit.getText());
-                engine.getScene().getTracksEntities().setTrailLength(trailLength);
+                engine.getScene().setTrailLength(trailLength);
                 break;
             case XZ_PLANE:
                 engine.viewXZplane();
@@ -427,10 +433,13 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
                 engine.getRenderer().takeScreenshot();
                 break;
             case DISPLAY_QUALITY:
-                engine.getScene().getTracksEntities().setDisplayQuality((TrackEntityCollection.RenderQuality)((JComboBox)e.getSource()).getSelectedItem());
+                engine.getScene().setRenderQuality((Scene.RenderQuality)((JComboBox)e.getSource()).getSelectedItem());
+                engine.getRenderer().setBindMeshBuffers(true);
                 break;
             case DISPLAY_COLOUR:
-                engine.getScene().getTracksEntities().setDisplayColour((TrackEntityCollection.DisplayColour)((JComboBox)e.getSource()).getSelectedItem());
+                Scene.DisplayColour displayColour = (Scene.DisplayColour)((JComboBox)e.getSource()).getSelectedItem();
+                engine.getScene().setDisplayColour(displayColour);
+                engine.getRenderer().setBindColourBuffers(displayColour != Scene.DisplayColour.ID);
                 break;
             default:
                 break;

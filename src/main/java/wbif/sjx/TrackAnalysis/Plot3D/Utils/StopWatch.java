@@ -4,9 +4,8 @@ package wbif.sjx.TrackAnalysis.Plot3D.Utils;
  * Created by JDJFisher on 31/07/2017.
  */
 public class StopWatch {
-
-    private float startTime;
-    private float endTime;
+    private double startTime;
+    private double endTime;
     private boolean running;
 
     public StopWatch() {
@@ -29,11 +28,11 @@ public class StopWatch {
         start();
     }
 
-    public float getTime() {
-        return System.nanoTime() / 1000_000_000.0f;
+    public double getTime() {
+        return System.nanoTime() / 1000_000_000.0;
     }
 
-    public float getElapsedTime() {
+    public double getElapsedTime() {
         return (running ? getTime() : endTime) - startTime;
     }
 
