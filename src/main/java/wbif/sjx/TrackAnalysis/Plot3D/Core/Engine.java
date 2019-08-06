@@ -49,7 +49,7 @@ public class Engine {
         }
     }
 
-    public void start() throws Exception {
+    public void start() {
         window.setVisibility(true);
         running = true;
         mainLoop();
@@ -60,15 +60,13 @@ public class Engine {
     }
 
     private void mainLoop() {
-        float timeElapsedLastLoop;
         float cumulativeLagTime = 0f;
-        final float secondsPerUpdate = 1f / (float)TARGET_UPDATES_PER_SECOND;
+        final float secondsPerUpdate = 1f / TARGET_UPDATES_PER_SECOND;
         final float secondsPerFrame = 1f / window.getRefreshRate();
         fpsTimer.start();
 
         while (running && window.isOpen()){
-            timeElapsedLastLoop = loopTimer.getElapsedTime();
-            cumulativeLagTime += timeElapsedLastLoop;
+            cumulativeLagTime += loopTimer.getElapsedTime();
             loopTimer.start();
 
             handleInput();
@@ -153,7 +151,7 @@ public class Engine {
     }
 
     private void update(float interval){
-        camera.update(interval, scene.getTracksEntities().getFocusOfPlot());
+        camera.update(interval, scene.getPlotFocus());
         scene.update(interval);
         trackPlotControl.updateGui();
     }
@@ -161,9 +159,10 @@ public class Engine {
     private void render() {
         if (fpsTimer.getElapsedTime() > 1) {
             fpsTimer.restart();
-            window.appendToTitle(String.format("FPS: %d", frameCount));
+            window.appendToTitle(String.format("FPS: %d FOV: %d", frameCount, camera.getFOV()));
             frameCount = 0;
         }
+
         frameCount++;
 
         renderer.render(window, camera, scene);
@@ -181,10 +180,6 @@ public class Engine {
         return renderer;
     }
 
-    public GLFWWindow getWindow() {
-        return window;
-    }
-
     private float calcOptimalViewingDistance(float xRange, float yRange){
         return ((Math.max(xRange / window.getAspectRatio(), yRange) + BIAS) / 2) / (float) Math.tan(Math.toRadians(camera.getFOV() / 2));
     }
@@ -195,41 +190,41 @@ public class Engine {
         camera.setTilt(-90);
         camera.setPan(0);
 
-        CollectionBounds collectionBounds = scene.getCollectionBounds();
+        CollectionBounds bounds = scene.getBounds();
 
-        float optimalViewingDistance = calcOptimalViewingDistance(collectionBounds.getWidth(), collectionBounds.getLength()) + collectionBounds.getMaxPosition().getY();
-        Vector3f centrePosition = collectionBounds.getCentrePosition();
+        float optimalViewingDistance = calcOptimalViewingDistance(bounds.getWidth(), bounds.getLength()) + bounds.getMaxPosition().getY();
+        Vector3f centrePosition = bounds.getCentrePosition();
 
         camera.getPosition().set(centrePosition.getX(), optimalViewingDistance, centrePosition.getZ());
 
-        renderer.setOrthoBoundingConstraints(collectionBounds.getWidth(), collectionBounds.getLength());
+        renderer.setOrthoBoundingConstraints(bounds.getWidth(), bounds.getLength());
     }
 
     public void viewYZplane(){
         camera.setTilt(0);
         camera.setPan(-90);
 
-        CollectionBounds collectionBounds = scene.getCollectionBounds();
+        CollectionBounds bounds = scene.getBounds();
 
-        float optimalViewingDistance = calcOptimalViewingDistance(collectionBounds.getLength(), collectionBounds.getHeight()) + collectionBounds.getMaxPosition().getX();
-        Vector3f centrePosition = collectionBounds.getCentrePosition();
+        float optimalViewingDistance = calcOptimalViewingDistance(bounds.getLength(), bounds.getHeight()) + bounds.getMaxPosition().getX();
+        Vector3f centrePosition = bounds.getCentrePosition();
 
         camera.getPosition().set(optimalViewingDistance, centrePosition.getY(), centrePosition.getZ());
 
-        renderer.setOrthoBoundingConstraints(collectionBounds.getLength(), collectionBounds.getHeight());
+        renderer.setOrthoBoundingConstraints(bounds.getLength(), bounds.getHeight());
     }
 
     public void viewXZplane(){
         camera.setTilt(0);
         camera.setPan(0);
 
-        CollectionBounds collectionBounds = scene.getCollectionBounds();
+        CollectionBounds bounds = scene.getBounds();
 
-        float optimalViewingDistance = calcOptimalViewingDistance(collectionBounds.getWidth(), collectionBounds.getHeight()) + collectionBounds.getMaxPosition().getZ();
-        Vector3f centrePosition = collectionBounds.getCentrePosition();
+        float optimalViewingDistance = calcOptimalViewingDistance(bounds.getWidth(), bounds.getHeight()) + bounds.getMaxPosition().getZ();
+        Vector3f centrePosition = bounds.getCentrePosition();
 
         camera.getPosition().set(centrePosition.getX(), centrePosition.getY(), optimalViewingDistance);
 
-        renderer.setOrthoBoundingConstraints(collectionBounds.getWidth(), collectionBounds.getHeight());
+        renderer.setOrthoBoundingConstraints(bounds.getWidth(), bounds.getHeight());
     }
 }

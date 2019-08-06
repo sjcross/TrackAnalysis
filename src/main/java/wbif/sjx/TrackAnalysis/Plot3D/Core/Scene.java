@@ -10,6 +10,7 @@ import wbif.sjx.TrackAnalysis.Plot3D.Graphics.MeshFactory;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Texture.Texture;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Texture.Texture2D;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
+import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataUtils;
 import wbif.sjx.common.Object.TrackCollection;
 
 import java.awt.*;
@@ -24,47 +25,58 @@ public class Scene {
     public static final Vector3f Z_AXIS = new Vector3f(0, 0, 1);
 
     private static final float BOUNDING_FRAME_THICKNESS = 1.5f;
-    public static final boolean playFrames_DEF = false;
-    public final int framePlaybackRate_DEF = 5;
 
     private final TrackEntityCollection tracksEntities;
-    private final CollectionBounds collectionBounds;
+    private final CollectionBounds bounds;
     private final Entity[] axes;
     private final Entity boundingFrame;
     private final Entity planeXY;
     private final Entity planeXZ;
     private final Entity planeYZ;
 
-    private boolean showAxes;
+    private final Vector3f centreOfTracks;
+    private DisplayColour displayColour;
+    private RenderQuality renderQuality;
+    private final int highestFrame;
     private boolean showBoundingBox;
+    private boolean motilityPlot;
     private boolean playFrames;
-    private int framePlaybackRate;
+    private boolean showTrail;
+    private boolean showAxes;
+    private float cumulativeTime;
     private float secsPerFrame;
+    private int framePlaybackRate;
+    private int trailLength;
     private int frame;
-    private float cumulativeTime = 0;
 
     private final Texture debugTexture;
 //    private final Texture iplXZTexture;
 
     public Scene(TrackCollection tracks, ImagePlus ipl) throws Exception {
-        TrackEntity.initStaticMeshes();
-
         tracksEntities = new TrackEntityCollection(tracks);
-        collectionBounds = new CollectionBounds(tracks.getSpatialLimits(true));
+        System.out.println("tracks done");
+        bounds = new CollectionBounds(tracks.getSpatialLimits(true));
 
-        frame = 0;
-        playFrames = playFrames_DEF;
-        showAxes = false;
+        centreOfTracks = DataUtils.toVector3f(tracks.getMeanPoint(0));
+        displayColour = DisplayColour.ID;
+        renderQuality = RenderQuality.LOW;
+
         showBoundingBox = true;
-        framePlaybackRate = framePlaybackRate_DEF;
-        setFramePlaybackRate(framePlaybackRate);
+        playFrames = false;
+        showAxes = false;
+        showTrail = true;
+
+        highestFrame = tracks.getHighestFrame();
+        trailLength = highestFrame;
+        cumulativeTime = 0;
+        frame = 0;
 
 
-        final float width = collectionBounds.getWidth();
-        final float height = collectionBounds.getHeight();
-        final float length = collectionBounds.getLength();
-        final Vector3f minPosition = collectionBounds.getMinPosition();
-        final Vector3f centrePosition = collectionBounds.getCentrePosition();
+        final float width = bounds.getWidth();
+        final float height = bounds.getHeight();
+        final float length = bounds.getLength();
+        final Vector3f minPosition = bounds.getMinPosition();
+        final Vector3f centrePosition = bounds.getCentrePosition();
 
         boundingFrame = new Entity(MeshFactory.cuboidFrame(width, height, length, BOUNDING_FRAME_THICKNESS), Color.white);
         boundingFrame.getPosition().set(centrePosition);
@@ -104,6 +116,8 @@ public class Scene {
         xAxis.getRotation().multiply(90, Z_AXIS);
 
         axes = new Entity[]{origin, xAxis, yAxis, zAxis};
+
+        System.out.println("scene done");
     }
 
     public void update(float interval) {
@@ -113,7 +127,7 @@ public class Scene {
             if (cumulativeTime >= secsPerFrame) {
                 cumulativeTime -= secsPerFrame;
 
-                if (frame == tracksEntities.getHighestFrame()) {
+                if (frame >= highestFrame) {
                     frame = 0;
                 } else {
                     incrementFrame();
@@ -126,8 +140,8 @@ public class Scene {
         return tracksEntities;
     }
 
-    public CollectionBounds getCollectionBounds() {
-        return collectionBounds;
+    public CollectionBounds getBounds() {
+        return bounds;
     }
 
     public Entity getBoundingFrame() {
@@ -146,12 +160,11 @@ public class Scene {
         return planeYZ;
     }
 
-    public void dispose() {
+    public void dispose()
+    {
         tracksEntities.dispose();
         debugTexture.dispose();
 //        iplXZTexture.dispose();
-
-        TrackEntity.disposeStaticMeshes();
     }
 
     public Entity[] getAxes() {
@@ -165,8 +178,8 @@ public class Scene {
     public void setFrame(int frame) {
         if (frame < 0) {
             this.frame = 0;
-        } else if (frame > tracksEntities.getHighestFrame()) {
-            this.frame = tracksEntities.getHighestFrame();
+        } else if (frame > highestFrame) {
+            this.frame = highestFrame;
         } else {
             this.frame = frame;
         }
@@ -232,5 +245,84 @@ public class Scene {
         }
 
         secsPerFrame = 1f / (float) (framePlaybackRate);
+    }
+
+    public Vector3f getPlotFocus() {
+        if (motilityPlot) {
+            return new Vector3f();
+        } else {
+            return centreOfTracks;
+        }
+    }
+
+    public int getHighestFrame() {
+        return highestFrame;
+    }
+
+    public boolean isTrailVisibile() {
+        return showTrail;
+    }
+
+    public void setTrailVisibility(boolean state) {
+        showTrail = state;
+    }
+
+    public void toggleTrailVisibility() {
+        showTrail = !showTrail;
+    }
+
+    public boolean ifMotilityPlot() {
+        return motilityPlot;
+    }
+
+    public void setMotilityPlot(boolean state) {
+        motilityPlot = state;
+    }
+
+    public void toggleMotilityPlot() {
+        motilityPlot = !motilityPlot;
+    }
+
+    public int getTrailLength() {
+        return trailLength;
+    }
+
+    public void setTrailLength(int value) {
+        if (value < 1) {
+            trailLength = 1;
+        } else if (value > highestFrame) {
+            trailLength = highestFrame;
+        } else {
+            trailLength = value;
+        }
+    }
+
+    public DisplayColour getDisplayColour() {
+        return displayColour;
+    }
+
+    public void setDisplayColour(DisplayColour displayColour) {
+        this.displayColour = displayColour;
+    }
+
+    public RenderQuality getRenderQuality() {
+        return renderQuality;
+    }
+
+    public void setRenderQuality(RenderQuality renderQuality) {
+        this.renderQuality = renderQuality;
+    }
+
+    public enum DisplayColour {
+        ID,
+        TOTAL_PATH_LENGTH,
+        VELOCITY
+    }
+
+    public enum RenderQuality {
+        LOWEST,
+        LOW,
+        MEDIUM,
+        HIGH
     }
 }
