@@ -7,6 +7,7 @@ import wbif.sjx.TrackAnalysis.Plot3D.Input.Cursor;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.Keyboard;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.MouseButtons;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.MouseWheel;
+import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2i;
 
 import static java.sql.Types.NULL;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -20,22 +21,20 @@ import static org.lwjgl.opengl.GL43.GL_MIPMAP;
  */
 public class GLFWWindow {
 
-    private GLFWVidMode primaryMonitor;
+    private final GLFWVidMode primaryMonitor;
     private String title;
     private int width;
     private int height;
-    private int refreshRate;
+    private final int refreshRate;
     private final boolean vSync;
-    private long windowHandle;
+    private final long handle;
 
     public GLFWWindow(String title, int width, int height, boolean vSync) {
         GLFWErrorCallback.createPrint(System.err).set();
 
-        if (!glfwInit()) {
-            throw new IllegalStateException("Unable to initialize GLFW");
-        }
+        if (!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW");
 
-        this.primaryMonitor = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        primaryMonitor = glfwGetVideoMode(glfwGetPrimaryMonitor());
         this.title = title;
         this.width = width;
         this.height = height;
@@ -52,27 +51,22 @@ public class GLFWWindow {
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         glfwWindowHint(GLFW_SAMPLES, 4);
 
-        windowHandle = glfwCreateWindow(width, height, title, NULL, NULL);
+        handle = glfwCreateWindow(width, height, title, NULL, NULL);
 
-        if (windowHandle == NULL) {
-            throw new RuntimeException("Failed to create the GLFW window");
-        }
+        if (handle == NULL) throw new RuntimeException("Failed to create the GLFW window");
 
-        centreWindow();
-        changeWindowPosition(-500, 0);
-
-        glfwSetFramebufferSizeCallback(windowHandle, (window, newWidth, newHeight) -> {
+        glfwSetFramebufferSizeCallback(handle, (window, newWidth, newHeight) -> {
             this.width = newWidth;
             this.height = newHeight;
             glViewport(0, 0, newWidth, newHeight);
         });
 
-        glfwSetKeyCallback(windowHandle, new Keyboard());
-        glfwSetMouseButtonCallback(windowHandle, new MouseButtons());
-        glfwSetCursorPosCallback(windowHandle, new Cursor());
-        glfwSetScrollCallback(windowHandle, new MouseWheel());
+        glfwSetKeyCallback(handle, new Keyboard());
+        glfwSetMouseButtonCallback(handle, new MouseButtons());
+        glfwSetCursorPosCallback(handle, new Cursor());
+        glfwSetScrollCallback(handle, new MouseWheel());
 
-        glfwMakeContextCurrent(windowHandle);
+        glfwMakeContextCurrent(handle);
         GL.createCapabilities();
 
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -84,50 +78,53 @@ public class GLFWWindow {
         glEnable(GL_MIPMAP);
 //        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glEnable(GL_DEPTH_TEST);
+
+        centre();
+        move(-500, 0);
     }
 
     public void setVisibility(boolean state) {
         if (state) {
-            glfwShowWindow(windowHandle);
+            glfwShowWindow(handle);
         } else {
-            glfwHideWindow(windowHandle);
+            glfwHideWindow(handle);
         }
     }
 
-    public void centreWindow() {
-        glfwSetWindowPos(windowHandle, (primaryMonitor.width() - width) / 2, (primaryMonitor.height() - height) / 2);
+    public void centre() {
+        glfwSetWindowPos(handle, (primaryMonitor.width() - width) / 2, (primaryMonitor.height() - height) / 2);
     }
 
-    public void changeWindowPosition(int dx, int dy) {
-        int[] windowPosition = glfwGetWindowPosition();
-        glfwSetWindowPos(windowHandle, windowPosition[0] + dx, windowPosition[1] + dy);
+    public void move(int dx, int dy) {
+        Vector2i position = getPosition();
+        glfwSetWindowPos(handle, position.getX() + dx, position.getY() + dy);
     }
 
-    public int[] glfwGetWindowPosition() {
+    public Vector2i getPosition() {
         int[] x = new int[1];
         int[] y = new int[1];
-        glfwGetWindowPos(windowHandle, x, y);
-        return new int[]{x[0], y[0]};
+        glfwGetWindowPos(handle, x, y);
+        return new Vector2i(x[0], y[0]);
     }
 
     public void dispose() {
-        glfwFreeCallbacks(windowHandle);
-        glfwDestroyWindow(windowHandle);
+        glfwFreeCallbacks(handle);
+        glfwDestroyWindow(handle);
         glfwTerminate();
         glfwSetErrorCallback(null).free();
     }
 
     public void update() {
-        glfwSwapBuffers(windowHandle);
+        glfwSwapBuffers(handle);
         glfwPollEvents();
     }
 
     public boolean isOpen() {
-        return !glfwWindowShouldClose(windowHandle);
+        return !glfwWindowShouldClose(handle);
     }
 
     public long getHandle() {
-        return windowHandle;
+        return handle;
     }
 
     public String getTitle() {
@@ -136,11 +133,11 @@ public class GLFWWindow {
 
     public void setTitle(String title) {
         this.title = title;
-        glfwSetWindowTitle(windowHandle, title);
+        glfwSetWindowTitle(handle, title);
     }
 
     public void appendToTitle(String string) {
-        glfwSetWindowTitle(windowHandle, String.format("%s (%s)", title, string));
+        glfwSetWindowTitle(handle, String.format("%s (%s)", title, string));
     }
 
     public int getWidth() {
@@ -152,11 +149,7 @@ public class GLFWWindow {
     }
 
     public float getAspectRatio() {
-        return getWidth() / (float) getHeight();
-    }
-
-    public GLFWVidMode getPrimaryMonitor() {
-        return primaryMonitor;
+        return width / height;
     }
 
     public boolean isVSyncEnabled() {
@@ -168,10 +161,10 @@ public class GLFWWindow {
     }
 
     public boolean isMinimized() {
-        return glfwGetWindowAttrib(windowHandle, GLFW_ICONIFIED) == 1; //Fix
+        return glfwGetWindowAttrib(handle, GLFW_ICONIFIED) == 1;
     }
 
     public boolean isFocused() {
-        return glfwGetWindowAttrib(windowHandle, GLFW_FOCUSED) == 1;
+        return glfwGetWindowAttrib(handle, GLFW_FOCUSED) == 1;
     }
 }

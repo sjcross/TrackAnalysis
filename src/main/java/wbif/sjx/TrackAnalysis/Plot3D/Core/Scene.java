@@ -1,33 +1,41 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
 import ij.ImagePlus;
+import wbif.sjx.TrackAnalysis.GUI.TrackPlotControl.*;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.CollectionBounds;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.Entity;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.TrackEntity;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.TrackEntityCollection;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.MeshFactory;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Texture.Texture;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Texture.Texture2D;
+import wbif.sjx.TrackAnalysis.Plot3D.Input.Keyboard;
+import wbif.sjx.TrackAnalysis.Plot3D.Input.MouseButtons;
+import wbif.sjx.TrackAnalysis.Plot3D.Input.MouseWheel;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Utils.DataUtils;
 import wbif.sjx.common.Object.TrackCollection;
 
 import java.awt.*;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F;
+
 /**
  * Created by JDJFisher on 31/07/2017.
  */
-public class Scene {
-
+public class Scene
+{
     public static final Vector3f X_AXIS = new Vector3f(1, 0, 0);
     public static final Vector3f Y_AXIS = new Vector3f(0, 1, 0);
     public static final Vector3f Z_AXIS = new Vector3f(0, 0, 1);
 
     private static final float BOUNDING_FRAME_THICKNESS = 1.5f;
+    public static final int DEF_FRAME_PLAYBACK_RATE = 50;
 
     private final TrackEntityCollection tracksEntities;
     private final CollectionBounds bounds;
+    private final Camera camera;
     private final Entity[] axes;
     private final Entity boundingFrame;
     private final Entity planeXY;
@@ -52,24 +60,25 @@ public class Scene {
     private final Texture debugTexture;
 //    private final Texture iplXZTexture;
 
-    public Scene(TrackCollection tracks, ImagePlus ipl) throws Exception {
+    public Scene(TrackCollection tracks, ImagePlus ipl) throws Exception
+    {
         tracksEntities = new TrackEntityCollection(tracks);
-        System.out.println("tracks done");
         bounds = new CollectionBounds(tracks.getSpatialLimits(true));
+        camera = new Camera();
 
         centreOfTracks = DataUtils.toVector3f(tracks.getMeanPoint(0));
         displayColour = DisplayColour.ID;
         renderQuality = RenderQuality.LOW;
-
         showBoundingBox = true;
         playFrames = false;
         showAxes = false;
         showTrail = true;
-
         highestFrame = tracks.getHighestFrame();
         trailLength = highestFrame;
         cumulativeTime = 0;
         frame = 0;
+        framePlaybackRate = DEF_FRAME_PLAYBACK_RATE;
+        secsPerFrame = 1f / (float) framePlaybackRate;
 
 
         final float width = bounds.getWidth();
@@ -116,48 +125,102 @@ public class Scene {
         xAxis.getRotation().multiply(90, Z_AXIS);
 
         axes = new Entity[]{origin, xAxis, yAxis, zAxis};
-
-        System.out.println("scene done");
     }
 
-    public void update(float interval) {
-        if (playFrames) {
+    public void handleInput()
+    {
+        camera.handleInput();
+
+        if(Keyboard.isKeyDown(GLFW_KEY_UP) || Keyboard.isKeyTapped(GLFW_KEY_PAGE_UP))
+        {
+            nextFrame();
+        }
+        else if(Keyboard.isKeyDown(GLFW_KEY_DOWN) || Keyboard.isKeyTapped(GLFW_KEY_PAGE_DOWN))
+        {
+            previousFrame();
+        }
+
+        if(MouseButtons.isButtonTapped(GLFW_MOUSE_BUTTON_MIDDLE)){
+            camera.setFOV(Camera.DEF_FOV);
+        }
+
+        if(Keyboard.isKeyDown(GLFW_KEY_LEFT_CONTROL) || Keyboard.isKeyDown(GLFW_KEY_RIGHT_CONTROL))
+        {
+            camera.changeFOV(-MouseWheel.getDeltaScroll());
+        }
+        else
+        {
+            changeFrame(MouseWheel.getDeltaScroll());
+        }
+
+        if(Keyboard.isKeyTapped(GLFW_KEY_F))
+        {
+            togglePlayFrames();
+        }
+    }
+
+    public void update(float interval)
+    {
+        camera.update(interval, motilityPlot ? new Vector3f() : centreOfTracks);
+
+        if (playFrames)
+        {
             cumulativeTime += interval;
 
-            if (cumulativeTime >= secsPerFrame) {
+            if (cumulativeTime >= secsPerFrame)
+            {
                 cumulativeTime -= secsPerFrame;
 
-                if (frame >= highestFrame) {
+                if (frame >= highestFrame)
+                {
                     frame = 0;
-                } else {
-                    incrementFrame();
+                }
+                else
+                {
+                    nextFrame();
                 }
             }
         }
     }
 
-    public TrackEntityCollection getTracksEntities() {
+    public TrackEntityCollection getTracksEntities()
+    {
         return tracksEntities;
     }
 
-    public CollectionBounds getBounds() {
+    public CollectionBounds getBounds()
+    {
         return bounds;
     }
 
-    public Entity getBoundingFrame() {
+    public Camera getCamera()
+    {
+        return camera;
+    }
+
+    public Entity getBoundingFrame()
+    {
         return boundingFrame;
     }
 
-    public Entity getPlaneXY() {
+    public Entity getPlaneXY()
+    {
         return planeXY;
     }
 
-    public Entity getPlaneXZ() {
+    public Entity getPlaneXZ()
+    {
         return planeXZ;
     }
 
-    public Entity getPlaneYZ() {
+    public Entity getPlaneYZ()
+    {
         return planeYZ;
+    }
+
+    public Entity[] getAxes()
+    {
+        return axes;
     }
 
     public void dispose()
@@ -167,162 +230,130 @@ public class Scene {
 //        iplXZTexture.dispose();
     }
 
-    public Entity[] getAxes() {
-        return axes;
-    }
-
-    public int getFrame() {
+    public int getFrame()
+    {
         return frame;
     }
 
-    public void setFrame(int frame) {
-        if (frame < 0) {
-            this.frame = 0;
-        } else if (frame > highestFrame) {
-            this.frame = highestFrame;
-        } else {
-            this.frame = frame;
-        }
+    public void setFrame(int value)
+    {
+        frame = Math.max(0, Math.min(value, highestFrame));
     }
 
-    public void changeFrame(int deltaFrame) {
-        setFrame(getFrame() + deltaFrame);
+    public void changeFrame(int deltaFrame)
+    {
+        setFrame(frame + deltaFrame);
     }
 
-    public void incrementFrame() {
-        setFrame(getFrame() + 1);
+    public void nextFrame()
+    {
+        setFrame(frame + 1);
     }
 
-    public void decrementFrame() {
-        setFrame(getFrame() - 1);
+    public void previousFrame()
+    {
+        setFrame(frame - 1);
     }
 
-    public boolean isPlayingFrames() {
+    public boolean isPlayingFrames()
+    {
         return playFrames;
     }
 
-    public void setPlayFrames(boolean state) {
+    public void setPlayFrames(boolean state)
+    {
         playFrames = state;
     }
 
-    public void togglePlayFrames() {
+    public void togglePlayFrames()
+    {
         playFrames = !playFrames;
     }
 
-    public boolean isAxesVisible() {
+    public boolean isAxesVisible()
+    {
         return showAxes;
     }
 
-    public void setAxesVisibility(boolean state) {
+    public void setAxesVisibility(boolean state)
+    {
         showAxes = state;
     }
 
-    public void toggleAxesVisibility() {
-        showAxes = !showAxes;
-    }
-
-    public boolean isBoundingBoxVisible() {
+    public boolean isBoundingBoxVisible()
+    {
         return showBoundingBox;
     }
 
-    public void setBoundingBoxVisibility(boolean state) {
+    public void setBoundingBoxVisibility(boolean state)
+    {
         showBoundingBox = state;
     }
 
-    public void toggleBoundingBoxVisibility() {
-        showBoundingBox = !showBoundingBox;
-    }
-
-    public int getFramePlaybackRate() {
+    public int getFramePlaybackRate()
+    {
         return framePlaybackRate;
     }
 
-    public void setFramePlaybackRate(int value) {
-        if (value < 0) {
-            framePlaybackRate = 0;
-        } else {
-            framePlaybackRate = value;
-        }
+    public void setFramePlaybackRate(int value)
+    {
+        framePlaybackRate = Math.max(0, value);
 
         secsPerFrame = 1f / (float) (framePlaybackRate);
     }
 
-    public Vector3f getPlotFocus() {
-        if (motilityPlot) {
-            return new Vector3f();
-        } else {
-            return centreOfTracks;
-        }
-    }
-
-    public int getHighestFrame() {
+    public int getHighestFrame()
+    {
         return highestFrame;
     }
 
-    public boolean isTrailVisibile() {
+    public boolean isTrailVisibile()
+    {
         return showTrail;
     }
 
-    public void setTrailVisibility(boolean state) {
+    public void setTrailVisibility(boolean state)
+    {
         showTrail = state;
     }
 
-    public void toggleTrailVisibility() {
-        showTrail = !showTrail;
-    }
-
-    public boolean ifMotilityPlot() {
+    public boolean ifMotilityPlot()
+    {
         return motilityPlot;
     }
 
-    public void setMotilityPlot(boolean state) {
+    public void setMotilityPlot(boolean state)
+    {
         motilityPlot = state;
     }
 
-    public void toggleMotilityPlot() {
-        motilityPlot = !motilityPlot;
-    }
-
-    public int getTrailLength() {
+    public int getTrailLength()
+    {
         return trailLength;
     }
 
-    public void setTrailLength(int value) {
-        if (value < 1) {
-            trailLength = 1;
-        } else if (value > highestFrame) {
-            trailLength = highestFrame;
-        } else {
-            trailLength = value;
-        }
+    public void setTrailLength(int value)
+    {
+        trailLength = Math.max(1, Math.min(value, highestFrame));
     }
 
-    public DisplayColour getDisplayColour() {
+    public DisplayColour getDisplayColour()
+    {
         return displayColour;
     }
 
-    public void setDisplayColour(DisplayColour displayColour) {
+    public void setDisplayColour(DisplayColour displayColour)
+    {
         this.displayColour = displayColour;
     }
 
-    public RenderQuality getRenderQuality() {
+    public RenderQuality getRenderQuality()
+    {
         return renderQuality;
     }
 
-    public void setRenderQuality(RenderQuality renderQuality) {
+    public void setRenderQuality(RenderQuality renderQuality)
+    {
         this.renderQuality = renderQuality;
-    }
-
-    public enum DisplayColour {
-        ID,
-        TOTAL_PATH_LENGTH,
-        VELOCITY
-    }
-
-    public enum RenderQuality {
-        LOWEST,
-        LOW,
-        MEDIUM,
-        HIGH
     }
 }

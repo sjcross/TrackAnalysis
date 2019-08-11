@@ -9,79 +9,92 @@ import wbif.sjx.TrackAnalysis.Plot3D.Input.MouseWheel;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 import wbif.sjx.TrackAnalysis.Plot3D.Utils.StopWatch;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static wbif.sjx.TrackAnalysis.Plot3D.Core.Renderer.BIAS;
 
 /**
  * Created by JDJFisher on 31/07/2017.
  */
-public class Engine {
+public class Engine
+{
 
     private static final int TARGET_UPDATES_PER_SECOND = 300;
 
     private TrackPlotControl trackPlotControl;
-    private boolean running;
     private GLFWWindow window;
     private Renderer renderer;
-    private Camera camera;
     private Scene scene;
     private StopWatch fpsTimer;
     private StopWatch loopTimer;
 
     private int frameCount;
+    private boolean running;
 
-    public Engine(TrackPlotControl trackPlotControl){
+    public Engine(TrackPlotControl trackPlotControl)
+    {
         this.trackPlotControl = trackPlotControl;
     }
 
-    public void init() throws Exception {
+    public void init() throws Exception
+    {
         window = new GLFWWindow("3D Track Plot", 600, 600, false);
         renderer = new Renderer();
-        camera = new Camera();
         scene = new Scene(trackPlotControl.getTracks(), trackPlotControl.getIpl());
         fpsTimer = new StopWatch();
         loopTimer = new StopWatch();
 
-        if (trackPlotControl.is2D()) {
+        double[][] limits = trackPlotControl.getTracks().getSpatialLimits(true);
+
+        if (Math.abs(limits[2][0] - limits[2][1]) < 0.5)
+        {
             viewXYplane();
-        } else {
+        }
+        else
+        {
             viewXZplane();
         }
     }
 
-    public void start() {
+    public void start()
+    {
         window.setVisibility(true);
         running = true;
         mainLoop();
     }
 
-    public void stop() {
+    public void stop()
+    {
         running = false;
     }
 
-    private void mainLoop() {
+    private void mainLoop()
+    {
         float cumulativeLagTime = 0f;
         final float secondsPerUpdate = 1f / TARGET_UPDATES_PER_SECOND;
         final float secondsPerFrame = 1f / window.getRefreshRate();
         fpsTimer.start();
 
-        while (running && window.isOpen()){
+        while (running && window.isOpen())
+        {
             cumulativeLagTime += loopTimer.getElapsedTime();
             loopTimer.start();
 
             handleInput();
 
-            while (cumulativeLagTime >= secondsPerUpdate) {
+            while (cumulativeLagTime >= secondsPerUpdate)
+            {
                 update(secondsPerUpdate);
                 cumulativeLagTime -= secondsPerUpdate;
             }
 
             window.update();
 
-            if(!window.isMinimized()) {
+            if (!window.isMinimized())
+            {
                 render();
 
-                if (window.isVSyncEnabled()) {
+                if (window.isVSyncEnabled())
+                {
                     sync(secondsPerFrame);
                 }
             }
@@ -93,54 +106,35 @@ public class Engine {
         running = false;
     }
 
-    private void sync(float secondsPerFrame) {
+    private void sync(float secondsPerFrame)
+    {
         double expectedEndTime = loopTimer.getStartTime() + secondsPerFrame;
-        while (loopTimer.getTime() < expectedEndTime) {
-            try {
+        while (loopTimer.getTime() < expectedEndTime)
+        {
+            try
+            {
                 Thread.sleep(1);
-            } catch (InterruptedException e) {
+            }
+            catch (InterruptedException e)
+            {
                 e.printStackTrace();
             }
         }
     }
 
-    public void dispose(){
+    public void dispose()
+    {
         renderer.dispose();
         scene.dispose();
         window.dispose();
     }
 
-    private void handleInput(){
-        camera.handleInput();
+    private void handleInput()
+    {
+        scene.handleInput();
 
-        //Handles frame switching
-        if(Keyboard.isKeyDown(GLFW_KEY_UP)){
-            scene.incrementFrame();
-        }else if(Keyboard.isKeyDown(GLFW_KEY_DOWN)){
-            scene.decrementFrame();
-        }
-
-        if(Keyboard.isKeyTapped(GLFW_KEY_PAGE_UP)){
-            scene.incrementFrame();
-        }else if(Keyboard.isKeyTapped(GLFW_KEY_PAGE_DOWN)){
-            scene.decrementFrame();
-        }
-
-        if(MouseButtons.isButtonTapped(GLFW_MOUSE_BUTTON_MIDDLE)){
-            camera.setFOV(Camera.fov_DEF);
-        }
-
-        if(Keyboard.isKeyDown(GLFW_KEY_LEFT_CONTROL) || Keyboard.isKeyDown(GLFW_KEY_RIGHT_CONTROL)) {
-            camera.changeFOV(-MouseWheel.getDeltaScroll());
-        }else {
-            scene.changeFrame(MouseWheel.getDeltaScroll());
-        }
-
-        if(Keyboard.isKeyTapped(GLFW_KEY_F)) {
-            scene.togglePlayFrames();
-        }
-
-        if (MouseButtons.isButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
+        if (MouseButtons.isButtonDown(GLFW_MOUSE_BUTTON_LEFT))
+        {
             renderer.disableOrthoProj();
         }
 
@@ -150,43 +144,48 @@ public class Engine {
         MouseWheel.update();
     }
 
-    private void update(float interval){
-        camera.update(interval, scene.getPlotFocus());
+    private void update(float interval)
+    {
         scene.update(interval);
         trackPlotControl.updateGui();
     }
 
-    private void render() {
-        if (fpsTimer.getElapsedTime() > 1) {
+    private void render()
+    {
+        if (fpsTimer.getElapsedTime() > 1)
+        {
             fpsTimer.restart();
-            window.appendToTitle(String.format("FPS: %d FOV: %d", frameCount, camera.getFOV()));
+            window.appendToTitle("FPS: " + frameCount);
             frameCount = 0;
         }
 
         frameCount++;
 
-        renderer.render(window, camera, scene);
+        renderer.render(window, scene);
     }
 
-    public Camera getCamera() {
-        return camera;
-    }
-
-    public Scene getScene() {
+    public Scene getScene()
+    {
         return scene;
     }
 
-    public Renderer getRenderer() {
+    public Renderer getRenderer()
+    {
         return renderer;
     }
 
-    private float calcOptimalViewingDistance(float xRange, float yRange){
-        return ((Math.max(xRange / window.getAspectRatio(), yRange) + BIAS) / 2) / (float) Math.tan(Math.toRadians(camera.getFOV() / 2));
+    // TODO: rework plane viewing and ortho view
+    private float calcOptimalViewingDistance(float xRange, float yRange)
+    {
+        return ((Math.max(xRange / window.getAspectRatio(), yRange) + BIAS) / 2) / (float) Math.tan(Math.toRadians(scene.getCamera().getFOV() / 2));
     }
 
     // the plane view methods position the camera to face to relevant faces of the collection in the z-up coordinate system
 
-    public void viewXYplane(){
+    public void viewXYplane()
+    {
+        Camera camera = scene.getCamera();
+
         camera.setTilt(-90);
         camera.setPan(0);
 
@@ -200,7 +199,10 @@ public class Engine {
         renderer.setOrthoBoundingConstraints(bounds.getWidth(), bounds.getLength());
     }
 
-    public void viewYZplane(){
+    public void viewYZplane()
+    {
+        Camera camera = scene.getCamera();
+
         camera.setTilt(0);
         camera.setPan(-90);
 
@@ -214,7 +216,10 @@ public class Engine {
         renderer.setOrthoBoundingConstraints(bounds.getLength(), bounds.getHeight());
     }
 
-    public void viewXZplane(){
+    public void viewXZplane()
+    {
+        Camera camera = scene.getCamera();
+
         camera.setTilt(0);
         camera.setPan(0);
 

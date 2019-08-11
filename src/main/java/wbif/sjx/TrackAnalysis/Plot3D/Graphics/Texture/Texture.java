@@ -9,16 +9,17 @@ import static org.lwjgl.opengl.GL20.GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS;
 /**
  * Created by JDJFisher on 31/07/2017.
  */
-public abstract class Texture {
-
+public abstract class Texture
+{
     private final int id;
     protected int width;
     protected int height;
 
     protected abstract int getTarget();
 
-    public Texture() {
-        this.id = glGenTextures();
+    public Texture()
+    {
+        id = glGenTextures();
         bind();
 
         glTexParameteri(getTarget(), GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -28,34 +29,42 @@ public abstract class Texture {
         glTexParameteri(getTarget(), GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
 
-    public void bind() {
+    public void bind()
+    {
         glBindTexture(getTarget(), id);
     }
 
-    public void bindToUnit(int textureUnit) {
+    public void bindToUnit(int textureUnit)
+    {
         SetActivateUnit(textureUnit);
         bind();
     }
 
-    public static void SetActivateUnit(int textureUnit) {
-        if (0 <= textureUnit && textureUnit <= glGetInteger(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS)) {
+    public static void SetActivateUnit(int textureUnit)
+    {
+        if (0 <= textureUnit && textureUnit <= glGetInteger(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS))
+        {
             glActiveTexture(GL_TEXTURE0 + textureUnit);
         }
     }
 
-    public int getId() {
+    public int getId()
+    {
         return id;
     }
 
-    public int getWidth() {
+    public int getWidth()
+    {
         return width;
     }
 
-    public int getHeight() {
+    public int getHeight()
+    {
         return height;
     }
 
-    public void dispose() {
+    public void dispose()
+    {
         glDeleteTextures(id);
     }
 }

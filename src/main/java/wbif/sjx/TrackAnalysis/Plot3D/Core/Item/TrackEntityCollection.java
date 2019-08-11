@@ -1,6 +1,6 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core.Item;
 
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Scene;
+import wbif.sjx.TrackAnalysis.GUI.TrackPlotControl.*;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.MeshFactory;
 import wbif.sjx.TrackAnalysis.Plot3D.Utils.UniCallback;
@@ -61,11 +61,11 @@ public class TrackEntityCollection {
         }
     }
 
-    public void updateColourBuffers(Scene.DisplayColour colour) {
+    public void updateColourBuffers(DisplayColour colour) {
         forEachTrackEntity(e -> e.updateColourBuffer(colour));
     }
 
-    public void updateMeshBuffers(Scene.RenderQuality quality) {
+    public void updateMeshBuffers(RenderQuality quality) {
         forEachTrackEntity(e -> e.updateMeshBuffer(quality, this));
     }
 

@@ -36,17 +36,6 @@ public class Quaternion {
         set(theta, axisDirection);
     }
 
-    @Override
-    public String toString() {
-        return String.format("Quaternion: [ %f, %f, %f, %f ]", x, y, z, w);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        Quaternion quaternion = (Quaternion) obj;
-        return x == quaternion.x && y == quaternion.y && z == quaternion.z && w == quaternion.w;
-    }
-
     public Quaternion getConjugate() {
         return Conjugate(this);
     }
@@ -132,6 +121,20 @@ public class Quaternion {
 
     public float getW() {
         return w;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Quaternion: [ %f, %f, %f, %f ]", x, y, z, w);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Quaternion quaternion = (Quaternion) obj;
+        return x == quaternion.x && y == quaternion.y && z == quaternion.z && w == quaternion.w;
     }
 
     private static Quaternion Multiply(final Quaternion multiplicand, final Quaternion multiplier) {

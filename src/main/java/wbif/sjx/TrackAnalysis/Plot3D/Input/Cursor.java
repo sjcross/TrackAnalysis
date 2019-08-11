@@ -2,40 +2,40 @@ package wbif.sjx.TrackAnalysis.Plot3D.Input;
 
 
 import org.lwjgl.glfw.GLFWCursorPosCallback;
-import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2d;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 
 /**
  * Created by JDJFisher on 31/07/2017.
  */
-public class Cursor extends GLFWCursorPosCallback{
+public class Cursor extends GLFWCursorPosCallback
+{
+    private static Vector2f curPosition;
+    private static Vector2f prevPosition;
 
-    private static Vector2d curPosition;
-    private static Vector2d prevPosition;
-
-    public Cursor(){
-        curPosition = new Vector2d();
-        prevPosition = new Vector2d();
+    public Cursor()
+    {
+        curPosition = new Vector2f();
+        prevPosition = new Vector2f();
     }
 
-    public void invoke(long window, double x, double y) {
-        curPosition.setX(x);
-        curPosition.setY(y);
+    public void invoke(long window, double x, double y)
+    {
+        curPosition.setX((float) x);
+        curPosition.setY((float) y);
     }
 
-    public static void update(){
-        prevPosition = new Vector2d(curPosition);
+    public static void update()
+    {
+        prevPosition = new Vector2f(curPosition);
     }
 
-    public static Vector2d getCurrentPosition(){
+    public static Vector2f getCurrentPosition()
+    {
         return curPosition;
     }
 
-    public static Vector2f getDeltaPosition() {
-        Vector2d deltaPosition = Vector2d.Subtract(curPosition, prevPosition);
-        return new Vector2f(
-                (float) deltaPosition.getX(),
-                (float) deltaPosition.getY()
-        );
+    public static Vector2f getDeltaPosition()
+    {
+        return Vector2f.Subtract(curPosition, prevPosition);
     }
 }

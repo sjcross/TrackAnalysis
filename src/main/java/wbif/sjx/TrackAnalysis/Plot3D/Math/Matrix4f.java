@@ -85,6 +85,9 @@ public class Matrix4f {
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
         float[][] elements2 = ((Matrix4f) obj).elements;
 
         for (int row = 0; row < ORDER; row++) {

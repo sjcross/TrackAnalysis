@@ -1,7 +1,7 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core.Item;
 
 import org.lwjgl.BufferUtils;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Scene;
+import wbif.sjx.TrackAnalysis.GUI.TrackPlotControl.*;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Vertex;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Maths;
@@ -49,7 +49,7 @@ public class TrackEntity {
     private final Matrix4f motilityPlotMatrix;
 
     public TrackEntity(Track track, float maxInstSpeed, float maxPathLength, TrackEntityCollection tec) {
-        this.colour = RNG.Colour();
+        colour = RNG.Colour();
 
         ArrayList<Vector3f> globalPosList = new ArrayList<>();
 
@@ -57,7 +57,7 @@ public class TrackEntity {
             globalPosList.add(frame, DataUtils.toVector3f(track.get(frame)));
         }
 
-        this.motilityPlotMatrix = Matrix4f.Translation(Vector3f.Negative(globalPosList.get(0)));
+        motilityPlotMatrix = Matrix4f.Translation(Vector3f.Negative(globalPosList.get(0)));
 
         FloatBuffer hingeMatricesBuffer = BufferUtils.createFloatBuffer(globalPosList.size() * Matrix4f.ORDER * Matrix4f.ORDER);
         FloatBuffer pipeMatricesBuffer = BufferUtils.createFloatBuffer((globalPosList.size() - 1) * Matrix4f.ORDER * Matrix4f.ORDER);
@@ -147,7 +147,7 @@ public class TrackEntity {
         renderDataPipe.render(primCount, baseInstance);
     }
 
-    public void updateColourBuffer(Scene.DisplayColour colour) {
+    public void updateColourBuffer(DisplayColour colour) {
         switch (colour) { // Change vao's icbo
             case VELOCITY:
                 renderDataParticle.bind();
@@ -172,7 +172,7 @@ public class TrackEntity {
         }
     }
 
-    public void updateMeshBuffer(Scene.RenderQuality quality, TrackEntityCollection tec) {
+    public void updateMeshBuffer(RenderQuality quality, TrackEntityCollection tec) {
         switch (quality) { // Change vao's vbo and ibo
             case LOWEST:
                 renderDataHinge.bind();
