@@ -76,11 +76,11 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
     private final static String SCREEN_SHOT = "Screen shot";
 
     private JTextField displayQualityTextField;
-    private JComboBox<Scene.RenderQuality> displayQualityComboBox;
+    private JComboBox<RenderQuality> displayQualityComboBox;
     private final static String DISPLAY_QUALITY = "Display quality";
 
     private JTextField displayColourTextField;
-    private JComboBox<Scene.DisplayColour> displayColourComboBox;
+    private JComboBox<DisplayColour> displayColourComboBox;
     private final static String DISPLAY_COLOUR = "Display colour";
 
     private final Engine engine;
@@ -176,9 +176,9 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         c.gridwidth = 1;
         c.gridy++;
         panel.add(displayQualityTextField,c);
-        displayQualityComboBox = new JComboBox<>(Scene.RenderQuality.values());
+        displayQualityComboBox = new JComboBox<>(RenderQuality.values());
         displayQualityComboBox.setPreferredSize(new Dimension(panelWidth*2/3-5,elementHeight));
-        displayQualityComboBox.setSelectedItem(Scene.RenderQuality.LOW);
+        displayQualityComboBox.setSelectedItem(RenderQuality.LOW);
         displayQualityComboBox.setName(DISPLAY_QUALITY);
         displayQualityComboBox.setEnabled(false);
         displayQualityComboBox.addActionListener(this);
@@ -195,9 +195,9 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         c.gridwidth = 1;
         c.gridy++;
         panel.add(displayColourTextField,c);
-        displayColourComboBox = new JComboBox<>(Scene.DisplayColour.values());
+        displayColourComboBox = new JComboBox<>(DisplayColour.values());
         displayColourComboBox.setPreferredSize(new Dimension(panelWidth*2/3-5,elementHeight));
-        displayColourComboBox.setSelectedItem(Scene.DisplayColour.ID);
+        displayColourComboBox.setSelectedItem(DisplayColour.ID);
         displayColourComboBox.setName(DISPLAY_COLOUR);
         displayColourComboBox.setEnabled(false);
         displayColourComboBox.addActionListener(this);
@@ -243,7 +243,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         c.gridwidth = 1;
         c.gridy++;
         panel.add(orbitButton,c);
-        orbitSpeedTextEdit = new JTextField(String.valueOf(Camera.angularVelocityDPS_DEF));
+        orbitSpeedTextEdit = new JTextField(String.valueOf(Camera.DEF_ANGULAR_VELOCITY));
         orbitSpeedTextEdit.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
         orbitSpeedTextEdit.setEnabled(false);
         orbitSpeedTextEdit.addActionListener(this);
@@ -268,7 +268,7 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         c.gridx=0;
         c.gridy++;
         panel.add(playFramesButton,c);
-        frameRateTextEdit = new JTextField("50");
+        frameRateTextEdit = new JTextField(String.valueOf(Scene.DEF_FRAME_PLAYBACK_RATE));
         frameRateTextEdit.setPreferredSize(new Dimension(panelWidth/3-5,elementHeight));
         frameRateTextEdit.setEnabled(false);
         frameRateTextEdit.addActionListener(this);
@@ -402,14 +402,14 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
                 engine.getScene().setFramePlaybackRate(frameRate);
                 break;
             case ORBIT:
-                engine.getCamera().setOrbit(((JToggleButton)e.getSource()).isSelected());
+                engine.getScene().getCamera().setOrbit(((JToggleButton)e.getSource()).isSelected());
                 engine.getRenderer().disableOrthoProj();
-                int angularVelocityDPS = Integer.parseInt(orbitSpeedTextEdit.getText());
-                engine.getCamera().setAngularVelocityDPS(angularVelocityDPS);
+                int angularVelocity = Integer.parseInt(orbitSpeedTextEdit.getText());
+                engine.getScene().getCamera().setAngularVelocity(angularVelocity);
                 break;
             case ORBIT_SPEED:
-                angularVelocityDPS = Integer.parseInt(orbitSpeedTextEdit.getText());
-                engine.getCamera().setAngularVelocityDPS(angularVelocityDPS);
+                angularVelocity = Integer.parseInt(orbitSpeedTextEdit.getText());
+                engine.getScene().getCamera().setAngularVelocity(angularVelocity);
                 break;
             case SHOW_TRAILS:
                 engine.getScene().setTrailVisibility(((JToggleButton)e.getSource()).isSelected());
@@ -433,13 +433,13 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
                 engine.getRenderer().takeScreenshot();
                 break;
             case DISPLAY_QUALITY:
-                engine.getScene().setRenderQuality((Scene.RenderQuality)((JComboBox)e.getSource()).getSelectedItem());
+                engine.getScene().setRenderQuality((RenderQuality)((JComboBox)e.getSource()).getSelectedItem());
                 engine.getRenderer().setBindMeshBuffers(true);
                 break;
             case DISPLAY_COLOUR:
-                Scene.DisplayColour displayColour = (Scene.DisplayColour)((JComboBox)e.getSource()).getSelectedItem();
+                DisplayColour displayColour = (DisplayColour)((JComboBox)e.getSource()).getSelectedItem();
                 engine.getScene().setDisplayColour(displayColour);
-                engine.getRenderer().setBindColourBuffers(displayColour != Scene.DisplayColour.ID);
+                engine.getRenderer().setBindColourBuffers(displayColour != DisplayColour.ID);
                 break;
             default:
                 break;
@@ -493,6 +493,21 @@ public class TrackPlotControl extends ModuleControl implements ChangeListener {
         displayQualityComboBox.setEnabled(state);
         displayColourTextField.setEnabled(state);
         displayColourComboBox.setEnabled(state);
+    }
+
+    public enum DisplayColour
+    {
+        ID,
+        TOTAL_PATH_LENGTH,
+        VELOCITY
+    }
+
+    public enum RenderQuality
+    {
+        LOWEST,
+        LOW,
+        MEDIUM,
+        HIGH
     }
 
     public TrackCollection getTracks() {

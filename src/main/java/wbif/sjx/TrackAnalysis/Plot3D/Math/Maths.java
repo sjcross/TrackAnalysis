@@ -5,8 +5,7 @@ package wbif.sjx.TrackAnalysis.Plot3D.Math;
  */
 public class Maths {
 
-    private Maths() {
-    }
+    private Maths() {}
 
     public static float max(float f0, float f1, float... fs) {
         float result = Math.max(f0, f1);

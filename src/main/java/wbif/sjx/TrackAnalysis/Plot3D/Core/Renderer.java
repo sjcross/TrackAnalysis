@@ -3,8 +3,8 @@ package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
 import com.jogamp.opengl.util.awt.ImageUtil;
 import ij.ImagePlus;
+import wbif.sjx.TrackAnalysis.GUI.TrackPlotControl.*;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.Entity;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.TrackEntity;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Texture.Texture;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;
@@ -31,8 +31,8 @@ public class Renderer {
     private boolean captureNextRender;
 
     private boolean useOrthoProj;
-    private boolean bindColourBuffers = true;
-    private boolean bindMeshBuffers = true;
+    private boolean bindColourBuffers;
+    private boolean bindMeshBuffers;
     private Vector2f orthoBoundingConstraints;
 
     public Renderer() throws Exception {
@@ -47,14 +47,16 @@ public class Renderer {
         mainShader.unbind();
 
         useOrthoProj = false;
+        bindColourBuffers = true;
+        bindMeshBuffers = true;
         orthoBoundingConstraints = new Vector2f();
     }
 
-    public void render(GLFWWindow window, Camera camera, Scene scene) {
+    public void render(GLFWWindow window, Scene scene) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glfwSwapInterval(window.isVSyncEnabled() ? 1 : 0);
 
-        Matrix4f projViewMatrix = calcProjViewMatrix(window, camera);
+        Matrix4f projViewMatrix = calcProjViewMatrix(window, scene.getCamera());
 
         mainShader.bind();
         mainShader.setMatrix4fUniform("projectedViewMatrix", projViewMatrix);
@@ -91,7 +93,7 @@ public class Renderer {
         instancedShader.bind();
         instancedShader.setMatrix4fUniform("projectedViewMatrix", projViewMatrix);
 
-        boolean useInstancedColour = scene.getDisplayColour() != Scene.DisplayColour.ID;
+        boolean useInstancedColour = scene.getDisplayColour() != DisplayColour.ID;
 
         if (bindMeshBuffers) {
             bindMeshBuffers = false;
@@ -117,7 +119,7 @@ public class Renderer {
             trackEntity.renderParticle(scene.getFrame());
 
             if (scene.isTrailVisibile()) {
-                trackEntity.renderTrail(scene.getFrame(), scene.getTrailLength(), scene.getRenderQuality() != Scene.RenderQuality.LOWEST);
+                trackEntity.renderTrail(scene.getFrame(), scene.getTrailLength(), scene.getRenderQuality() != RenderQuality.LOWEST);
             }
         });
 

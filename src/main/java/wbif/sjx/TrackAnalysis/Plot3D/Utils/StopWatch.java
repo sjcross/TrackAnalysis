@@ -24,7 +24,6 @@ public class StopWatch {
     }
 
     public void restart() {
-        stop();
         start();
     }
 
