@@ -1,55 +1,37 @@
 package wbif.sjx.TrackAnalysis.GUI;
 
 import ij.ImagePlus;
-import ij.Prefs;
 import ij.gui.Plot;
+import wbif.sjx.TrackAnalysis.GUI.Control.BasicModule;
 import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.util.Arrays;
-import java.util.TreeMap;
 import java.util.stream.IntStream;
 
-public class TrackDurationControl extends ModuleControl {
-    public TrackDurationControl(TrackCollection tracks, ImagePlus ipl, int panelWidth, int elementHeight) {
-        super(tracks, ipl, panelWidth, elementHeight);
-    }
+import static wbif.sjx.TrackAnalysis.GUI.Control.MainGUI.elementHeight;
+import static wbif.sjx.TrackAnalysis.GUI.Control.MainGUI.frameWidth;
 
-    @Override
-    public String getTitle() {
-        return "Track duration plot";
-    }
-
-    @Override
-    public JPanel getCommonControls() {
-        JPanel panel = new JPanel(new GridBagLayout());
+public class TrackDurationControl extends BasicModule
+{
+    public TrackDurationControl(TrackCollection tracks, ImagePlus ipl) {
+        super(tracks, ipl);
 
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
-        c.gridwidth = 2;
         c.insets = new Insets(20,5,20,5);
 
-        // Button to run ensemble plotting
-        JButton plotAllButton = new JButton(PLOT_ALL);
-        plotAllButton.setPreferredSize(new Dimension(panelWidth,elementHeight));
-        plotAllButton.addActionListener(this);
+        // Button to plot all tracks
+        JButton plotAllButton = new JButton("All tracks");
+        plotAllButton.setPreferredSize(new Dimension(frameWidth, elementHeight));
+        plotAllButton.addActionListener(e -> new Thread((this::plotAll)).start());
         panel.add(plotAllButton,c);
-
-        return panel;
     }
 
-    @Override
-    public JPanel getExtraControls() {
-        return null;
-
-    }
-
-    @Override
-    public void run(int ID) {
+    public void plotAll()
+    {
         int highestFrame = tracks.getHighestFrame();
         double[] duration = IntStream.range(0,highestFrame).asDoubleStream().toArray();
         double[] number = new double[duration.length];
@@ -64,12 +46,6 @@ public class TrackDurationControl extends ModuleControl {
         plot.addPoints(duration,number,Plot.LINE);
         plot.setLimitsToFit(true);
         plot.show();
-
-    }
-
-    @Override
-    public void extraActions(ActionEvent e) {
-
 
     }
 }
