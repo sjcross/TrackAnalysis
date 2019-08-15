@@ -4,25 +4,25 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;
 import ij.measure.ResultsTable;
-import org.apache.commons.math3.stat.descriptive.moment.Mean;
-import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
-import org.lwjgl.system.CallbackI;
+import wbif.sjx.TrackAnalysis.GUI.Control.PlotableModule;
 import wbif.sjx.common.Analysis.MSDCalculator;
 import wbif.sjx.common.MathFunc.CumStat;
-import wbif.sjx.common.Object.Timepoint;
 import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.TreeMap;
+
+import static wbif.sjx.TrackAnalysis.GUI.Control.MainGUI.elementHeight;
+import static wbif.sjx.TrackAnalysis.GUI.Control.MainGUI.frameWidth;
 
 /**
  * Created by sc13967 on 24/06/2017.
  */
-public class TrackSummary extends ModuleControl {
+public class TrackSummary extends PlotableModule
+{
     private JCheckBox frameByFrameCheckbox;
     private JCheckBox numberOfObjectsCheckbox;
     private JCheckBox trackDurationCheckbox;
@@ -30,12 +30,153 @@ public class TrackSummary extends ModuleControl {
     private JCheckBox diffusionCoefficientCheckbox;
     private JTextField nPointsTextField;
 
-    public TrackSummary(TrackCollection tracks, ImagePlus ipl, int panelWidth, int elementHeight) {
-        super(tracks, ipl, panelWidth, elementHeight);
+    public TrackSummary(TrackCollection tracks, ImagePlus ipl) {
+        super(tracks, ipl);
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 2;
+        c.insets = new Insets(0,5,0,5);
+
+        // Full track details
+        boolean fullTrackDetails = Prefs.get("TrackAnalysis.TrackSummary.fullTrackDetails",true);
+        frameByFrameCheckbox = new JCheckBox("Full track details (frame-by-frame)");
+        frameByFrameCheckbox.setPreferredSize(new Dimension(frameWidth,elementHeight));
+        frameByFrameCheckbox.setSelected(fullTrackDetails);
+        c.gridy++;
+        panel.add(frameByFrameCheckbox,c);
+
+        // Checkbox for number of objects
+        boolean numberOfObjects = Prefs.get("TrackAnalysis.TrackSummary.numberOfObjects",true);
+        numberOfObjectsCheckbox = new JCheckBox("Output number of objects");
+        numberOfObjectsCheckbox.setPreferredSize(new Dimension(frameWidth,elementHeight));
+        numberOfObjectsCheckbox.setSelected(numberOfObjects);
+        panel.add(numberOfObjectsCheckbox,c);
+
+        // Track duration
+        boolean trackDuration = Prefs.get("TrackAnalysis.TrackSummary.trackDuration",true);
+        trackDurationCheckbox = new JCheckBox("Output track duration");
+        trackDurationCheckbox.setPreferredSize(new Dimension(frameWidth,elementHeight));
+        trackDurationCheckbox.setSelected(trackDuration);
+        c.gridy++;
+        panel.add(trackDurationCheckbox,c);
+
+        // Spatial statistics
+        boolean spatialStatistics = Prefs.get("TrackAnalysis.TrackSummary.spatialStatistics",true);
+        spatialStatisticsCheckbox = new JCheckBox("Output spatial statistics");
+        spatialStatisticsCheckbox.setPreferredSize(new Dimension(frameWidth,elementHeight));
+        spatialStatisticsCheckbox.setSelected(spatialStatistics);
+        c.gridy++;
+        panel.add(spatialStatisticsCheckbox,c);
+
+        // Diffusion coefficient
+        boolean diffusionCoefficient = Prefs.get("TrackAnalysis.TrackSummary.diffusionCoefficient",false);
+        diffusionCoefficientCheckbox = new JCheckBox("Output diffusion coefficient");
+        diffusionCoefficientCheckbox.setPreferredSize(new Dimension(frameWidth,elementHeight));
+        diffusionCoefficientCheckbox.setSelected(diffusionCoefficient);
+        c.gridy++;
+        panel.add(diffusionCoefficientCheckbox,c);
+
+        // Label and text field to get number of points to use for diffusion coefficient calculation
+        JTextField label = new JTextField("Number of frames");
+        label.setPreferredSize(new Dimension(3*frameWidth/4,elementHeight));
+        label.setEditable(false);
+        label.setBorder(null);
+        c.gridwidth = 1;
+        c.gridy++;
+        c.insets = new Insets(5,5,20,5);
+        panel.add(label,c);
+
+        int nPoints = (int) Prefs.get("TrackAnalysis.TrackSummary.nPoints",25);
+        nPointsTextField = new JTextField();
+        nPointsTextField.setPreferredSize(new Dimension(frameWidth/4-5,elementHeight));
+        nPointsTextField.setText(String.valueOf(nPoints));
+        c.gridx++;
+        c.insets = new Insets(5,0,20,5);
+        panel.add(nPointsTextField,c);
+    }
+
+    @Override
+    public void plotAll()
+    {
+        boolean fullTrackDetails = frameByFrameCheckbox.isSelected();
+        Prefs.set("TrackAnalysis.fullTrackDetails",fullTrackDetails);
+
+        boolean numberOfObjects = numberOfObjectsCheckbox.isSelected();
+        Prefs.set("TrackAnalysis.numberOfObjects",numberOfObjects);
+
+        boolean trackDuration = trackDurationCheckbox.isSelected();
+        Prefs.set("TrackAnalysis.trackDuration",trackDuration);
+
+        boolean spatialStatistics = spatialStatisticsCheckbox.isSelected();
+        Prefs.set("TrackAnalysis.spatialStatistics",spatialStatistics);
+
+        boolean diffusionCoefficient = diffusionCoefficientCheckbox.isSelected();
+        Prefs.set("TrackAnalysis.diffusionCoefficient",diffusionCoefficient);
+
+        ResultsTable rt = new ResultsTable();
+
+        IJ.log("++SUMMARY OF ALL TRACKS++");
+        IJ.log(" ");
+
+        int i=0;
+        for (int key:tracks.keySet()) {
+            rt.setValue("ID",i++,key);
+        }
+
+        showTrackSummary(rt);
+        if (numberOfObjects) showNumberOfObjects();
+        if (trackDuration) showTrackDuration(rt);
+        if (spatialStatistics) showTrackSpatialStatistics(rt);
+        if (diffusionCoefficient) showDiffusionCoefficient(rt);
+
+        ResultsTable fullRT = new ResultsTable();
+        if (fullTrackDetails) showFullTrackResults(fullRT);
+        fullRT.show("Full track details");
+
+        rt.show("Track summary");
+    }
+
+    @Override
+    public void plotTrack(int ID)
+    {
+        boolean fullTrackDetails = frameByFrameCheckbox.isSelected();
+        Prefs.set("TrackAnalysis.fullTrackDetails",fullTrackDetails);
+
+        boolean numberOfObjects = numberOfObjectsCheckbox.isSelected();
+        Prefs.set("TrackAnalysis.numberOfObjects",numberOfObjects);
+
+        boolean trackDuration = trackDurationCheckbox.isSelected();
+        Prefs.set("TrackAnalysis.trackDuration",trackDuration);
+
+        boolean spatialStatistics = spatialStatisticsCheckbox.isSelected();
+        Prefs.set("TrackAnalysis.spatialStatistics",spatialStatistics);
+
+        boolean diffusionCoefficient = diffusionCoefficientCheckbox.isSelected();
+        Prefs.set("TrackAnalysis.diffusionCoefficient",diffusionCoefficient);
+
+        ResultsTable rt = new ResultsTable();
+
+        IJ.log("++SUMMARY OF TRACK "+ID+"++");
+        IJ.log(" ");
+
+        rt.setValue("ID",0,ID);
+
+        showTrackSummary(ID,rt);
+        if (trackDuration) showTrackDuration(ID,rt);
+        if (spatialStatistics) showTrackSpatialStatistics(ID,rt);
+        if (diffusionCoefficient) showDiffusionCoefficient(ID,rt);
+
+        ResultsTable fullRT = new ResultsTable();
+        if (fullTrackDetails) showFullTrackResults(ID,fullRT);
+        fullRT.show("Full track details");
+
+        rt.show("Track summary");
     }
 
     private void showTrackSummary(ResultsTable rt) {
-         DecimalFormat df = new DecimalFormat("#.###");
+        DecimalFormat df = new DecimalFormat("#.###");
         String units = tracks.values().iterator().next().getUnits();
 
         int i=0;
@@ -69,18 +210,11 @@ public class TrackSummary extends ModuleControl {
 
     }
 
-    private void showFullTrackResults(int ID, ResultsTable rt) {
+    private void showFullTrackResults(ResultsTable rt) {
         String units = tracks.values().iterator().next().getUnits();
 
-        Set<Integer> IDs = new TreeSet<>();
-        if (ID == -1) {
-            IDs = tracks.keySet();
-        } else {
-            IDs.add(ID);
-        }
-
         int i = 0;
-        for (int currentID:IDs) {
+        for (int currentID:tracks.keySet()) {
             Track track = tracks.get(currentID);
 
 //            TreeMap<Integer,double[]> nnDistances = track.getNearestNeighbourDistance(tracks);
@@ -107,6 +241,33 @@ public class TrackSummary extends ModuleControl {
         }
     }
 
+    private void showFullTrackResults(int ID, ResultsTable rt) {
+        Track track = tracks.get(ID);
+        String units = track.getUnits();
+
+//            TreeMap<Integer,double[]> nnDistances = track.getNearestNeighbourDistance(tracks);
+        TreeMap<Integer,Double> rollingTotalPath = track.getRollingTotalPathLength();
+        TreeMap<Integer,Double> rollingEuclideanDistance = track.getRollingEuclideanDistance();
+        TreeMap<Integer,Double> rollingDirectionalityRatio= track.getRollingDirectionalityRatio();
+        TreeMap<Integer,Double> instantaneousSpeed = track.getInstantaneousSpeed();
+
+        int i = 0;
+        for (int f:track.getF()){
+            rt.setValue("ID", i, ID);
+            rt.setValue("X (" + units + ")", i, track.getX(f));
+            rt.setValue("Y (" + units + ")", i, track.getY(f));
+            rt.setValue("Z (" + units + ")", i, track.getZ(f));
+//                rt.setValue("NN ID", i, nnDistances.get(f)[0]);
+//                rt.setValue("NN distance (" + units + ")", i, nnDistances.get(f)[1]);
+            rt.setValue("Rolling path length (" + units + ")", i, rollingTotalPath.get(f));
+            rt.setValue("Rolling Euclidean distance (" + units + ")", i, rollingEuclideanDistance.get(f));
+            rt.setValue("Rolling directionality ratio", i, rollingDirectionalityRatio.get(f));
+            rt.setValue("Instantaneous speed ("+units+"/frame)", i, instantaneousSpeed.get(f));
+
+            i++;
+        }
+    }
+
     private void showNumberOfObjects() {
         int[][] frameAndNumber = tracks.getNumberOfObjects(false);
         DecimalFormat df = new DecimalFormat("#.###");
@@ -125,7 +286,7 @@ public class TrackSummary extends ModuleControl {
 
     }
 
-    private void showAllTracksDuration(ResultsTable rt) {
+    private void showTrackDuration(ResultsTable rt) {
         DecimalFormat df = new DecimalFormat("#.##");
         DecimalFormat dfS = new DecimalFormat("#");
         CumStat cs = new CumStat();
@@ -158,7 +319,7 @@ public class TrackSummary extends ModuleControl {
 
     }
 
-    private void showAllTracksSpatialStatistics(ResultsTable rt) {
+    private void showTrackSpatialStatistics(ResultsTable rt) {
         DecimalFormat df = new DecimalFormat("#.###");
         String units = tracks.values().iterator().next().getUnits();
 
@@ -326,148 +487,5 @@ public class TrackSummary extends ModuleControl {
         IJ.log("Least squares intercept: "+String.valueOf(df.format(linearFit[1]))+" "+units+"^2");
         IJ.log("Calculated over "+String.valueOf(dfS.format(linearFit[2]))+" frames");
         IJ.log(" ");
-
     }
-
-    @Override
-    public String getTitle() {
-        return "Track summary";
-    }
-
-    @Override
-    public JPanel getExtraControls() {
-        JPanel panel = new JPanel(new GridBagLayout());
-
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridx = 0;
-        c.gridy = 0;
-        c.gridwidth = 2;
-        c.insets = new Insets(0,5,0,5);
-
-
-        // Full track details
-        boolean fullTrackDetails = Prefs.get("TrackAnalysis.TrackSummary.fullTrackDetails",true);
-        frameByFrameCheckbox = new JCheckBox("Full track details (frame-by-frame)");
-        frameByFrameCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
-        frameByFrameCheckbox.setSelected(fullTrackDetails);
-        c.gridy++;
-        panel.add(frameByFrameCheckbox,c);
-
-        // Checkbox for number of objects
-        boolean numberOfObjects = Prefs.get("TrackAnalysis.TrackSummary.numberOfObjects",true);
-        numberOfObjectsCheckbox = new JCheckBox("Output number of objects");
-        numberOfObjectsCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
-        numberOfObjectsCheckbox.setSelected(numberOfObjects);
-        panel.add(numberOfObjectsCheckbox,c);
-
-        // Track duration
-        boolean trackDuration = Prefs.get("TrackAnalysis.TrackSummary.trackDuration",true);
-        trackDurationCheckbox = new JCheckBox("Output track duration");
-        trackDurationCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
-        trackDurationCheckbox.setSelected(trackDuration);
-        c.gridy++;
-        panel.add(trackDurationCheckbox,c);
-
-        // Spatial statistics
-        boolean spatialStatistics = Prefs.get("TrackAnalysis.TrackSummary.spatialStatistics",true);
-        spatialStatisticsCheckbox = new JCheckBox("Output spatial statistics");
-        spatialStatisticsCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
-        spatialStatisticsCheckbox.setSelected(spatialStatistics);
-        c.gridy++;
-        panel.add(spatialStatisticsCheckbox,c);
-
-        // Diffusion coefficient
-        boolean diffusionCoefficient = Prefs.get("TrackAnalysis.TrackSummary.diffusionCoefficient",false);
-        diffusionCoefficientCheckbox = new JCheckBox("Output diffusion coefficient");
-        diffusionCoefficientCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
-        diffusionCoefficientCheckbox.setSelected(diffusionCoefficient);
-        c.gridy++;
-        panel.add(diffusionCoefficientCheckbox,c);
-
-        // Label and text field to get number of points to use for diffusion coefficient calculation
-        JTextField label = new JTextField("Number of frames");
-        label.setPreferredSize(new Dimension(3*panelWidth/4,elementHeight));
-        label.setEditable(false);
-        label.setBorder(null);
-        c.gridwidth = 1;
-        c.gridy++;
-        c.insets = new Insets(5,5,20,5);
-        panel.add(label,c);
-
-        int nPoints = (int) Prefs.get("TrackAnalysis.TrackSummary.nPoints",25);
-        nPointsTextField = new JTextField();
-        nPointsTextField.setPreferredSize(new Dimension(panelWidth/4-5,elementHeight));
-        nPointsTextField.setText(String.valueOf(nPoints));
-        c.gridx++;
-        c.insets = new Insets(5,0,20,5);
-        panel.add(nPointsTextField,c);
-
-        return panel;
-
-    }
-
-    @Override
-    public void run(int ID) {
-        boolean fullTrackDetails = frameByFrameCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.fullTrackDetails",fullTrackDetails);
-
-        boolean numberOfObjects = numberOfObjectsCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.numberOfObjects",numberOfObjects);
-
-        boolean trackDuration = trackDurationCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.trackDuration",trackDuration);
-
-        boolean spatialStatistics = spatialStatisticsCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.spatialStatistics",spatialStatistics);
-
-        boolean diffusionCoefficient = diffusionCoefficientCheckbox.isSelected();
-        Prefs.set("TrackAnalysis.diffusionCoefficient",diffusionCoefficient);
-
-        ResultsTable rt = new ResultsTable();
-
-        if (ID == -1) {
-            IJ.log("++SUMMARY OF ALL TRACKS++");
-            IJ.log(" ");
-
-            int i=0;
-            for (int key:tracks.keySet()) {
-                rt.setValue("ID",i++,key);
-            }
-
-            showTrackSummary(rt);
-            if (numberOfObjects) showNumberOfObjects();
-            if (trackDuration) showAllTracksDuration(rt);
-            if (spatialStatistics) showAllTracksSpatialStatistics(rt);
-            if (diffusionCoefficient) showDiffusionCoefficient(rt);
-
-            ResultsTable fullRT = new ResultsTable();
-            if (fullTrackDetails) showFullTrackResults(ID, fullRT);
-            fullRT.show("Full track details");
-
-        } else {
-            IJ.log("++SUMMARY OF TRACK "+ID+"++");
-            IJ.log(" ");
-
-            rt.setValue("ID",0,ID);
-
-            showTrackSummary(ID,rt);
-            if (trackDuration) showTrackDuration(ID,rt);
-            if (spatialStatistics) showTrackSpatialStatistics(ID,rt);
-            if (diffusionCoefficient) showDiffusionCoefficient(ID,rt);
-
-            ResultsTable fullRT = new ResultsTable();
-            if (fullTrackDetails) showFullTrackResults(ID,fullRT);
-            fullRT.show("Full track details");
-
-        }
-
-        rt.show("Track summary");
-
-    }
-
-    @Override
-    public void extraActions(ActionEvent e) {
-
-    }
-
 }

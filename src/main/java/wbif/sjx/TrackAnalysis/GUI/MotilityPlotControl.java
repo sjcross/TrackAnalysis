@@ -3,33 +3,27 @@ package wbif.sjx.TrackAnalysis.GUI;
 import ij.ImagePlus;
 import ij.Prefs;
 import ij.gui.Plot;
+import wbif.sjx.TrackAnalysis.GUI.Control.PlotableModule;
 import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+
+import static wbif.sjx.TrackAnalysis.GUI.Control.MainGUI.elementHeight;
+import static wbif.sjx.TrackAnalysis.GUI.Control.MainGUI.frameWidth;
 
 /**
  * Created by sc13967 on 24/06/2017.
  */
-public class MotilityPlotControl extends ModuleControl {
+public class MotilityPlotControl extends PlotableModule
+{
     private JTextField lineWidthTextField;
     private JCheckBox blackPlotCheckbox;
     private JCheckBox showLabelsCheckbox;
 
-    public MotilityPlotControl(TrackCollection tracks, ImagePlus ipl, int panelWidth, int elementHeight) {
-        super(tracks, ipl, panelWidth, elementHeight);
-    }
-
-    @Override
-    public String getTitle() {
-        return "Motility plot";
-    }
-
-    @Override
-    public JPanel getExtraControls() {
-        JPanel panel = new JPanel(new GridBagLayout());
+    public MotilityPlotControl(TrackCollection tracks, ImagePlus ipl) {
+        super(tracks, ipl);
 
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
@@ -38,7 +32,7 @@ public class MotilityPlotControl extends ModuleControl {
 
         // Label and text field to specify line width
         JTextField label = new JTextField("Line width");
-        label.setPreferredSize(new Dimension(3*panelWidth/4,elementHeight));
+        label.setPreferredSize(new Dimension(3*frameWidth/4,elementHeight));
         label.setEditable(false);
         label.setBorder(null);
         c.gridwidth = 1;
@@ -47,7 +41,7 @@ public class MotilityPlotControl extends ModuleControl {
 
         double lineWidth = Prefs.get("TrackAnalysis.MotilityPlot.lineWith",1.0);
         lineWidthTextField = new JTextField();
-        lineWidthTextField.setPreferredSize(new Dimension(panelWidth/4-5,elementHeight));
+        lineWidthTextField.setPreferredSize(new Dimension(frameWidth/4-5,elementHeight));
         lineWidthTextField.setText(String.valueOf(lineWidth));
         c.gridx++;
         c.insets = new Insets(5,0,0,5);
@@ -55,7 +49,7 @@ public class MotilityPlotControl extends ModuleControl {
 
         boolean blackPlot = Prefs.get("TrackAnalysis.MotilityPlot.blackPlot",false);
         blackPlotCheckbox = new JCheckBox("Black lines");
-        blackPlotCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
+        blackPlotCheckbox.setPreferredSize(new Dimension(frameWidth,elementHeight));
         blackPlotCheckbox.setSelected(blackPlot);
         c.gridx = 0;
         c.gridy++;
@@ -64,17 +58,25 @@ public class MotilityPlotControl extends ModuleControl {
 
         boolean showLabels = Prefs.get("TrackAnalysis.MotilityPlot.showLabels",false);
         showLabelsCheckbox = new JCheckBox("Show labels");
-        showLabelsCheckbox.setPreferredSize(new Dimension(panelWidth,elementHeight));
+        showLabelsCheckbox.setPreferredSize(new Dimension(frameWidth,elementHeight));
         showLabelsCheckbox.setSelected(showLabels);
         c.gridy++;
         c.insets = new Insets(5,0,20,5);
         panel.add(showLabelsCheckbox,c);
+    }
 
-        return panel;
+    @Override
+    public void plotAll()
+    {
 
     }
 
     @Override
+    public void plotTrack(int ID)
+    {
+
+    }
+
     public void run(int ID) {
         double lineWidth = Double.parseDouble(lineWidthTextField.getText());
 
@@ -160,11 +162,6 @@ public class MotilityPlotControl extends ModuleControl {
 
         plot.setLineWidth(1);
         plot.show();
-
-    }
-
-    @Override
-    public void extraActions(ActionEvent e) {
 
     }
 }
