@@ -16,108 +16,43 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="ResultsTableLoader.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/ResultsTableLoader.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="31" column="50" selection-start-line="31" selection-start-column="50" selection-end-line="31" selection-end-column="50" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Engine.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Core/Engine.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="172">
-              <caret line="65" column="25" lean-forward="true" selection-start-line="65" selection-start-column="25" selection-end-line="65" selection-end-column="25" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RNG.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Utils/RNG.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret selection-end-column="44" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StopWatch.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Utils/StopWatch.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="74">
-              <caret line="5" column="24" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="24" />
-              <folding>
-                <element signature="e#262#263#0" expanded="true" />
-                <element signature="e#293#294#0" expanded="true" />
-                <element signature="e#609#610#0" expanded="true" />
-                <element signature="e#666#667#0" expanded="true" />
-                <element signature="e#650#651#0" expanded="true" />
-                <element signature="e#716#717#0" expanded="true" />
-                <element signature="e#952#953#0" expanded="true" />
-                <element signature="e#988#989#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Camera.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Core/Camera.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="196">
-              <caret line="96" column="17" lean-forward="true" selection-start-line="96" selection-start-column="17" selection-end-line="96" selection-end-column="17" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MainGUI.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/MainGUI.java">
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="153">
-              <caret line="46" column="26" lean-forward="true" selection-start-line="46" selection-start-column="26" selection-end-line="46" selection-end-column="26" />
+              <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Keyboard.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Input/Keyboard.java">
+      <file leaf-file-name="ShowTrackIDControl.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/ShowTrackIDControl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="58">
-              <caret line="27" column="43" lean-forward="true" selection-start-line="27" selection-start-column="43" selection-end-line="27" selection-end-column="43" />
+            <state relative-caret-position="207">
+              <caret line="209" selection-start-line="209" selection-end-line="209" />
+              <folding>
+                <element signature="docComment;class#ShowTrackIDControl#0" />
+                <element signature="e#797#798#0" expanded="true" />
+                <element signature="e#847#848#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="System.java" pinned="false" current-in-tab="false">
-        <entry file="jar://C:/Program Files/Java/jdk1.8.0_171/src.zip!/java/lang/System.java">
+      <file leaf-file-name="DirectionalPersistenceControl.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/DirectionalPersistenceControl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="129">
-              <caret line="492" column="30" selection-start-line="492" selection-start-column="30" selection-end-line="492" selection-end-column="30" />
+            <state relative-caret-position="221">
+              <caret line="47" column="37" selection-start-line="47" selection-start-column="37" selection-end-line="47" selection-end-column="37" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TrackPlotLoader.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackPlotLoader.java">
+      <file leaf-file-name="TrackSummary.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/TrackSummary.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1411">
-              <caret line="90" column="45" selection-start-line="90" selection-start-column="45" selection-end-line="90" selection-end-column="45" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TrackMateLoader.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoader.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="697">
-              <caret line="52" column="30" selection-start-line="52" selection-start-column="30" selection-end-line="52" selection-end-column="30" />
+            <state relative-caret-position="258">
+              <caret line="393" column="8" selection-start-line="393" selection-start-column="8" selection-end-line="393" selection-end-column="40" />
             </state>
           </provider>
         </entry>
@@ -130,9 +65,12 @@
       <find>Fas</find>
       <find>FastMath</find>
       <find>boolean pixelDistances = calibrationCheckbox.isSelected();</find>
+      <find>main(</find>
+      <find>Trail</find>
     </findStrings>
     <replaceStrings>
       <replace>Math</replace>
+      <replace>Line</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -141,7 +79,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/TrackPlotControl.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Math/vectors/Vector4f.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Math/vectors/Vector3f.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Math/Quaternion.java" />
@@ -171,17 +108,18 @@
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/TotalPathLengthControl.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/MotilityPlotControl.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/MSDControl.java" />
-        <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/ShowTrackIDControl.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/FishLoader.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackPlotLoader.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/ResultsTableLoader.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/TrackMateLoader.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Input/Keyboard.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Core/Camera.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Utils/StopWatch.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/MainGUI.java" />
         <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Core/Engine.java" />
+        <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/TrackPlotControl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/ShowTrackIDControl.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
   </component>
@@ -193,18 +131,16 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="63" />
-    <option name="y" value="-9" />
-    <option name="width" value="1875" />
-    <option name="height" value="1098" />
+    <option name="x" value="81" />
+    <option name="y" value="-10" />
+    <option name="width" value="1845" />
+    <option name="height" value="1100" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="AndroidView" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -254,17 +190,7 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="TrackAnalysis" type="462c0819:PsiDirectoryNode" />
-              <item name="Plot3D" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="TrackAnalysis" type="b2602c69:ProjectViewProjectNode" />
-              <item name="TrackAnalysis" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="TrackAnalysis" type="462c0819:PsiDirectoryNode" />
-              <item name="Plot3D" type="462c0819:PsiDirectoryNode" />
-              <item name="Utils" type="462c0819:PsiDirectoryNode" />
+              <item name="IO" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="TrackAnalysis" type="b2602c69:ProjectViewProjectNode" />
@@ -302,6 +228,8 @@
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -322,9 +250,20 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.ResultsTableLoader">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+    </configuration>
+    <configuration name="ResultsTableLoader" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="wbif.sjx.TrackAnalysis.IO.ResultsTableLoader" />
+      <module name="TrackAnalysis" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="wbif.sjx.TrackAnalysis.IO.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
     </configuration>
     <configuration name="TrackPlotLoader" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="wbif.sjx.TrackAnalysis.IO.TrackPlotLoader" />
@@ -378,8 +317,13 @@
       <properties />
       <listeners />
     </configuration>
+    <list>
+      <item itemvalue="Application.TrackPlotLoader" />
+      <item itemvalue="Application.ResultsTableLoader" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ResultsTableLoader" />
         <item itemvalue="Application.TrackPlotLoader" />
       </list>
     </recent_temporary>
@@ -398,61 +342,41 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1295" height="704" extended-state="6" />
+    <frame x="55" y="-7" width="1488" height="878" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" order="7" weight="0.4584013" />
+      <window_info anchor="bottom" id="Messages" order="7" weight="0.45751634" />
       <window_info anchor="right" id="Palette&#9;" order="3" />
-      <window_info id="Image Layers" order="2" />
-      <window_info anchor="right" id="Capture Analysis" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="right" id="Maven Projects" order="3" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32626426" />
       <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.31764707" />
       <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24980484" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.24762551" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32923076" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info id="UI Designer" order="2" />
-      <window_info anchor="right" id="Theme Preview" order="3" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Capture Analysis" order="3" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" id="Theme Preview" order="3" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info id="Image Layers" order="2" />
+      <window_info id="UI Designer" order="2" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32923076" />
+      <window_info id="Capture Tool" order="2" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Math/vectors/Vector2d.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Math/vectors/Vector2f.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/Tracks/MAX_SimulatedTracks100_halfheight_z.tif">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/Textures/debugTexture.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Utils/DataUtils.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
@@ -574,8 +498,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Graphics/Component/FaceSI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="20" column="26" selection-end-line="58" />
+        <state relative-caret-position="238">
+          <caret line="16" column="13" lean-forward="true" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -607,24 +531,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Core/Item/TrackEntityCollection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="571">
-          <caret line="50" column="30" lean-forward="true" selection-start-line="50" selection-start-column="30" selection-end-line="50" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Core/Item/TrackEntity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1302">
           <caret line="153" column="85" selection-start-line="153" selection-start-column="85" selection-end-line="153" selection-end-column="85" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/DirectionalPersistenceControl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="47" column="37" lean-forward="true" selection-start-line="47" selection-start-column="37" selection-end-line="47" selection-end-column="37" />
         </state>
       </provider>
     </entry>
@@ -635,24 +545,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/TrackSummary.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="445">
-          <caret line="297" lean-forward="true" selection-start-line="297" selection-end-line="297" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/DirectionalityRatioControl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="605">
           <caret line="71" column="84" lean-forward="true" selection-start-line="71" selection-start-column="84" selection-end-line="71" selection-end-column="84" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/NearestNeighbourCalculator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="935">
-          <caret line="67" column="42" selection-start-line="67" selection-start-column="42" selection-end-line="67" selection-end-column="42" />
         </state>
       </provider>
     </entry>
@@ -677,27 +573,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/ShowTrackIDControl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1615">
-          <caret line="109" column="36" selection-start-line="109" selection-start-column="36" selection-end-line="109" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/github/SJCross/Common/1.4.35/Common-1.4.35-sources.jar!/wbif/sjx/common/Object/Track.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="17" column="11" selection-start-line="17" selection-start-column="11" selection-end-line="17" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/github/SJCross/Common/1.4.35/Common-1.4.35-sources.jar!/wbif/sjx/common/Process/SwitchTAndZ.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="7" column="3" selection-start-line="7" selection-start-column="3" selection-end-line="7" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/github/SJCross/Common/1.4.35/Common-1.4.35-sources.jar!/wbif/sjx/common/Object/Track.java" />
+    <entry file="jar://$MAVEN_REPOSITORY$/com/github/SJCross/Common/1.4.35/Common-1.4.35-sources.jar!/wbif/sjx/common/Process/SwitchTAndZ.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/FishLoader.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -719,68 +596,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-340">
-          <caret line="39" column="37" selection-start-line="39" selection-start-column="37" selection-end-line="39" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_171/src.zip!/java/lang/System.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="129">
-          <caret line="492" column="30" selection-start-line="492" selection-start-column="30" selection-end-line="492" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_171/src.zip!/java/lang/System.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Input/Keyboard.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="58">
-          <caret line="27" column="43" lean-forward="true" selection-start-line="27" selection-start-column="43" selection-end-line="27" selection-end-column="43" />
+        <state relative-caret-position="425">
+          <caret line="27" column="43" selection-start-line="27" selection-start-column="43" selection-end-line="27" selection-end-column="43" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Utils/RNG.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-column="44" />
+        <state relative-caret-position="119">
+          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Core/Camera.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="96" column="17" lean-forward="true" selection-start-line="96" selection-start-column="17" selection-end-line="96" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/MainGUI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="46" column="26" lean-forward="true" selection-start-line="46" selection-start-column="26" selection-end-line="46" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Utils/StopWatch.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="74">
-          <caret line="5" column="24" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="24" />
-          <folding>
-            <element signature="e#262#263#0" expanded="true" />
-            <element signature="e#293#294#0" expanded="true" />
-            <element signature="e#609#610#0" expanded="true" />
-            <element signature="e#666#667#0" expanded="true" />
-            <element signature="e#650#651#0" expanded="true" />
-            <element signature="e#716#717#0" expanded="true" />
-            <element signature="e#952#953#0" expanded="true" />
-            <element signature="e#988#989#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="1428">
+          <caret line="96" column="5" selection-start-line="96" selection-start-column="5" selection-end-line="96" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/IO/ResultsTableLoader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
+        <state relative-caret-position="323">
           <caret line="31" column="50" selection-start-line="31" selection-start-column="50" selection-end-line="31" selection-end-column="50" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -790,11 +630,110 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Core/Engine.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
-          <caret line="65" column="25" lean-forward="true" selection-start-line="65" selection-start-column="25" selection-end-line="65" selection-end-column="25" />
+        <state relative-caret-position="1003">
+          <caret line="73" column="59" selection-start-line="73" selection-start-column="59" selection-end-line="73" selection-end-column="59" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/TrackPlotControl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1343">
+          <caret line="89" column="36" selection-start-line="89" selection-start-column="36" selection-end-line="89" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/TrackAnalysis.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="22" selection-start-line="22" selection-end-line="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/MainGUI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="51" lean-forward="true" selection-start-line="51" selection-end-line="51" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Utils/StopWatch.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="24" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/Plot3D/Core/Item/TrackEntityCollection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="29" selection-start-line="6" selection-start-column="29" selection-end-line="6" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/NearestNeighbourCalculator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/net/imagej/ij/1.51h/ij-1.51h.jar!/ij/gui/Line.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="215">
+          <caret line="48" column="11" selection-start-line="48" selection-start-column="11" selection-end-line="48" selection-end-column="11" />
+          <folding>
+            <element signature="e#1376#1377#0" expanded="true" />
+            <element signature="e#1448#1449#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/awt/Insets.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="102" column="11" selection-start-line="102" selection-start-column="11" selection-end-line="102" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/DirectionalPersistenceControl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="47" column="37" selection-start-line="47" selection-start-column="37" selection-end-line="47" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/TrackSummary.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="258">
+          <caret line="393" column="8" selection-start-line="393" selection-start-column="8" selection-end-line="393" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/wbif/sjx/TrackAnalysis/GUI/ShowTrackIDControl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="209" selection-start-line="209" selection-end-line="209" />
+          <folding>
+            <element signature="docComment;class#ShowTrackIDControl#0" />
+            <element signature="e#797#798#0" expanded="true" />
+            <element signature="e#847#848#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
         </state>
       </provider>
     </entry>

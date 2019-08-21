@@ -10,34 +10,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: com.github.SJCross:Common:1.4.35" level="project" />
-    <orderEntry type="library" name="Maven: ome:bio-formats_plugins:5.9.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openmicroscopy:ome-common:5.3.6" level="project" />
-    <orderEntry type="library" name="Maven: org.openmicroscopy:ome-xml:5.6.3" level="project" />
-    <orderEntry type="library" name="Maven: ome:formats-api:5.9.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openmicroscopy:ome-codecs:0.2.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openmicroscopy:ome-jai:0.1.0" level="project" />
-    <orderEntry type="library" name="Maven: ome:formats-bsd:5.9.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openmicroscopy:specification:5.6.3" level="project" />
-    <orderEntry type="library" name="Maven: ome:turbojpeg:5.9.2" level="project" />
-    <orderEntry type="library" name="Maven: ome:formats-gpl:5.9.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openmicroscopy:ome-mdbtools:5.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openmicroscopy:metakit:5.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.openmicroscopy:ome-poi:5.3.3" level="project" />
-    <orderEntry type="library" name="Maven: org.json:json:20090211" level="project" />
-    <orderEntry type="library" name="Maven: net.imagej:imagej-ops:0.43.2" level="project" />
-    <orderEntry type="library" name="Maven: net.imagej:imagej-mesh:0.7.1" level="project" />
-    <orderEntry type="library" name="Maven: org.scijava:scijava-search:0.5.0" level="project" />
-    <orderEntry type="library" name="Maven: com.miglayout:miglayout:swing:3.7.4" level="project" />
-    <orderEntry type="library" name="Maven: org.ocpsoft.prettytime:prettytime:4.0.1.Final" level="project" />
-    <orderEntry type="library" name="Maven: org.scijava:scripting-javascript:0.4.4" level="project" />
-    <orderEntry type="library" name="Maven: org.joml:joml:1.9.9" level="project" />
-    <orderEntry type="library" name="Maven: org.ojalgo:ojalgo:45.1.1" level="project" />
     <orderEntry type="library" name="Maven: net.imagej:ij:1.51h" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: com.sun:tools:1.4.2">
         <CLASSES>
-          <root url="jar://C:/Program Files/Java/jdk1.8.0_131/lib/tools.jar!/" />
+          <root url="jar://C:/Program Files/Java/jdk1.8.0_161/lib/tools.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

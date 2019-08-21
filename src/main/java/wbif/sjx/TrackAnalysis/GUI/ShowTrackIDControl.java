@@ -2,6 +2,7 @@ package wbif.sjx.TrackAnalysis.GUI;
 
 import ij.ImagePlus;
 import ij.Prefs;
+import ij.gui.Line;
 import ij.gui.Overlay;
 import ij.gui.PointRoi;
 import ij.gui.TextRoi;
@@ -12,13 +13,15 @@ import wbif.sjx.common.Object.TrackCollection;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
 
 /**
  * Created by sc13967 on 04/07/2017.
  */
 public class ShowTrackIDControl extends ModuleControl {
+    private JTextField spotSizeTextField;
     private JTextField fontSizeTextField;
+    private JCheckBox showTrailsCheckbox;
+    private JTextField trailWidthTextField;
 
     public ShowTrackIDControl(TrackCollection tracks, ImagePlus ipl, int panelWidth, int elementHeight) {
         super(tracks, ipl, panelWidth, elementHeight);
@@ -39,24 +42,75 @@ public class ShowTrackIDControl extends ModuleControl {
         c.gridwidth = 2;
         c.insets = new Insets(0,5,0,5);
 
-        // Label and text field to get number of points to use for diffusion coefficient calculation
-        JTextField label = new JTextField("Font size");
-        label.setPreferredSize(new Dimension(3*panelWidth/4,elementHeight));
-        label.setEditable(false);
-        label.setBorder(null);
+        JTextField spotSizeLabel = new JTextField("Spot size (0-4)");
+        spotSizeLabel.setPreferredSize(new Dimension(3 * panelWidth / 4, elementHeight));
+        spotSizeLabel.setEditable(false);
+        spotSizeLabel.setBorder(null);
+        c.gridx = 0;
+        c.gridwidth = 1;
+        c.gridy++;
+        panel.add(spotSizeLabel, c);
+
+        // Font size
+        int spotSize = (int) Prefs.get("TrackAnalysis.ShowTrackID.spot", 2);
+        spotSizeTextField = new JTextField();
+        spotSizeTextField.setPreferredSize(new Dimension(panelWidth / 4 - 5, elementHeight));
+        spotSizeTextField.setText(String.valueOf(spotSize));
+        c.gridx++;
+        panel.add(spotSizeTextField, c);
+
+        JTextField fontSizeLabel = new JTextField("Font size");
+        fontSizeLabel.setPreferredSize(new Dimension(3 * panelWidth / 4, elementHeight));
+        fontSizeLabel.setEditable(false);
+        fontSizeLabel.setBorder(null);
+        c.gridx = 0;
+        c.gridwidth = 1;
+        c.gridy++;
+        panel.add(fontSizeLabel, c);
+
+        // Font size
+        int fontSize = (int) Prefs.get("TrackAnalysis.ShowTrackID.fontSize", 8);
+        fontSizeTextField = new JTextField();
+        fontSizeTextField.setPreferredSize(new Dimension(panelWidth / 4 - 5, elementHeight));
+        fontSizeTextField.setText(String.valueOf(fontSize));
+        c.gridx++;
+        panel.add(fontSizeTextField, c);
+
+        JTextField showLabelLabel = new JTextField("Show trails");
+        showLabelLabel.setPreferredSize(new Dimension(3*panelWidth/4,elementHeight));
+        showLabelLabel.setEditable(false);
+        showLabelLabel.setBorder(null);
+        c.gridx = 0;
+        c.gridwidth = 1;
+        c.gridy++;
+        panel.add(showLabelLabel,c);
+
+        // Font size
+        boolean showTrails = Prefs.get("TrackAnalysis.ShowTrackID.showTrails",true);
+        showTrailsCheckbox = new JCheckBox();
+        showTrailsCheckbox.setPreferredSize(new Dimension(panelWidth/4-5,elementHeight));
+        showTrailsCheckbox.setSelected(showTrails);
+        c.gridx++;
+        panel.add(showTrailsCheckbox,c);
+
+        JTextField trailWidthLabel = new JTextField("Trail width");
+        trailWidthLabel.setPreferredSize(new Dimension(3 * panelWidth / 4, elementHeight));
+        trailWidthLabel.setEditable(false);
+        trailWidthLabel.setBorder(null);
+        c.gridx = 0;
         c.gridwidth = 1;
         c.gridy++;
         c.insets = new Insets(5,5,20,5);
-        panel.add(label,c);
+        panel.add(trailWidthLabel, c);
 
         // Font size
-        int fontSize = (int) Prefs.get("TrackAnalysis.ShowTrackID.fontSize",8);
-        fontSizeTextField = new JTextField();
-        fontSizeTextField.setPreferredSize(new Dimension(panelWidth/4-5,elementHeight));
-        fontSizeTextField.setText(String.valueOf(fontSize));
+        int trailWidth = (int) Prefs.get("TrackAnalysis.ShowTrackID.trailWidth", 1);
+        trailWidthTextField = new JTextField();
+        trailWidthTextField.setPreferredSize(new Dimension(panelWidth / 4 - 5, elementHeight));
+        trailWidthTextField.setText(String.valueOf(trailWidth));
         c.gridx++;
         c.insets = new Insets(5,0,20,5);
-        panel.add(fontSizeTextField,c);
+        panel.add(trailWidthTextField, c);
 
         return panel;
 
@@ -64,15 +118,24 @@ public class ShowTrackIDControl extends ModuleControl {
 
     @Override
     public void run(int ID) {
+        int spotSize = (int) Math.round(Double.parseDouble(spotSizeTextField.getText()));
+        Prefs.set("TrackAnalysis.ShowTrackID.spotSize",spotSize);
+
         int fontSize = (int) Math.round(Double.parseDouble(fontSizeTextField.getText()));
         Prefs.set("TrackAnalysis.ShowTrackID.fontSize",fontSize);
 
+        boolean showTrails = showTrailsCheckbox.isSelected();
+        Prefs.set("TrackAnalysis.ShowTrackID.showTrails",showTrails);
+
+        int trailWidth = (int) Math.round(Double.parseDouble(trailWidthTextField.getText()));
+        Prefs.set("TrackAnalysis.ShowTrackID.trailWidth",trailWidth);
+
         // Creating a duplicate of the image, so the original isn't altered
-        ipl = new Duplicator().run(ipl);
+        ImagePlus dupIpl = ipl.duplicate();
 
         // Creating an overlay for the image
         Overlay ovl = new Overlay();
-        ipl.setOverlay(ovl);
+        dupIpl.setOverlay(ovl);
 
         if (ID == -1) {
             for (int key:tracks.keySet()) {
@@ -88,18 +151,34 @@ public class ShowTrackIDControl extends ModuleControl {
                 for (int i=0;i<f.length;i++) {
                     PointRoi roi = new PointRoi(x[i]+0.5,y[i]+0.5);
                     roi.setPointType(3);
-                    if (ipl.isHyperStack()) roi.setPosition(1,(int) (z[i]+1),f[i]+1);
+                    roi.setSize(spotSize);
+                    if (dupIpl.isHyperStack()) roi.setPosition(1,(int) (z[i]+1),f[i]+1);
                     else roi.setPosition(f[i]+1);
                     roi.setStrokeColor(col);
                     ovl.addElement(roi);
 
-                    TextRoi text = new TextRoi(x[i],y[i],String.valueOf(key));
-                    if (ipl.isHyperStack()) text.setPosition(1,(int) (z[i]+1),f[i]+1);
-                    else text.setPosition(f[i]+1);
-                    text.setCurrentFont(new Font(Font.SANS_SERIF,Font.PLAIN,fontSize));
-                    text.setStrokeColor(col);
-                    ovl.addElement(text);
+                    // Add labels if the font size is not equal to zero
+                    if (fontSize != 0) {
+                        TextRoi text = new TextRoi(x[i], y[i], String.valueOf(key));
+                        if (dupIpl.isHyperStack()) text.setPosition(1, (int) (z[i] + 1), f[i] + 1);
+                        else text.setPosition(f[i] + 1);
+                        text.setCurrentFont(new Font(Font.SANS_SERIF, Font.PLAIN, fontSize));
+                        text.setStrokeColor(col);
+                        ovl.addElement(text);
+                    }
 
+                    // Adding trail if selected
+                    if (showTrails) {
+                        // Adding trail to all subsequent sections
+                        for (int j=i+1;j<f.length;j++) {
+                            Line line = new Line(x[i],y[i],x[i+1],y[i+1]);
+                            if (dupIpl.isHyperStack()) line.setPosition(1, (int) (z[i] + 1), f[j] + 1);
+                            else line.setPosition(f[j] + 1);
+                            line.setStrokeColor(col);
+                            line.setStrokeWidth(trailWidth);
+                            ovl.addElement(line);
+                        }
+                    }
                 }
             }
 
@@ -115,20 +194,35 @@ public class ShowTrackIDControl extends ModuleControl {
             for (int i=0;i<f.length;i++) {
                 PointRoi roi = new PointRoi(x[i]+0.5,y[i]+0.5);
                 roi.setPointType(3);
+                roi.setSize(spotSize);
                 roi.setPosition(f[i]+1);
                 roi.setStrokeColor(col);
                 ovl.addElement(roi);
 
-                TextRoi text = new TextRoi(x[i],y[i],String.valueOf(ID));
-                text.setPosition(f[i]+1);
-                text.setCurrentFont(new Font(Font.SANS_SERIF,Font.PLAIN,fontSize));
-                text.setStrokeColor(col);
-                ovl.addElement(text);
+                // Add labels if the font size is not equal to zero
+                if (fontSize != 0) {
+                    TextRoi text = new TextRoi(x[i], y[i], String.valueOf(ID));
+                    text.setPosition(f[i] + 1);
+                    text.setCurrentFont(new Font(Font.SANS_SERIF, Font.PLAIN, fontSize));
+                    text.setStrokeColor(col);
+                    ovl.addElement(text);
+                }
 
+                // Adding trail if selected
+                if (showTrails) {
+                    // Adding trail to all subsequent sections
+                    for (int j=i+1;j<f.length;j++) {
+                        Line line = new Line(x[i],y[i],x[i+1],y[i+1]);
+                        line.setPosition(f[j] + 1);
+                        line.setStrokeColor(col);
+                        line.setStrokeWidth(trailWidth);
+                        ovl.addElement(line);
+                    }
+                }
             }
         }
 
-        ipl.show();
+        dupIpl.show();
 
     }
 
