@@ -170,10 +170,11 @@ public class ShowTrackIDControl extends ModuleControl {
                     // Adding trail if selected
                     if (showTrails) {
                         // Adding trail to all subsequent sections
-                        for (int j=i+1;j<f.length;j++) {
+                        for (int ff=f[i]+1;ff<ipl.getNFrames();ff++) {
+                            if ((i+1) == f.length) continue;
                             Line line = new Line(x[i],y[i],x[i+1],y[i+1]);
-                            if (dupIpl.isHyperStack()) line.setPosition(1, (int) (z[i] + 1), f[j] + 1);
-                            else line.setPosition(f[j] + 1);
+                            if (dupIpl.isHyperStack()) line.setPosition(1, (int) (z[i] + 1), ff+1);
+                            else line.setPosition(ff+1);
                             line.setStrokeColor(col);
                             line.setStrokeWidth(trailWidth);
                             ovl.addElement(line);
@@ -210,10 +211,11 @@ public class ShowTrackIDControl extends ModuleControl {
 
                 // Adding trail if selected
                 if (showTrails) {
+                    if ((i+1) == f.length) continue;
                     // Adding trail to all subsequent sections
-                    for (int j=i+1;j<f.length;j++) {
+                    for (int ff=f[i]+1;ff<ipl.getNFrames();ff++) {
                         Line line = new Line(x[i],y[i],x[i+1],y[i+1]);
-                        line.setPosition(f[j] + 1);
+                        line.setPosition(ff+1);
                         line.setStrokeColor(col);
                         line.setStrokeWidth(trailWidth);
                         ovl.addElement(line);

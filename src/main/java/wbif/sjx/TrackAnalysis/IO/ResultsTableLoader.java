@@ -1,8 +1,10 @@
 package wbif.sjx.TrackAnalysis.IO;
 
+import fiji.stacks.Hyperstack_rearranger;
 import ij.*;
 import ij.gui.GenericDialog;
 import ij.measure.ResultsTable;
+import ij.plugin.HyperStackConverter;
 import ij.plugin.PlugIn;
 import wbif.sjx.TrackAnalysis.TrackAnalysis;
 import wbif.sjx.common.Object.Point;
@@ -58,9 +60,10 @@ public class ResultsTableLoader implements PlugIn {
             if (ipl.getNFrames()==1 & ipl.getNSlices() > 1) {
                 int yn_bt = JOptionPane.showConfirmDialog(null, "Swap frames (t) and slices (z)?","Swap dimensions",JOptionPane.YES_NO_OPTION);
                 if (yn_bt == JOptionPane.YES_OPTION) {
-                    SwitchTAndZ.run(ipl);
+                    ipl.setDimensions(ipl.getNChannels(),ipl.getNFrames(),ipl.getNSlices());
+                    ipl.getCalibration().setTimeUnit("frame");
+                    ipl.getCalibration().frameInterval = 1;
                 }
-
             }
         } else {
             ipl = null;

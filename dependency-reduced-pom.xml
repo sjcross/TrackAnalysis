@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>pom-scijava</artifactId>
+    <groupId>org.scijava</groupId>
+    <version>27.0.1</version>
+    <relativePath>pom.xml</relativePath>
+  </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>wbif.sjx</groupId>
   <artifactId>TrackAnalysis</artifactId>
   <name>Track_Analysis</name>
-  <version>1.1.5</version>
+  <version>1.1.7</version>
   <description>A Maven project implementing an ImageJ 1.x plugin.</description>
   <url>https://github.com/SJCross/TrackAnalysis/</url>
   <issueManagement>
@@ -32,6 +38,13 @@
         <role>reviewer</role>
         <role>support</role>
         <role>maintainer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>jdjfisher</id>
+      <name>Jordan Fisher</name>
+      <roles>
+        <role>developer</role>
       </roles>
     </developer>
   </developers>
@@ -136,7 +149,7 @@
     <dependency>
       <groupId>net.imagej</groupId>
       <artifactId>ij</artifactId>
-      <version>1.51h</version>
+      <version>1.52o</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
@@ -148,20 +161,12 @@
     <dependency>
       <groupId>sc.fiji</groupId>
       <artifactId>TrackMate_</artifactId>
-      <version>3.5.1</version>
+      <version>4.0.0</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
           <artifactId>imagej-deprecated</artifactId>
           <groupId>net.imagej</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>imglib2</artifactId>
-          <groupId>net.imglib2</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>imglib2-algorithm</artifactId>
-          <groupId>net.imglib2</groupId>
         </exclusion>
         <exclusion>
           <artifactId>imglib2-algorithm-gpl</artifactId>
@@ -172,20 +177,12 @@
           <groupId>net.imglib2</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>imglib2-realtransform</artifactId>
-          <groupId>net.imglib2</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>scijava-common</artifactId>
-          <groupId>org.scijava</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>itextpdf</artifactId>
           <groupId>com.itextpdf</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>jgrapht</artifactId>
-          <groupId>net.sf.jgrapht</groupId>
+          <artifactId>jgrapht-core</artifactId>
+          <groupId>org.jgrapht</groupId>
         </exclusion>
         <exclusion>
           <artifactId>batik-dom</artifactId>
@@ -200,10 +197,6 @@
           <groupId>org.jdom</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>jcommon</artifactId>
-          <groupId>org.jfree</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>jfreechart</artifactId>
           <groupId>org.jfree</groupId>
         </exclusion>
@@ -213,12 +206,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-math3</artifactId>
-      <version>3.6.1</version>
-      <scope>provided</scope>
-    </dependency>
   </dependencies>
   <reporting>
     <plugins>
@@ -227,7 +214,6 @@
         <version>3.0.0</version>
         <configuration>
           <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
-          <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
         </configuration>
         <reportSets>
           <reportSet>
