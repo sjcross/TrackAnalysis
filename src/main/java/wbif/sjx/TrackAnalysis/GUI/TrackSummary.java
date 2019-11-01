@@ -4,12 +4,8 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;
 import ij.measure.ResultsTable;
-import org.apache.commons.math3.stat.descriptive.moment.Mean;
-import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
-import org.lwjgl.system.CallbackI;
 import wbif.sjx.common.Analysis.MSDCalculator;
 import wbif.sjx.common.MathFunc.CumStat;
-import wbif.sjx.common.Object.Timepoint;
 import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
 
@@ -17,7 +13,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * Created by sc13967 on 24/06/2017.

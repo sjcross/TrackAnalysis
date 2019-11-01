@@ -3,7 +3,6 @@ package wbif.sjx.TrackAnalysis.Plot3D.Core;
 import ij.ImagePlus;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.CollectionBounds;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.Entity;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.TrackEntity;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.TrackEntityCollection;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.MeshFactory;

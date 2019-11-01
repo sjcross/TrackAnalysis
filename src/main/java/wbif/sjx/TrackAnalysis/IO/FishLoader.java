@@ -1,23 +1,21 @@
 package wbif.sjx.TrackAnalysis.IO;
 
-import fiji.stacks.Hyperstack_rearranger;
-import ij.*;
+import ij.ImageJ;
+import ij.ImagePlus;
+import ij.Prefs;
+import ij.WindowManager;
 import ij.gui.GenericDialog;
-import ij.measure.ResultsTable;
-import ij.plugin.HyperStackConverter;
 import ij.plugin.PlugIn;
 import wbif.sjx.TrackAnalysis.TrackAnalysis;
-import wbif.sjx.common.Object.Point;
-import wbif.sjx.common.Object.Timepoint;
 import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
-import wbif.sjx.common.Process.SwitchTAndZ;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.StringTokenizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Loads tracks from results table.  Tracks are stored in terms of calibrated distances.

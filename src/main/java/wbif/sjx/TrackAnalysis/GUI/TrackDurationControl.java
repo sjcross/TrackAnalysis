@@ -1,7 +1,6 @@
 package wbif.sjx.TrackAnalysis.GUI;
 
 import ij.ImagePlus;
-import ij.Prefs;
 import ij.gui.Plot;
 import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
@@ -9,8 +8,6 @@ import wbif.sjx.common.Object.TrackCollection;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
-import java.util.TreeMap;
 import java.util.stream.IntStream;
 
 public class TrackDurationControl extends ModuleControl {

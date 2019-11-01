@@ -4,7 +4,6 @@ package wbif.sjx.TrackAnalysis.Plot3D.Core;
 import com.jogamp.opengl.util.awt.ImageUtil;
 import ij.ImagePlus;
 import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.Entity;
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.TrackEntity;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
 import wbif.sjx.TrackAnalysis.Plot3D.Graphics.Texture.Texture;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.Matrix4f;

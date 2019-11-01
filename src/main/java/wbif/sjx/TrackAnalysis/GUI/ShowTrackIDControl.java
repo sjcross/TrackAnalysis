@@ -6,7 +6,6 @@ import ij.gui.Line;
 import ij.gui.Overlay;
 import ij.gui.PointRoi;
 import ij.gui.TextRoi;
-import ij.plugin.Duplicator;
 import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
 

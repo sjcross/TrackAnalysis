@@ -7,7 +7,6 @@ import fiji.plugin.trackmate.action.AbstractTMAction;
 import ij.ImagePlus;
 import ij.measure.Calibration;
 import wbif.sjx.TrackAnalysis.TrackAnalysis;
-import wbif.sjx.common.Object.Point;
 import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
 

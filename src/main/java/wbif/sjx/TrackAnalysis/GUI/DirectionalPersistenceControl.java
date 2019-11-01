@@ -1,7 +1,6 @@
 package wbif.sjx.TrackAnalysis.GUI;
 
 import ij.ImagePlus;
-import ij.Prefs;
 import ij.gui.Plot;
 import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;

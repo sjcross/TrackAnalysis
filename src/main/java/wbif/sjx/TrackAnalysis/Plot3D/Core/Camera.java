@@ -1,6 +1,5 @@
 package wbif.sjx.TrackAnalysis.Plot3D.Core;
 
-import wbif.sjx.TrackAnalysis.Plot3D.Core.Item.CollectionBounds;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.Cursor;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.Keyboard;
 import wbif.sjx.TrackAnalysis.Plot3D.Input.MouseButtons;
@@ -10,7 +9,6 @@ import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
 import wbif.sjx.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static wbif.sjx.TrackAnalysis.Plot3D.Core.Renderer.BIAS;
 import static wbif.sjx.TrackAnalysis.Plot3D.Core.Scene.X_AXIS;
 import static wbif.sjx.TrackAnalysis.Plot3D.Core.Scene.Y_AXIS;
 

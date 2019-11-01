@@ -1,20 +1,14 @@
 package wbif.sjx.TrackAnalysis.IO;
 
-import fiji.stacks.Hyperstack_rearranger;
 import ij.*;
 import ij.gui.GenericDialog;
 import ij.measure.ResultsTable;
-import ij.plugin.HyperStackConverter;
 import ij.plugin.PlugIn;
 import wbif.sjx.TrackAnalysis.TrackAnalysis;
-import wbif.sjx.common.Object.Point;
 import wbif.sjx.common.Object.Track;
 import wbif.sjx.common.Object.TrackCollection;
-import wbif.sjx.common.Process.SwitchTAndZ;
 
 import javax.swing.*;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 
 /**
  * Loads tracks from results table.  Tracks are stored in terms of calibrated distances.
@@ -25,15 +19,9 @@ public class ResultsTableLoader implements PlugIn {
      * @param args
      */
     public static void main(String[] args) {
-        try {
-            new ImageJ();
-            String pathToMacro = URLDecoder.decode(TrackAnalysis.class.getResource("/Import_Results_Table.ijm").getPath(),"UTF-8");
-            IJ.runMacro("waitForUser");
-            new ResultsTableLoader().run("");
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        new ImageJ();
+        IJ.runMacro("waitForUser");
+        new ResultsTableLoader().run("");
     }
 
     /**

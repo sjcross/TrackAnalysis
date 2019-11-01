@@ -1,6 +1,9 @@
 package wbif.sjx.TrackAnalysis.IO;
 
-import ij.*;
+import ij.IJ;
+import ij.ImageJ;
+import ij.ImagePlus;
+import ij.Prefs;
 import ij.measure.ResultsTable;
 import ij.plugin.PlugIn;
 import wbif.sjx.TrackAnalysis.TrackAnalysis;
