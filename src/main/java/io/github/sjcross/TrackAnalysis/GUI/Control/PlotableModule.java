@@ -1,13 +1,14 @@
-package io.github.sjcross.TrackAnalysis.GUI.Control;
+package io.github.sjcross.trackanalysis.GUI.Control;
 
 import ij.ImagePlus;
 import io.github.sjcross.common.object.tracks.TrackCollection;
 
 import javax.swing.*;
-import java.awt.*;
 
-import static io.github.sjcross.TrackAnalysis.GUI.Control.MainGUI.elementHeight;
-import static io.github.sjcross.TrackAnalysis.GUI.Control.MainGUI.frameWidth;
+import static io.github.sjcross.trackanalysis.GUI.Control.MainGUI.elementHeight;
+import static io.github.sjcross.trackanalysis.GUI.Control.MainGUI.frameWidth;
+
+import java.awt.*;
 
 public abstract class PlotableModule extends BasicModule
 {

@@ -1,6 +1,6 @@
 //TODO: Need to import distance calibration
 
-package io.github.sjcross.TrackAnalysis.IO;
+package io.github.sjcross.trackanalysis.io;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -17,9 +17,9 @@ import fiji.plugin.trackmate.TrackModel;
 import fiji.plugin.trackmate.action.AbstractTMAction;
 import ij.ImagePlus;
 import ij.measure.Calibration;
-import io.github.sjcross.TrackAnalysis.TrackAnalysis;
 import io.github.sjcross.common.object.tracks.Track;
 import io.github.sjcross.common.object.tracks.TrackCollection;
+import io.github.sjcross.trackanalysis.TrackAnalysis;
 
 /**
  * Created by sc13967 on 12/06/2017.

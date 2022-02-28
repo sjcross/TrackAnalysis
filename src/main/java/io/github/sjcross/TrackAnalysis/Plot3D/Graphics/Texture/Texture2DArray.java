@@ -1,4 +1,4 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Graphics.Texture;
+package io.github.sjcross.trackanalysis.Plot3D.Graphics.Texture;
 
 import ij.ImagePlus;
 

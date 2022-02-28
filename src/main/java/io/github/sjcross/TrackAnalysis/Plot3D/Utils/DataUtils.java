@@ -1,4 +1,4 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Utils;
+package io.github.sjcross.trackanalysis.Plot3D.Utils;
 
 import java.awt.Color;
 import java.io.InputStream;
@@ -8,13 +8,13 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Scanner;
 
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.Matrix4f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector3i;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector4f;
 import io.github.sjcross.common.object.Point;
 import io.github.sjcross.common.object.tracks.Timepoint;
+import io.github.sjcross.trackanalysis.Plot3D.Math.Matrix4f;
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector2f;
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector3f;
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector3i;
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector4f;
 
 /**
  * Created by JDJFisher on 31/07/2017.

@@ -1,10 +1,10 @@
-package io.github.sjcross.TrackAnalysis.GUI;
+package io.github.sjcross.trackanalysis.GUI;
 
 import ij.ImagePlus;
 import ij.gui.Plot;
-import io.github.sjcross.TrackAnalysis.GUI.Control.PlotableModule;
 import io.github.sjcross.common.object.tracks.Track;
 import io.github.sjcross.common.object.tracks.TrackCollection;
+import io.github.sjcross.trackanalysis.GUI.Control.PlotableModule;
 
 import java.awt.*;
 import java.util.TreeMap;

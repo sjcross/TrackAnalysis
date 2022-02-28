@@ -1,13 +1,13 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Graphics.Component;
+package io.github.sjcross.trackanalysis.Plot3D.Graphics.Component;
 
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
+import static io.github.sjcross.trackanalysis.Plot3D.Graphics.Component.FaceMI.IndexSet.NULL_INDEX;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static io.github.sjcross.TrackAnalysis.Plot3D.Graphics.Component.FaceMI.IndexSet.NULL_INDEX;
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector2f;
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector3f;
 
 /**
  * Created by JDJFisher on 31/07/2017.

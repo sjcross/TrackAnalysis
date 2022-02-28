@@ -1,4 +1,4 @@
-package io.github.sjcross.TrackAnalysis.GUI.Control;
+package io.github.sjcross.trackanalysis.GUI.Control;
 
 public class NonExistentTrackException extends Exception
 {

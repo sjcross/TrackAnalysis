@@ -1,10 +1,10 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors;
-
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.Maths;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.Matrix4f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.Quaternion;
+package io.github.sjcross.trackanalysis.Plot3D.Math.vectors;
 
 import java.util.Objects;
+
+import io.github.sjcross.trackanalysis.Plot3D.Math.Maths;
+import io.github.sjcross.trackanalysis.Plot3D.Math.Matrix4f;
+import io.github.sjcross.trackanalysis.Plot3D.Math.Quaternion;
 
 /**
  * Created by JDJFisher on 31/07/2017.

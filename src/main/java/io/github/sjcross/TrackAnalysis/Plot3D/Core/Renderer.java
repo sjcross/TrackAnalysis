@@ -1,15 +1,15 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Core;
+package io.github.sjcross.trackanalysis.Plot3D.Core;
 
 
 import com.jogamp.opengl.util.awt.ImageUtil;
 import ij.ImagePlus;
-import io.github.sjcross.TrackAnalysis.GUI.TrackPlotControl.*;
-import io.github.sjcross.TrackAnalysis.Plot3D.Core.Item.Entity;
-import io.github.sjcross.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
-import io.github.sjcross.TrackAnalysis.Plot3D.Graphics.Texture.Texture;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.Matrix4f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Utils.DataUtils;
+import io.github.sjcross.trackanalysis.GUI.TrackPlotControl.*;
+import io.github.sjcross.trackanalysis.Plot3D.Core.Item.Entity;
+import io.github.sjcross.trackanalysis.Plot3D.Graphics.ShaderProgram;
+import io.github.sjcross.trackanalysis.Plot3D.Graphics.Texture.Texture;
+import io.github.sjcross.trackanalysis.Plot3D.Math.Matrix4f;
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector2f;
+import io.github.sjcross.trackanalysis.Plot3D.Utils.DataUtils;
 
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;

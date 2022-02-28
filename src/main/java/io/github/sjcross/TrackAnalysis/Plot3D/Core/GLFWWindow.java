@@ -1,13 +1,14 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Core;
+package io.github.sjcross.trackanalysis.Plot3D.Core;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import io.github.sjcross.TrackAnalysis.Plot3D.Input.Cursor;
-import io.github.sjcross.TrackAnalysis.Plot3D.Input.Keyboard;
-import io.github.sjcross.TrackAnalysis.Plot3D.Input.MouseButtons;
-import io.github.sjcross.TrackAnalysis.Plot3D.Input.MouseWheel;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector2i;
+
+import io.github.sjcross.trackanalysis.Plot3D.Input.Cursor;
+import io.github.sjcross.trackanalysis.Plot3D.Input.Keyboard;
+import io.github.sjcross.trackanalysis.Plot3D.Input.MouseButtons;
+import io.github.sjcross.trackanalysis.Plot3D.Input.MouseWheel;
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector2i;
 
 import static java.sql.Types.NULL;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;

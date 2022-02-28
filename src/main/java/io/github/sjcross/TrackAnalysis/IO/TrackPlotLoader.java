@@ -1,11 +1,11 @@
-package io.github.sjcross.TrackAnalysis.IO;
+package io.github.sjcross.trackanalysis.io;
 
 import ij.*;
 import ij.measure.ResultsTable;
 import ij.plugin.PlugIn;
-import io.github.sjcross.TrackAnalysis.TrackAnalysis;
 import io.github.sjcross.common.object.tracks.Track;
 import io.github.sjcross.common.object.tracks.TrackCollection;
+import io.github.sjcross.trackanalysis.TrackAnalysis;
 
 import javax.swing.*;
 

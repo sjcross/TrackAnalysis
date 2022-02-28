@@ -1,4 +1,4 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Graphics.Texture;
+package io.github.sjcross.trackanalysis.Plot3D.Graphics.Texture;
 
 import static com.jogamp.opengl.GL.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL11.*;

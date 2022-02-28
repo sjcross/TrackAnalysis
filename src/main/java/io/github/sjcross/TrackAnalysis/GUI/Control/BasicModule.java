@@ -1,4 +1,4 @@
-package io.github.sjcross.TrackAnalysis.GUI.Control;
+package io.github.sjcross.trackanalysis.GUI.Control;
 
 import ij.ImagePlus;
 import io.github.sjcross.common.object.tracks.TrackCollection;

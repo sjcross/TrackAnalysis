@@ -1,11 +1,11 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Core.Item;
+package io.github.sjcross.trackanalysis.Plot3D.Core.Item;
 
-import io.github.sjcross.TrackAnalysis.GUI.TrackPlotControl.*;
-import io.github.sjcross.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
-import io.github.sjcross.TrackAnalysis.Plot3D.Graphics.MeshFactory;
-import io.github.sjcross.TrackAnalysis.Plot3D.Utils.UniCallback;
 import io.github.sjcross.common.object.tracks.Track;
 import io.github.sjcross.common.object.tracks.TrackCollection;
+import io.github.sjcross.trackanalysis.GUI.TrackPlotControl.*;
+import io.github.sjcross.trackanalysis.Plot3D.Graphics.MeshFactory;
+import io.github.sjcross.trackanalysis.Plot3D.Graphics.Component.Mesh;
+import io.github.sjcross.trackanalysis.Plot3D.Utils.UniCallback;
 
 /**
  * Created by JDJFisher on 31/07/2017.

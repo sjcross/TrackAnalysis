@@ -1,4 +1,4 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Input;
+package io.github.sjcross.trackanalysis.Plot3D.Input;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;

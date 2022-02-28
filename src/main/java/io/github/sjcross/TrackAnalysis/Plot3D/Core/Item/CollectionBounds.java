@@ -1,6 +1,6 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Core.Item;
+package io.github.sjcross.trackanalysis.Plot3D.Core.Item;
 
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector3f;
 
 /**
  * Created by JDJFisher on 04/08/2017.

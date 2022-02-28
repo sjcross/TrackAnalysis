@@ -1,18 +1,19 @@
-package io.github.sjcross.TrackAnalysis.GUI;
+package io.github.sjcross.trackanalysis.GUI;
 
 import ij.ImagePlus;
 import ij.Prefs;
 import ij.gui.Plot;
-import io.github.sjcross.TrackAnalysis.GUI.Control.PlotableModule;
 import io.github.sjcross.common.object.tracks.Track;
 import io.github.sjcross.common.object.tracks.TrackCollection;
+import io.github.sjcross.trackanalysis.GUI.Control.PlotableModule;
 
 import javax.swing.*;
+
+import static io.github.sjcross.trackanalysis.GUI.Control.MainGUI.elementHeight;
+import static io.github.sjcross.trackanalysis.GUI.Control.MainGUI.frameWidth;
+
 import java.awt.*;
 import java.util.TreeMap;
-
-import static io.github.sjcross.TrackAnalysis.GUI.Control.MainGUI.elementHeight;
-import static io.github.sjcross.TrackAnalysis.GUI.Control.MainGUI.frameWidth;
 
 /**
  * Created by sc13967 on 25/06/2017.

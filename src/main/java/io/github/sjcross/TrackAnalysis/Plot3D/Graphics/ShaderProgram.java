@@ -1,15 +1,15 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Graphics;
-
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.Matrix4f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector4f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Utils.DataUtils;
+package io.github.sjcross.trackanalysis.Plot3D.Graphics;
 
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import io.github.sjcross.trackanalysis.Plot3D.Math.Matrix4f;
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector3f;
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector4f;
+import io.github.sjcross.trackanalysis.Plot3D.Utils.DataUtils;
 
 import static org.lwjgl.opengl.GL11.glGetInteger;
 import static org.lwjgl.opengl.GL20.*;

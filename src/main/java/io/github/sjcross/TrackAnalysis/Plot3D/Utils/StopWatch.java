@@ -1,4 +1,4 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Utils;
+package io.github.sjcross.trackanalysis.Plot3D.Utils;
 
 /**
  * Created by JDJFisher on 31/07/2017.

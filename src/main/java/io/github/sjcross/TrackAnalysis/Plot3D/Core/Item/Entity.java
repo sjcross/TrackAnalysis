@@ -1,14 +1,14 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Core.Item;
-
-import io.github.sjcross.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
-import io.github.sjcross.TrackAnalysis.Plot3D.Graphics.ShaderProgram;
-import io.github.sjcross.TrackAnalysis.Plot3D.Graphics.Texture.Texture;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.Matrix4f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.Quaternion;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Utils.RNG;
+package io.github.sjcross.trackanalysis.Plot3D.Core.Item;
 
 import java.awt.*;
+
+import io.github.sjcross.trackanalysis.Plot3D.Graphics.ShaderProgram;
+import io.github.sjcross.trackanalysis.Plot3D.Graphics.Component.Mesh;
+import io.github.sjcross.trackanalysis.Plot3D.Graphics.Texture.Texture;
+import io.github.sjcross.trackanalysis.Plot3D.Math.Matrix4f;
+import io.github.sjcross.trackanalysis.Plot3D.Math.Quaternion;
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector3f;
+import io.github.sjcross.trackanalysis.Plot3D.Utils.RNG;
 
 /**
  * Created by JDJFisher on 31/07/2017.

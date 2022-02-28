@@ -1,16 +1,16 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Core;
+package io.github.sjcross.trackanalysis.Plot3D.Core;
 
-import io.github.sjcross.TrackAnalysis.GUI.TrackPlotControl;
-import io.github.sjcross.TrackAnalysis.Plot3D.Core.Item.CollectionBounds;
-import io.github.sjcross.TrackAnalysis.Plot3D.Input.Cursor;
-import io.github.sjcross.TrackAnalysis.Plot3D.Input.Keyboard;
-import io.github.sjcross.TrackAnalysis.Plot3D.Input.MouseButtons;
-import io.github.sjcross.TrackAnalysis.Plot3D.Input.MouseWheel;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Utils.StopWatch;
-
+import static io.github.sjcross.trackanalysis.Plot3D.Core.Renderer.BIAS;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
-import static io.github.sjcross.TrackAnalysis.Plot3D.Core.Renderer.BIAS;
+
+import io.github.sjcross.trackanalysis.GUI.TrackPlotControl;
+import io.github.sjcross.trackanalysis.Plot3D.Core.Item.CollectionBounds;
+import io.github.sjcross.trackanalysis.Plot3D.Input.Cursor;
+import io.github.sjcross.trackanalysis.Plot3D.Input.Keyboard;
+import io.github.sjcross.trackanalysis.Plot3D.Input.MouseButtons;
+import io.github.sjcross.trackanalysis.Plot3D.Input.MouseWheel;
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector3f;
+import io.github.sjcross.trackanalysis.Plot3D.Utils.StopWatch;
 
 /**
  * Created by JDJFisher on 31/07/2017.

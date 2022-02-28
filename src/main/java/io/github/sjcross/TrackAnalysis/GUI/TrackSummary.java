@@ -1,7 +1,7 @@
-package io.github.sjcross.TrackAnalysis.GUI;
+package io.github.sjcross.trackanalysis.GUI;
 
-import static io.github.sjcross.TrackAnalysis.GUI.Control.MainGUI.elementHeight;
-import static io.github.sjcross.TrackAnalysis.GUI.Control.MainGUI.frameWidth;
+import static io.github.sjcross.trackanalysis.GUI.Control.MainGUI.elementHeight;
+import static io.github.sjcross.trackanalysis.GUI.Control.MainGUI.frameWidth;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -16,11 +16,11 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;
 import ij.measure.ResultsTable;
-import io.github.sjcross.TrackAnalysis.GUI.Control.PlotableModule;
 import io.github.sjcross.common.analysis.MSDCalculator;
 import io.github.sjcross.common.mathfunc.CumStat;
 import io.github.sjcross.common.object.tracks.Track;
 import io.github.sjcross.common.object.tracks.TrackCollection;
+import io.github.sjcross.trackanalysis.GUI.Control.PlotableModule;
 
 /**
  * Created by sc13967 on 24/06/2017.

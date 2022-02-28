@@ -1,11 +1,11 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Math;
-
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Utils.DataUtils;
+package io.github.sjcross.trackanalysis.Plot3D.Math;
 
 import java.nio.FloatBuffer;
 import java.util.Arrays;
+
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector2f;
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector3f;
+import io.github.sjcross.trackanalysis.Plot3D.Utils.DataUtils;
 
 /**
  * Created by JDJFisher on 31/07/2017.

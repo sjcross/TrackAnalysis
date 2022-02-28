@@ -1,4 +1,4 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors;
+package io.github.sjcross.trackanalysis.Plot3D.Math.vectors;
 
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package io.github.sjcross.TrackAnalysis.IO;
+package io.github.sjcross.trackanalysis.io;
 
 import fiji.plugin.trackmate.action.TrackMateAction;
 import fiji.plugin.trackmate.action.TrackMateActionFactory;

@@ -1,17 +1,18 @@
-package io.github.sjcross.TrackAnalysis.GUI;
+package io.github.sjcross.trackanalysis.GUI;
 
 import ij.ImagePlus;
 import ij.gui.Plot;
-import io.github.sjcross.TrackAnalysis.GUI.Control.BasicModule;
 import io.github.sjcross.common.object.tracks.Track;
 import io.github.sjcross.common.object.tracks.TrackCollection;
+import io.github.sjcross.trackanalysis.GUI.Control.BasicModule;
 
 import javax.swing.*;
+
+import static io.github.sjcross.trackanalysis.GUI.Control.MainGUI.elementHeight;
+import static io.github.sjcross.trackanalysis.GUI.Control.MainGUI.frameWidth;
+
 import java.awt.*;
 import java.util.stream.IntStream;
-
-import static io.github.sjcross.TrackAnalysis.GUI.Control.MainGUI.elementHeight;
-import static io.github.sjcross.TrackAnalysis.GUI.Control.MainGUI.frameWidth;
 
 public class TrackDurationControl extends BasicModule
 {

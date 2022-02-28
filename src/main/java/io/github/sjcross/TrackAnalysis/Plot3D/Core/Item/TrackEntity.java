@@ -1,23 +1,27 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Core.Item;
+package io.github.sjcross.trackanalysis.Plot3D.Core.Item;
 
 import org.lwjgl.BufferUtils;
-import io.github.sjcross.TrackAnalysis.GUI.TrackPlotControl.*;
-import io.github.sjcross.TrackAnalysis.Plot3D.Graphics.Component.Mesh;
-import io.github.sjcross.TrackAnalysis.Plot3D.Graphics.Component.Vertex;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.Maths;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.Matrix4f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.Quaternion;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector3f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector4f;
-import io.github.sjcross.TrackAnalysis.Plot3D.Utils.DataUtils;
-import io.github.sjcross.TrackAnalysis.Plot3D.Utils.RNG;
+
 import io.github.sjcross.common.object.tracks.Track;
+import io.github.sjcross.trackanalysis.GUI.TrackPlotControl.*;
+import io.github.sjcross.trackanalysis.Plot3D.Graphics.Component.Mesh;
+import io.github.sjcross.trackanalysis.Plot3D.Graphics.Component.Vertex;
+import io.github.sjcross.trackanalysis.Plot3D.Math.Maths;
+import io.github.sjcross.trackanalysis.Plot3D.Math.Matrix4f;
+import io.github.sjcross.trackanalysis.Plot3D.Math.Quaternion;
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector3f;
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector4f;
+import io.github.sjcross.trackanalysis.Plot3D.Utils.DataUtils;
+import io.github.sjcross.trackanalysis.Plot3D.Utils.RNG;
 
 import java.awt.*;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+import static io.github.sjcross.trackanalysis.Plot3D.Core.Scene.X_AXIS;
+import static io.github.sjcross.trackanalysis.Plot3D.Core.Scene.Y_AXIS;
+import static io.github.sjcross.trackanalysis.Plot3D.Graphics.Component.Mesh.FLOAT_SIZE;
 import static org.lwjgl.opengl.ARBVertexArrayObject.glBindVertexArray;
 import static org.lwjgl.opengl.ARBVertexArrayObject.glGenVertexArrays;
 import static org.lwjgl.opengl.GL11.*;
@@ -27,9 +31,6 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL33.glVertexAttribDivisor;
 import static org.lwjgl.opengl.GL42.glDrawElementsInstancedBaseInstance;
-import static io.github.sjcross.TrackAnalysis.Plot3D.Core.Scene.X_AXIS;
-import static io.github.sjcross.TrackAnalysis.Plot3D.Core.Scene.Y_AXIS;
-import static io.github.sjcross.TrackAnalysis.Plot3D.Graphics.Component.Mesh.FLOAT_SIZE;
 
 /**
  * Created by JDJFisher on 31/07/2017.

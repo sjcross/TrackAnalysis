@@ -1,8 +1,9 @@
-package io.github.sjcross.TrackAnalysis.Plot3D.Input;
+package io.github.sjcross.trackanalysis.Plot3D.Input;
 
 
 import org.lwjgl.glfw.GLFWCursorPosCallback;
-import io.github.sjcross.TrackAnalysis.Plot3D.Math.vectors.Vector2f;
+
+import io.github.sjcross.trackanalysis.Plot3D.Math.vectors.Vector2f;
 
 /**
  * Created by JDJFisher on 31/07/2017.

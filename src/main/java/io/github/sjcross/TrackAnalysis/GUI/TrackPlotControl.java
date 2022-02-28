@@ -1,17 +1,18 @@
-package io.github.sjcross.TrackAnalysis.GUI;
+package io.github.sjcross.trackanalysis.GUI;
 
 import ij.ImagePlus;
-import io.github.sjcross.TrackAnalysis.GUI.Control.BasicModule;
-import io.github.sjcross.TrackAnalysis.Plot3D.Core.Camera;
-import io.github.sjcross.TrackAnalysis.Plot3D.Core.Engine;
-import io.github.sjcross.TrackAnalysis.Plot3D.Core.Scene;
 import io.github.sjcross.common.object.tracks.TrackCollection;
+import io.github.sjcross.trackanalysis.GUI.Control.BasicModule;
+import io.github.sjcross.trackanalysis.Plot3D.Core.Camera;
+import io.github.sjcross.trackanalysis.Plot3D.Core.Engine;
+import io.github.sjcross.trackanalysis.Plot3D.Core.Scene;
 
 import javax.swing.*;
-import java.awt.*;
 
-import static io.github.sjcross.TrackAnalysis.GUI.Control.MainGUI.elementHeight;
-import static io.github.sjcross.TrackAnalysis.GUI.Control.MainGUI.frameWidth;
+import static io.github.sjcross.trackanalysis.GUI.Control.MainGUI.elementHeight;
+import static io.github.sjcross.trackanalysis.GUI.Control.MainGUI.frameWidth;
+
+import java.awt.*;
 
 /**
  * Created by JDJFisher on 31/07/2017.
