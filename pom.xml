@@ -5,16 +5,16 @@
 		http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!--<parent>-->
-        <!--<groupId>org.scijava</groupId>-->
-        <!--<artifactId>pom-scijava</artifactId>-->
-        <!--<version>14.0.0</version>-->
-        <!--<relativePath />-->
-    <!--</parent>-->
+    <parent>
+        <groupId>org.scijava</groupId>
+        <artifactId>pom-scijava</artifactId>
+        <version>27.0.1</version>
+        <relativePath />
+    </parent>
 
-    <groupId>wbif.sjx</groupId>
+    <groupId>io.github.sjcross</groupId>
     <artifactId>TrackAnalysis</artifactId>
-    <version>1.1.5</version>
+    <version>1.1.8-SNAPSHOT</version>
     <name>Track_Analysis</name>
     <description>A Maven project implementing an ImageJ 1.x plugin.</description>
     <url>https://github.com/SJCross/TrackAnalysis/</url>
@@ -98,8 +98,8 @@
     </ciManagement>
 
     <properties>
-        <package-name>wbif.sjx.TrackAnalysis</package-name>
-        <main-class>wbif.sjx.TrackAnalysis.IO.TrackAnalysisPlugin</main-class>
+        <package-name>io.github.sjcross.TrackAnalysis</package-name>
+        <main-class>io.github.sjcross.TrackAnalysis.IO.TrackAnalysisPlugin</main-class>
         <license.licenseName>gpl3</license.licenseName>
         <license.copyrightOwners>Stephen Cross</license.copyrightOwners>
         <lwjgl.version>3.1.1</lwjgl.version>
@@ -121,25 +121,23 @@
         <dependency>
             <groupId>net.imagej</groupId>
             <artifactId>ij</artifactId>
-            <version>1.51h</version>
             <scope>${myscope}</scope>
         </dependency>
 
         <dependency>
             <groupId>sc.fiji</groupId>
             <artifactId>TrackMate_</artifactId>
-            <version>3.5.1</version>
             <scope>${myscope}</scope>
         </dependency>
 
         <dependency>
-            <!--<groupId>wbif.sjx</groupId>-->
-            <groupId>com.github.SJCross</groupId>
-            <artifactId>Common</artifactId>
-            <version>1.4.35</version>
+            <!-- <groupId>io.github.sjcross</groupId> -->
+           <groupId>com.github.sjcross</groupId>
+            <artifactId>common</artifactId>
+            <version>1.11.2</version>
         </dependency>
 
-        <!-- PLot3D Libs -->
+        <!-- Plot3D Libs -->
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
@@ -196,7 +194,7 @@
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                            <mainClass>wbif.sjx.TrackAnalysis.TrackAnalysis</mainClass>
+                            <mainClass>io.github.sjcross.TrackAnalysis.TrackAnalysis</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -227,7 +225,7 @@
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Main-Class>wbif.sjx.TrackAnalysis.TrackAnalysis</Main-Class>
+                                        <Main-Class>io.github.sjcross.TrackAnalysis.TrackAnalysis</Main-Class>
                                         <Specification-Title>${project.artifactId}</Specification-Title>
                                         <Specification-Version>${project.version}</Specification-Version>
                                     </manifestEntries>
