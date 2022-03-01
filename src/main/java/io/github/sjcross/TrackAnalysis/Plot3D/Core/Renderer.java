@@ -1,6 +1,5 @@
 package io.github.sjcross.trackanalysis.Plot3D.Core;
 
-
 import com.jogamp.opengl.util.awt.ImageUtil;
 import ij.ImagePlus;
 import io.github.sjcross.trackanalysis.GUI.TrackPlotControl.*;

@@ -18,8 +18,8 @@ public enum Modules
     SHOW_TRACK_ID(ShowTrackIDControl::new, true, "Show track paths with IDs"),
     TOTAL_PATH_LENGTH(TotalPathLengthControl::new, false, "Total path length plot"),
     TRACK_DURATION(TrackDurationControl::new, false, "Track duration plot"),
-    TRACK_INTENSITY(TrackIntensityControl::new, true, "Track intensity plot");
-    // TRACK_PLOT(TrackPlotControl::new, false, "Track Plot");
+    TRACK_INTENSITY(TrackIntensityControl::new, true, "Track intensity plot"),
+    TRACK_PLOT(TrackPlotControl::new, false, "Track Plot");
 
     private final ModuleFactory factory;
     private final String name;

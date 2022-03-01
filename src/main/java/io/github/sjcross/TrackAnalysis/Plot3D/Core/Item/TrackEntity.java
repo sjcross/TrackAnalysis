@@ -17,6 +17,7 @@ import io.github.sjcross.trackanalysis.Plot3D.Utils.RNG;
 import java.awt.*;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.TreeMap;
 
 import static io.github.sjcross.trackanalysis.Plot3D.Core.Scene.X_AXIS;
@@ -54,25 +55,29 @@ public class TrackEntity {
 
         ArrayList<Vector3f> globalPosList = new ArrayList<>();
 
-        for (int frame : track.keySet()) {
-            globalPosList.add(frame, DataUtils.toVector3f(track.get(frame)));
-        }
-
+        for (int frame : track.keySet())
+            globalPosList.add(DataUtils.toVector3f(track.get(frame)));
+        
         motilityPlotMatrix = Matrix4f.Translation(Vector3f.Negative(globalPosList.get(0)));
 
-        FloatBuffer hingeMatricesBuffer = BufferUtils.createFloatBuffer(globalPosList.size() * Matrix4f.ORDER * Matrix4f.ORDER);
-        FloatBuffer pipeMatricesBuffer = BufferUtils.createFloatBuffer((globalPosList.size() - 1) * Matrix4f.ORDER * Matrix4f.ORDER);
+        FloatBuffer hingeMatricesBuffer = BufferUtils
+                .createFloatBuffer(globalPosList.size() * Matrix4f.ORDER * Matrix4f.ORDER);
+        FloatBuffer pipeMatricesBuffer = BufferUtils
+                .createFloatBuffer((globalPosList.size() - 1) * Matrix4f.ORDER * Matrix4f.ORDER);
 
-        for (int i = 0; i < globalPosList.size() - 1; i++) {
-            Vector3f currentPosition = globalPosList.get(i);
-            Vector3f nextPosition = globalPosList.get(i + 1);
+        Iterator<Vector3f> iter = globalPosList.iterator();
+        Vector3f currentPosition = iter.next();
+        while (iter.hasNext()) {
+            Vector3f nextPosition = iter.next();
+            // for (int i = 0; i < globalPosList.size() - 1; i++) {
+            // Vector3f currentPosition = globalPosList.get(i);
+            // Vector3f nextPosition = globalPosList.get(i + 1);
             Vector3f pipeVector = Vector3f.Subtract(nextPosition, currentPosition);
             Quaternion pipeRotation = new Quaternion(pipeVector.getPhi(), X_AXIS);
             pipeRotation.multiply(pipeVector.getTheta() + 90, Y_AXIS);
 
             Matrix4f globalMatrix = Matrix4f.Translation(currentPosition);
             globalMatrix.multiply(Matrix4f.QuaternionRotation(pipeRotation));
-
 
             DataUtils.putMatrix4f(hingeMatricesBuffer, globalMatrix);
 
@@ -95,13 +100,16 @@ public class TrackEntity {
         glBufferData(GL_ARRAY_BUFFER, pipeMatricesBuffer, GL_STATIC_DRAW);
         pipeMatricesBuffer.clear();
 
-
         FloatBuffer colourFloatBuffer = BufferUtils.createFloatBuffer(globalPosList.size());
 
         TreeMap<Integer, Double> instantaneousVelocity = track.getInstantaneousSpeed();
 
         for (int i = 0; i < globalPosList.size(); i++) {
-            colourFloatBuffer.put(Maths.scaleRange(0, maxInstSpeed, 0, 1, instantaneousVelocity.get(i).floatValue()));
+            if (instantaneousVelocity.get(i) == null)
+                colourFloatBuffer.put(0);
+            else
+                colourFloatBuffer
+                        .put(Maths.scaleRange(0, maxInstSpeed, 0, 1, instantaneousVelocity.get(i).floatValue()));
         }
 
         colourFloatBuffer.flip();
@@ -113,7 +121,10 @@ public class TrackEntity {
         TreeMap<Integer, Double> totalPathLength = track.getRollingTotalPathLength();
 
         for (int i = 0; i < globalPosList.size(); i++) {
-            colourFloatBuffer.put(Maths.scaleRange(0, maxPathLength, 0, 1, totalPathLength.get(i).floatValue()));
+            if (totalPathLength.get(i) == null)
+                colourFloatBuffer.put(0);
+            else
+                colourFloatBuffer.put(Maths.scaleRange(0, maxPathLength, 0, 1, totalPathLength.get(i).floatValue()));
         }
 
         colourFloatBuffer.flip();
@@ -121,7 +132,6 @@ public class TrackEntity {
         glBindBuffer(GL_ARRAY_BUFFER, icboPathLength);
         glBufferData(GL_ARRAY_BUFFER, colourFloatBuffer, GL_STATIC_DRAW);
         colourFloatBuffer.clear();
-
 
         renderDataParticle = new RenderData(igmboHinge);
         renderDataParticle.bind();
@@ -140,7 +150,7 @@ public class TrackEntity {
         final int baseInstance = trailLength > frame ? 0 : frame - trailLength;
         final int primCount = frame - baseInstance;
 
-        if(renderHinge) {
+        if (renderHinge) {
             renderDataHinge.bind();
             renderDataHinge.render(primCount, baseInstance);
         }
@@ -241,13 +251,16 @@ public class TrackEntity {
             glVertexAttribPointer(2, Vector4f.SIZE, GL_FLOAT, false, Matrix4f.ORDER * Matrix4f.ORDER * FLOAT_SIZE, 0);
             glVertexAttribDivisor(2, 1);
             glEnableVertexAttribArray(3);
-            glVertexAttribPointer(3, Vector4f.SIZE, GL_FLOAT, false, Matrix4f.ORDER * Matrix4f.ORDER * FLOAT_SIZE, Vector4f.SIZE * FLOAT_SIZE);
+            glVertexAttribPointer(3, Vector4f.SIZE, GL_FLOAT, false, Matrix4f.ORDER * Matrix4f.ORDER * FLOAT_SIZE,
+                    Vector4f.SIZE * FLOAT_SIZE);
             glVertexAttribDivisor(3, 1);
             glEnableVertexAttribArray(4);
-            glVertexAttribPointer(4, Vector4f.SIZE, GL_FLOAT, false, Matrix4f.ORDER * Matrix4f.ORDER * FLOAT_SIZE, 2 * Vector4f.SIZE * FLOAT_SIZE);
+            glVertexAttribPointer(4, Vector4f.SIZE, GL_FLOAT, false, Matrix4f.ORDER * Matrix4f.ORDER * FLOAT_SIZE,
+                    2 * Vector4f.SIZE * FLOAT_SIZE);
             glVertexAttribDivisor(4, 1);
             glEnableVertexAttribArray(5);
-            glVertexAttribPointer(5, Vector4f.SIZE, GL_FLOAT, false, Matrix4f.ORDER * Matrix4f.ORDER * FLOAT_SIZE, 3 * Vector4f.SIZE * FLOAT_SIZE);
+            glVertexAttribPointer(5, Vector4f.SIZE, GL_FLOAT, false, Matrix4f.ORDER * Matrix4f.ORDER * FLOAT_SIZE,
+                    3 * Vector4f.SIZE * FLOAT_SIZE);
             glVertexAttribDivisor(5, 1);
         }
 
@@ -270,7 +283,8 @@ public class TrackEntity {
         }
 
         public void render(int primCount, int baseInstance) {
-            glDrawElementsInstancedBaseInstance(GL_TRIANGLES, indexedVertexCount, GL_UNSIGNED_INT, 0, primCount, baseInstance);
+            glDrawElementsInstancedBaseInstance(GL_TRIANGLES, indexedVertexCount, GL_UNSIGNED_INT, 0, primCount,
+                    baseInstance);
         }
 
         public void bind() {

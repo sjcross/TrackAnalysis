@@ -50,15 +50,17 @@ public class TrackEntityCollection {
         final float maxPathLength = (float) tracks.getMaximumTotalPathLength();
         int i = 0;
 
-        for (Track track : tracks.values()) {
-            trackEntities[i++] = new TrackEntity(track, maxInstSpeed, maxPathLength, this);
-        }
+        for (Track track : tracks.values())
+            if (track.size() >= 2)
+                trackEntities[i++] = new TrackEntity(track, maxInstSpeed, maxPathLength, this);
+
     }
 
     public void forEachTrackEntity(UniCallback<TrackEntity> x) {
-        for(TrackEntity trackEntity : trackEntities) {
-            x.invoke(trackEntity);
-        }
+        for (TrackEntity trackEntity : trackEntities)
+            if (trackEntity != null)
+                x.invoke(trackEntity);
+
     }
 
     public void updateColourBuffers(DisplayColour colour) {

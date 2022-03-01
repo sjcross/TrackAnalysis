@@ -1,18 +1,22 @@
 package io.github.sjcross.trackanalysis.GUI;
 
+import static io.github.sjcross.trackanalysis.GUI.Control.MainGUI.elementHeight;
+import static io.github.sjcross.trackanalysis.GUI.Control.MainGUI.frameWidth;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+
+import javax.swing.JCheckBox;
+import javax.swing.JTextField;
+
 import ij.ImagePlus;
 import ij.Prefs;
 import ij.gui.Plot;
 import io.github.sjcross.common.object.tracks.Track;
 import io.github.sjcross.common.object.tracks.TrackCollection;
 import io.github.sjcross.trackanalysis.GUI.Control.PlotableModule;
-
-import javax.swing.*;
-
-import static io.github.sjcross.trackanalysis.GUI.Control.MainGUI.elementHeight;
-import static io.github.sjcross.trackanalysis.GUI.Control.MainGUI.frameWidth;
-
-import java.awt.*;
 
 /**
  * Created by sc13967 on 24/06/2017.
@@ -80,6 +84,7 @@ public class MotilityPlotControl extends PlotableModule {
                 "Y-position (" + units + ")");
         plot.setLineWidth((float) lineWidth);
 
+        double[][] lims = new double[2][2];
         for (int key : tracks.keySet()) {
             Track track = tracks.get(key);
 
@@ -95,6 +100,12 @@ public class MotilityPlotControl extends PlotableModule {
             for (int i = 1; i < x.length; i++) {
                 x[i] = x[i] - x[0];
                 y[i] = y[i] - y[0];
+
+                lims[0][0] = Math.min(lims[0][0],x[i]);
+                lims[0][1] = Math.max(lims[0][1],x[i]);
+                lims[1][0] = Math.min(lims[1][0],y[i]);
+                lims[1][1] = Math.max(lims[1][1],y[i]);
+                
             }
             x[0] = y[0] = 0;
 
@@ -107,15 +118,13 @@ public class MotilityPlotControl extends PlotableModule {
         }
 
         plot.setLimitsToFit(true);
-        plot.update();
-        plot.draw();
+        plot.draw();        
 
         double mag = 1.2;
-        double[] lim = plot.getLimits();
-        plot.setLimits(lim[0] * mag, lim[1] * mag, lim[2] * mag, lim[3] * mag);
+        plot.setLimits(lims[0][0] * mag, lims[0][1] * mag, lims[1][0] * mag, lims[1][1] * mag);
         int base_w = 600;
-        double range_x = (lim[1] - lim[0]) * mag;
-        double range_y = (lim[3] - lim[2]) * mag;
+        double range_x = (lims[0][1] - lims[0][0]) * mag;
+        double range_y = (lims[1][1] - lims[1][0]) * mag;
 
         if (range_x > range_y) {
             plot.setFrameSize(base_w, (int) (base_w * range_y / range_x));

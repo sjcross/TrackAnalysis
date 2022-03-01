@@ -3,19 +3,19 @@
   <parent>
     <artifactId>pom-scijava</artifactId>
     <groupId>org.scijava</groupId>
-    <version>27.0.1</version>
+    <version>31.1.0</version>
     <relativePath>pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.sjcross</groupId>
   <artifactId>TrackAnalysis</artifactId>
   <name>Track_Analysis</name>
-  <version>1.1.8-SNAPSHOT</version>
-  <description>A Maven project implementing an ImageJ 1.x plugin.</description>
-  <url>https://github.com/SJCross/TrackAnalysis/</url>
+  <version>1.2.0</version>
+  <description>Track analysis and plotting</description>
+  <url>https://github.com/sjcross/TrackAnalysis/</url>
   <issueManagement>
     <system>GitHub Issues</system>
-    <url>https://github.com/SJCross/TrackAnalysis/issues</url>
+    <url>https://github.com/sjcross/TrackAnalysis/issues</url>
   </issueManagement>
   <ciManagement>
     <system>None</system>
@@ -76,9 +76,9 @@
     </license>
   </licenses>
   <scm>
-    <connection>scm:git:git://github.com/SJCross/TrackAnalysis</connection>
-    <developerConnection>scm:git:git@github.com:SJCross/TrackAnalysis</developerConnection>
-    <url>https://github.com/SJCross/TrackAnalysis</url>
+    <connection>scm:git:git://github.com/sjcross/TrackAnalysis</connection>
+    <developerConnection>scm:git:git@github.com:sjcross/TrackAnalysis</developerConnection>
+    <url>https://github.com/sjcross/TrackAnalysis</url>
   </scm>
   <organization>
     <name>University of Bristol</name>
