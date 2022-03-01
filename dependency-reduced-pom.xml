@@ -3,19 +3,19 @@
   <parent>
     <artifactId>pom-scijava</artifactId>
     <groupId>org.scijava</groupId>
-    <version>27.0.1</version>
+    <version>31.1.0</version>
     <relativePath>pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>wbif.sjx</groupId>
+  <groupId>io.github.sjcross</groupId>
   <artifactId>TrackAnalysis</artifactId>
   <name>Track_Analysis</name>
-  <version>1.1.7</version>
-  <description>A Maven project implementing an ImageJ 1.x plugin.</description>
-  <url>https://github.com/SJCross/TrackAnalysis/</url>
+  <version>1.2.0</version>
+  <description>Track analysis and plotting</description>
+  <url>https://github.com/sjcross/TrackAnalysis/</url>
   <issueManagement>
     <system>GitHub Issues</system>
-    <url>https://github.com/SJCross/TrackAnalysis/issues</url>
+    <url>https://github.com/sjcross/TrackAnalysis/issues</url>
   </issueManagement>
   <ciManagement>
     <system>None</system>
@@ -76,9 +76,9 @@
     </license>
   </licenses>
   <scm>
-    <connection>scm:git:git://github.com/SJCross/TrackAnalysis</connection>
-    <developerConnection>scm:git:git@github.com:SJCross/TrackAnalysis</developerConnection>
-    <url>https://github.com/SJCross/TrackAnalysis</url>
+    <connection>scm:git:git://github.com/sjcross/TrackAnalysis</connection>
+    <developerConnection>scm:git:git@github.com:sjcross/TrackAnalysis</developerConnection>
+    <url>https://github.com/sjcross/TrackAnalysis</url>
   </scm>
   <organization>
     <name>University of Bristol</name>
@@ -94,7 +94,7 @@
             <manifest>
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
               <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-              <mainClass>wbif.sjx.TrackAnalysis.TrackAnalysis</mainClass>
+              <mainClass>io.github.sjcross.TrackAnalysis.TrackAnalysis</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -123,7 +123,7 @@
               <transformers>
                 <transformer>
                   <manifestEntries>
-                    <Main-Class>wbif.sjx.TrackAnalysis.TrackAnalysis</Main-Class>
+                    <Main-Class>io.github.sjcross.TrackAnalysis.TrackAnalysis</Main-Class>
                     <Specification-Title>${project.artifactId}</Specification-Title>
                     <Specification-Version>${project.version}</Specification-Version>
                   </manifestEntries>
@@ -145,68 +145,6 @@
       <url>http://maven.imagej.net/content/groups/public</url>
     </repository>
   </repositories>
-  <dependencies>
-    <dependency>
-      <groupId>net.imagej</groupId>
-      <artifactId>ij</artifactId>
-      <version>1.52o</version>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>tools</artifactId>
-          <groupId>com.sun</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>sc.fiji</groupId>
-      <artifactId>TrackMate_</artifactId>
-      <version>4.0.0</version>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>imagej-deprecated</artifactId>
-          <groupId>net.imagej</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>imglib2-algorithm-gpl</artifactId>
-          <groupId>net.imglib2</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>imglib2-ij</artifactId>
-          <groupId>net.imglib2</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>itextpdf</artifactId>
-          <groupId>com.itextpdf</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jgrapht-core</artifactId>
-          <groupId>org.jgrapht</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>batik-dom</artifactId>
-          <groupId>org.apache.xmlgraphics</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>batik-svggen</artifactId>
-          <groupId>org.apache.xmlgraphics</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jdom2</artifactId>
-          <groupId>org.jdom</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jfreechart</artifactId>
-          <groupId>org.jfree</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jgraphx</artifactId>
-          <groupId>org.tinyjee.jgraphx</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-  </dependencies>
   <reporting>
     <plugins>
       <plugin>
@@ -227,9 +165,9 @@
   </reporting>
   <properties>
     <myscope>compile</myscope>
-    <package-name>wbif.sjx.TrackAnalysis</package-name>
+    <package-name>io.github.sjcross.TrackAnalysis</package-name>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <main-class>wbif.sjx.TrackAnalysis.IO.TrackAnalysisPlugin</main-class>
+    <main-class>io.github.sjcross.TrackAnalysis.IO.TrackAnalysisPlugin</main-class>
     <lwjgl.version>3.1.1</lwjgl.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <license.copyrightOwners>Stephen Cross</license.copyrightOwners>

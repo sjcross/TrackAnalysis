@@ -21,7 +21,7 @@ The plugin uses track coordinates present in the Fiji results table to perform a
 
 Starting the plugin
 -------------------
-- In Fiji, run the plugin from Plugins > Wolfson Bioimaging > Track analysis > Load from results table
+- In Fiji, run the plugin from Plugins > Tracking > Track analysis > Load from results table
 - You'll be prompted to select the window names for the results table containing the tracks and, optionally, the image series the tracks correspond to.
 - Next, the column headings in the results table need to be matched to the input fields ("Track ID column", "X-position column", etc.).  Using the TrackMate "Spots in tracks statistics" table as an example the following would be set:
   - Track ID column -> TRACK_ID
